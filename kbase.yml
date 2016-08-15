@@ -2,7 +2,7 @@ module-name:
     KBaseDataObjectToFileUtils
 
 module-description:
-    A KBase module
+    A KBase module for converting KBase Data Objects to common bioinformatics format files
 
 service-language:
     python
