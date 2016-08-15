@@ -12,6 +12,7 @@ eval {
     $get_time = sub { Time::HiRes::gettimeofday() };
 };
 
+use Bio::KBase::AuthToken;
 
 # Client version should match Impl version
 # This is a Semantic Version number,
@@ -25,7 +26,10 @@ KBaseDataObjectToFileUtils::KBaseDataObjectToFileUtilsClient
 =head1 DESCRIPTION
 
 
-A KBase module: KBaseDataObjectToFileUtils
+** A KBase module: kb_blast
+**
+** This module contains methods for converting KBase Data Objects to common bioinformatics file formats
+**
 
 
 =cut
@@ -74,6 +78,28 @@ sub new
 	push(@{$self->{headers}}, 'Kbrpc-Errordest', $self->{kbrpc_error_dest});
     }
 
+    #
+    # This module requires authentication.
+    #
+    # We create an auth token, passing through the arguments that we were (hopefully) given.
+
+    {
+	my $token = Bio::KBase::AuthToken->new(@args);
+	
+	if (!$token->error_message)
+	{
+	    $self->{token} = $token->token;
+	    $self->{client}->{token} = $token->token;
+	}
+        else
+        {
+	    #
+	    # All methods in this module require authentication. In this case, if we
+	    # don't have a token, we can't continue.
+	    #
+	    die "Authentication failed: " . $token->error_message;
+	}
+    }
 
     my $ua = $self->{client}->ua;	 
     my $timeout = $ENV{CDMI_TIMEOUT} || (30 * 60);	 
@@ -84,6 +110,127 @@ sub new
 }
 
 
+
+
+=head2 GenomeAnnotationToFASTA
+
+  $return = $obj->GenomeAnnotationToFASTA($params)
+
+=over 4
+
+=item Parameter and return types
+
+=begin html
+
+<pre>
+$params is a KBaseDataObjectToFileUtils.GenomeAnnotationToFASTA_Params
+$return is a KBaseDataObjectToFileUtils.GenomeAnnotationToFASTA_Output
+GenomeAnnotationToFASTA_Params is a reference to a hash where the following keys are defined:
+	genome_ref has a value which is a KBaseDataObjectToFileUtils.data_obj_ref
+	file has a value which is a KBaseDataObjectToFileUtils.path_type
+	dir has a value which is a KBaseDataObjectToFileUtils.path_type
+	console has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+	invalid_msgs has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+	residue_type has a value which is a string
+	feature_type has a value which is a string
+	record_id_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+	record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+	case has a value which is a string
+	linewrap has a value which is an int
+data_obj_ref is a string
+path_type is a string
+log_msg is a string
+pattern_type is a string
+GenomeAnnotationToFASTA_Output is a reference to a hash where the following keys are defined:
+	output_file has a value which is a KBaseDataObjectToFileUtils.path_type
+	feature_ids has a value which is a reference to a list where each element is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+$params is a KBaseDataObjectToFileUtils.GenomeAnnotationToFASTA_Params
+$return is a KBaseDataObjectToFileUtils.GenomeAnnotationToFASTA_Output
+GenomeAnnotationToFASTA_Params is a reference to a hash where the following keys are defined:
+	genome_ref has a value which is a KBaseDataObjectToFileUtils.data_obj_ref
+	file has a value which is a KBaseDataObjectToFileUtils.path_type
+	dir has a value which is a KBaseDataObjectToFileUtils.path_type
+	console has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+	invalid_msgs has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+	residue_type has a value which is a string
+	feature_type has a value which is a string
+	record_id_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+	record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+	case has a value which is a string
+	linewrap has a value which is an int
+data_obj_ref is a string
+path_type is a string
+log_msg is a string
+pattern_type is a string
+GenomeAnnotationToFASTA_Output is a reference to a hash where the following keys are defined:
+	output_file has a value which is a KBaseDataObjectToFileUtils.path_type
+	feature_ids has a value which is a reference to a list where each element is a string
+
+
+=end text
+
+=item Description
+
+Methods for converting KBase Data Objects to common bioinformatics format files
+**
+
+=back
+
+=cut
+
+ sub GenomeAnnotationToFASTA
+{
+    my($self, @args) = @_;
+
+# Authentication: required
+
+    if ((my $n = @args) != 1)
+    {
+	Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
+							       "Invalid argument count for function GenomeAnnotationToFASTA (received $n, expecting 1)");
+    }
+    {
+	my($params) = @args;
+
+	my @_bad_arguments;
+        (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument 1 \"params\" (value was \"$params\")");
+        if (@_bad_arguments) {
+	    my $msg = "Invalid arguments passed to GenomeAnnotationToFASTA:\n" . join("", map { "\t$_\n" } @_bad_arguments);
+	    Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
+								   method_name => 'GenomeAnnotationToFASTA');
+	}
+    }
+
+    my $url = $self->{url};
+    my $result = $self->{client}->call($url, $self->{headers}, {
+	    method => "KBaseDataObjectToFileUtils.GenomeAnnotationToFASTA",
+	    params => \@args,
+    });
+    if ($result) {
+	if ($result->is_error) {
+	    Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
+					       code => $result->content->{error}->{code},
+					       method_name => 'GenomeAnnotationToFASTA',
+					       data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
+					      );
+	} else {
+	    return wantarray ? @{$result->result} : $result->result->[0];
+	}
+    } else {
+        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method GenomeAnnotationToFASTA",
+					    status_line => $self->{client}->status_line,
+					    method_name => 'GenomeAnnotationToFASTA',
+				       );
+    }
+}
+ 
   
 sub status
 {
@@ -119,7 +266,7 @@ sub status
 sub version {
     my ($self) = @_;
     my $result = $self->{client}->call($self->{url}, $self->{headers}, {
-        method => "${last_module.module_name}.version",
+        method => "KBaseDataObjectToFileUtils.version",
         params => [],
     });
     if ($result) {
@@ -127,16 +274,16 @@ sub version {
             Bio::KBase::Exceptions::JSONRPC->throw(
                 error => $result->error_message,
                 code => $result->content->{code},
-                method_name => '${last_method.name}',
+                method_name => 'GenomeAnnotationToFASTA',
             );
         } else {
             return wantarray ? @{$result->result} : $result->result->[0];
         }
     } else {
         Bio::KBase::Exceptions::HTTP->throw(
-            error => "Error invoking method ${last_method.name}",
+            error => "Error invoking method GenomeAnnotationToFASTA",
             status_line => $self->{client}->status_line,
-            method_name => '${last_method.name}',
+            method_name => 'GenomeAnnotationToFASTA',
         );
     }
 }
@@ -170,6 +317,291 @@ sub _validate_version {
 }
 
 =head1 TYPES
+
+
+
+=head2 workspace_name
+
+=over 4
+
+
+
+=item Description
+
+** The workspace object refs are of form:
+**
+**    objects = ws.get_objects([{'ref': params['workspace_id']+'/'+params['obj_name']}])
+**
+** "ref" means the entire name combining the workspace id and the object name
+** "id" is a numerical identifier of the workspace or object, and should just be used for workspace
+** "name" is a string identifier of a workspace or object.  This is received from Narrative.
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a string
+</pre>
+
+=end html
+
+=begin text
+
+a string
+
+=end text
+
+=back
+
+
+
+=head2 sequence
+
+=over 4
+
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a string
+</pre>
+
+=end html
+
+=begin text
+
+a string
+
+=end text
+
+=back
+
+
+
+=head2 data_obj_name
+
+=over 4
+
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a string
+</pre>
+
+=end html
+
+=begin text
+
+a string
+
+=end text
+
+=back
+
+
+
+=head2 data_obj_ref
+
+=over 4
+
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a string
+</pre>
+
+=end html
+
+=begin text
+
+a string
+
+=end text
+
+=back
+
+
+
+=head2 path_type
+
+=over 4
+
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a string
+</pre>
+
+=end html
+
+=begin text
+
+a string
+
+=end text
+
+=back
+
+
+
+=head2 pattern_type
+
+=over 4
+
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a string
+</pre>
+
+=end html
+
+=begin text
+
+a string
+
+=end text
+
+=back
+
+
+
+=head2 log_msg
+
+=over 4
+
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a string
+</pre>
+
+=end html
+
+=begin text
+
+a string
+
+=end text
+
+=back
+
+
+
+=head2 GenomeAnnotationToFASTA_Params
+
+=over 4
+
+
+
+=item Description
+
+GenomeAnnotationToFASTA() Params
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+genome_ref has a value which is a KBaseDataObjectToFileUtils.data_obj_ref
+file has a value which is a KBaseDataObjectToFileUtils.path_type
+dir has a value which is a KBaseDataObjectToFileUtils.path_type
+console has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+invalid_msgs has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+residue_type has a value which is a string
+feature_type has a value which is a string
+record_id_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+case has a value which is a string
+linewrap has a value which is an int
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+genome_ref has a value which is a KBaseDataObjectToFileUtils.data_obj_ref
+file has a value which is a KBaseDataObjectToFileUtils.path_type
+dir has a value which is a KBaseDataObjectToFileUtils.path_type
+console has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+invalid_msgs has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+residue_type has a value which is a string
+feature_type has a value which is a string
+record_id_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+case has a value which is a string
+linewrap has a value which is an int
+
+
+=end text
+
+=back
+
+
+
+=head2 GenomeAnnotationToFASTA_Output
+
+=over 4
+
+
+
+=item Description
+
+GenomeAnnotationToFASTA() Output
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+output_file has a value which is a KBaseDataObjectToFileUtils.path_type
+feature_ids has a value which is a reference to a list where each element is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+output_file has a value which is a KBaseDataObjectToFileUtils.path_type
+feature_ids has a value which is a reference to a list where each element is a string
+
+
+=end text
+
+=back
 
 
 
