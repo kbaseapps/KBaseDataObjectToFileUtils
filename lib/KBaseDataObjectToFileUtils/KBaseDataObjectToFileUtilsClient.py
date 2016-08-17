@@ -33,10 +33,23 @@ class KBaseDataObjectToFileUtils(object):
             trust_all_ssl_certificates=trust_all_ssl_certificates,
             auth_svc=auth_svc)
 
-    def GenomeToFASTA(self, params, context=None):
+    def TranslateNucToProtSeq(self, params, context=None):
         """
         Methods for converting KBase Data Objects to common bioinformatics format files
         **
+        :param params: instance of type "TranslateNucToProtSeq_Params"
+           (TranslateNucToProtSeq() Params) -> structure: parameter "nuc_seq"
+           of String, parameter "genetic_code" of String
+        :returns: instance of type "TranslateNucToProtSeq_Output"
+           (TranslateNucToProtSeq() Output) -> structure: parameter
+           "prot_seq" of String
+        """
+        return self._client.call_method(
+            'KBaseDataObjectToFileUtils.TranslateNucToProtSeq',
+            [params], self._service_ver, context)
+
+    def GenomeToFASTA(self, params, context=None):
+        """
         :param params: instance of type "GenomeAnnotationToFASTA_Params"
            (GenomeAnnotationToFASTA() Params) -> structure: parameter
            "genome_ref" of type "data_obj_ref", parameter "file" of type

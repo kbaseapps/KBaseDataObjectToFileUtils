@@ -25,6 +25,21 @@ module KBaseDataObjectToFileUtils {
     typedef string log_msg;
 
 
+    /* TranslateNucToProtSeq() Params
+    */
+    typedef structure {
+	string  nuc_seq;
+	string  genetic_code;
+    } TranslateNucToProtSeq_Params;
+
+
+    /* TranslateNucToProtSeq() Output
+    */
+    typedef structure {
+	string  prot_seq;
+    } TranslateNucToProtSeq_Output;
+
+
     /* GenomeAnnotationToFASTA() Params
     */
     typedef structure {
@@ -54,6 +69,9 @@ module KBaseDataObjectToFileUtils {
     /*  Methods for converting KBase Data Objects to common bioinformatics format files
     **
     */
+    funcdef TranslateNucToProtSeq (TranslateNucToProtSeq_Params params)  returns (TranslateNucToProtSeq_Output) authentication required;
+
     funcdef GenomeToFASTA (GenomeAnnotationToFASTA_Params params)  returns (GenomeAnnotationToFASTA_Output) authentication required;
+
     funcdef GenomeAnnotationToFASTA (GenomeAnnotationToFASTA_Params params)  returns (GenomeAnnotationToFASTA_Output) authentication required;
 };

@@ -179,10 +179,27 @@ public class KBaseDataObjectToFileUtilsClient {
     }
 
     /**
-     * <p>Original spec-file function name: GenomeToFASTA</p>
+     * <p>Original spec-file function name: TranslateNucToProtSeq</p>
      * <pre>
      * Methods for converting KBase Data Objects to common bioinformatics format files
      * **
+     * </pre>
+     * @param   params   instance of type {@link us.kbase.kbasedataobjecttofileutils.TranslateNucToProtSeqParams TranslateNucToProtSeqParams} (original type "TranslateNucToProtSeq_Params")
+     * @return   instance of type {@link us.kbase.kbasedataobjecttofileutils.TranslateNucToProtSeqOutput TranslateNucToProtSeqOutput} (original type "TranslateNucToProtSeq_Output")
+     * @throws IOException if an IO exception occurs
+     * @throws JsonClientException if a JSON RPC exception occurs
+     */
+    public TranslateNucToProtSeqOutput translateNucToProtSeq(TranslateNucToProtSeqParams params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
+        List<Object> args = new ArrayList<Object>();
+        args.add(params);
+        TypeReference<List<TranslateNucToProtSeqOutput>> retType = new TypeReference<List<TranslateNucToProtSeqOutput>>() {};
+        List<TranslateNucToProtSeqOutput> res = caller.jsonrpcCall("KBaseDataObjectToFileUtils.TranslateNucToProtSeq", args, retType, true, true, jsonRpcContext, this.serviceVersion);
+        return res.get(0);
+    }
+
+    /**
+     * <p>Original spec-file function name: GenomeToFASTA</p>
+     * <pre>
      * </pre>
      * @param   params   instance of type {@link us.kbase.kbasedataobjecttofileutils.GenomeAnnotationToFASTAParams GenomeAnnotationToFASTAParams} (original type "GenomeAnnotationToFASTA_Params")
      * @return   instance of type {@link us.kbase.kbasedataobjecttofileutils.GenomeAnnotationToFASTAOutput GenomeAnnotationToFASTAOutput} (original type "GenomeAnnotationToFASTA_Output")

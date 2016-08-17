@@ -1,5 +1,31 @@
 # -*- coding: utf-8 -*-
 #BEGIN_HEADER
+import os
+import sys
+import shutil
+import hashlib
+import subprocess
+import requests
+import re
+import traceback
+import uuid
+from datetime import datetime
+from pprint import pprint, pformat
+import numpy as np
+import gzip
+
+from Bio import SeqIO
+from Bio.Seq import Seq
+from Bio.SeqRecord import SeqRecord
+from Bio.Alphabet import generic_protein
+from biokbase.workspace.client import Workspace as workspaceService
+from requests_toolbelt import MultipartEncoder
+from biokbase.AbstractHandle.Client import AbstractHandle as HandleService
+
+# silence whining
+import requests
+requests.packages.urllib3.disable_warnings()
+
 #END_HEADER
 
 
@@ -23,23 +49,66 @@ class KBaseDataObjectToFileUtils:
     #########################################
     VERSION = "0.0.1"
     GIT_URL = "https://github.com/kbaseapps/KBaseDataObjectToFileUtils.git"
-    GIT_COMMIT_HASH = "4d2cff2178dd2cfe9cc883b52c28bdd8141ead82"
+    GIT_COMMIT_HASH = "3c859e1531e002b5fc9f4483bea68b8019efc4fc"
     
     #BEGIN_CLASS_HEADER
+    workspaceURL = None
+    shockURL = None
+    handleURL = None
+
+    # target is a list for collecting log messages
+    def log(self, target, message):
+        # we should do something better here...
+        if target is not None:
+            target.append(message)
+        print(message)
+        sys.stdout.flush()
+
     #END_CLASS_HEADER
 
     # config contains contents of config file in a hash or None if it couldn't
     # be found
     def __init__(self, config):
         #BEGIN_CONSTRUCTOR
+        self.workspaceURL = config['workspace-url']
+        self.shockURL = config['shock-url']
+        self.handleURL = config['handle-service-url']
+        self.scratch = os.path.abspath(config['scratch'])
+        # HACK!! temporary hack for issue where megahit fails on mac because of silent named pipe error
+        #self.host_scratch = self.scratch
+        self.scratch = os.path.join('/kb','module','local_scratch')
+        # end hack
+        if not os.path.exists(self.scratch):
+            os.makedirs(self.scratch)
         #END_CONSTRUCTOR
         pass
     
 
-    def GenomeToFASTA(self, ctx, params):
+    def TranslateNucToProtSeq(self, ctx, params):
         """
         Methods for converting KBase Data Objects to common bioinformatics format files
         **
+        :param params: instance of type "TranslateNucToProtSeq_Params"
+           (TranslateNucToProtSeq() Params) -> structure: parameter "nuc_seq"
+           of String, parameter "genetic_code" of String
+        :returns: instance of type "TranslateNucToProtSeq_Output"
+           (TranslateNucToProtSeq() Output) -> structure: parameter
+           "prot_seq" of String
+        """
+        # ctx is the context object
+        # return variables are: returnVal
+        #BEGIN TranslateNucToProtSeq
+        #END TranslateNucToProtSeq
+
+        # At some point might do deeper type checking...
+        if not isinstance(returnVal, dict):
+            raise ValueError('Method TranslateNucToProtSeq return value ' +
+                             'returnVal is not type dict as required.')
+        # return the results
+        return [returnVal]
+
+    def GenomeToFASTA(self, ctx, params):
+        """
         :param params: instance of type "GenomeAnnotationToFASTA_Params"
            (GenomeAnnotationToFASTA() Params) -> structure: parameter
            "genome_ref" of type "data_obj_ref", parameter "file" of type

@@ -112,6 +112,99 @@ sub new
 
 
 
+=head2 TranslateNucToProtSeq
+
+  $return = $obj->TranslateNucToProtSeq($params)
+
+=over 4
+
+=item Parameter and return types
+
+=begin html
+
+<pre>
+$params is a KBaseDataObjectToFileUtils.TranslateNucToProtSeq_Params
+$return is a KBaseDataObjectToFileUtils.TranslateNucToProtSeq_Output
+TranslateNucToProtSeq_Params is a reference to a hash where the following keys are defined:
+	nuc_seq has a value which is a string
+	genetic_code has a value which is a string
+TranslateNucToProtSeq_Output is a reference to a hash where the following keys are defined:
+	prot_seq has a value which is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+$params is a KBaseDataObjectToFileUtils.TranslateNucToProtSeq_Params
+$return is a KBaseDataObjectToFileUtils.TranslateNucToProtSeq_Output
+TranslateNucToProtSeq_Params is a reference to a hash where the following keys are defined:
+	nuc_seq has a value which is a string
+	genetic_code has a value which is a string
+TranslateNucToProtSeq_Output is a reference to a hash where the following keys are defined:
+	prot_seq has a value which is a string
+
+
+=end text
+
+=item Description
+
+Methods for converting KBase Data Objects to common bioinformatics format files
+**
+
+=back
+
+=cut
+
+ sub TranslateNucToProtSeq
+{
+    my($self, @args) = @_;
+
+# Authentication: required
+
+    if ((my $n = @args) != 1)
+    {
+	Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
+							       "Invalid argument count for function TranslateNucToProtSeq (received $n, expecting 1)");
+    }
+    {
+	my($params) = @args;
+
+	my @_bad_arguments;
+        (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument 1 \"params\" (value was \"$params\")");
+        if (@_bad_arguments) {
+	    my $msg = "Invalid arguments passed to TranslateNucToProtSeq:\n" . join("", map { "\t$_\n" } @_bad_arguments);
+	    Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
+								   method_name => 'TranslateNucToProtSeq');
+	}
+    }
+
+    my $url = $self->{url};
+    my $result = $self->{client}->call($url, $self->{headers}, {
+	    method => "KBaseDataObjectToFileUtils.TranslateNucToProtSeq",
+	    params => \@args,
+    });
+    if ($result) {
+	if ($result->is_error) {
+	    Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
+					       code => $result->content->{error}->{code},
+					       method_name => 'TranslateNucToProtSeq',
+					       data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
+					      );
+	} else {
+	    return wantarray ? @{$result->result} : $result->result->[0];
+	}
+    } else {
+        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method TranslateNucToProtSeq",
+					    status_line => $self->{client}->status_line,
+					    method_name => 'TranslateNucToProtSeq',
+				       );
+    }
+}
+ 
+
+
 =head2 GenomeToFASTA
 
   $return = $obj->GenomeToFASTA($params)
@@ -178,8 +271,7 @@ GenomeAnnotationToFASTA_Output is a reference to a hash where the following keys
 
 =item Description
 
-Methods for converting KBase Data Objects to common bioinformatics format files
-**
+
 
 =back
 
@@ -626,6 +718,78 @@ a string
 =begin text
 
 a string
+
+=end text
+
+=back
+
+
+
+=head2 TranslateNucToProtSeq_Params
+
+=over 4
+
+
+
+=item Description
+
+TranslateNucToProtSeq() Params
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+nuc_seq has a value which is a string
+genetic_code has a value which is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+nuc_seq has a value which is a string
+genetic_code has a value which is a string
+
+
+=end text
+
+=back
+
+
+
+=head2 TranslateNucToProtSeq_Output
+
+=over 4
+
+
+
+=item Description
+
+TranslateNucToProtSeq() Output
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+prot_seq has a value which is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+prot_seq has a value which is a string
+
 
 =end text
 

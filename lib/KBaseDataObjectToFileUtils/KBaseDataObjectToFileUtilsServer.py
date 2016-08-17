@@ -328,6 +328,10 @@ class Application(object):
         self.serverlog.set_log_level(6)
         self.rpc_service = JSONRPCServiceCustom()
         self.method_authentication = dict()
+        self.rpc_service.add(impl_KBaseDataObjectToFileUtils.TranslateNucToProtSeq,
+                             name='KBaseDataObjectToFileUtils.TranslateNucToProtSeq',
+                             types=[dict])
+        self.method_authentication['KBaseDataObjectToFileUtils.TranslateNucToProtSeq'] = 'required'
         self.rpc_service.add(impl_KBaseDataObjectToFileUtils.GenomeToFASTA,
                              name='KBaseDataObjectToFileUtils.GenomeToFASTA',
                              types=[dict])
