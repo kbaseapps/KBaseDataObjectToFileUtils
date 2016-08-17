@@ -179,10 +179,27 @@ public class KBaseDataObjectToFileUtilsClient {
     }
 
     /**
-     * <p>Original spec-file function name: GenomeAnnotationToFASTA</p>
+     * <p>Original spec-file function name: GenomeToFASTA</p>
      * <pre>
      * Methods for converting KBase Data Objects to common bioinformatics format files
      * **
+     * </pre>
+     * @param   params   instance of type {@link us.kbase.kbasedataobjecttofileutils.GenomeAnnotationToFASTAParams GenomeAnnotationToFASTAParams} (original type "GenomeAnnotationToFASTA_Params")
+     * @return   instance of type {@link us.kbase.kbasedataobjecttofileutils.GenomeAnnotationToFASTAOutput GenomeAnnotationToFASTAOutput} (original type "GenomeAnnotationToFASTA_Output")
+     * @throws IOException if an IO exception occurs
+     * @throws JsonClientException if a JSON RPC exception occurs
+     */
+    public GenomeAnnotationToFASTAOutput genomeToFASTA(GenomeAnnotationToFASTAParams params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
+        List<Object> args = new ArrayList<Object>();
+        args.add(params);
+        TypeReference<List<GenomeAnnotationToFASTAOutput>> retType = new TypeReference<List<GenomeAnnotationToFASTAOutput>>() {};
+        List<GenomeAnnotationToFASTAOutput> res = caller.jsonrpcCall("KBaseDataObjectToFileUtils.GenomeToFASTA", args, retType, true, true, jsonRpcContext, this.serviceVersion);
+        return res.get(0);
+    }
+
+    /**
+     * <p>Original spec-file function name: GenomeAnnotationToFASTA</p>
+     * <pre>
      * </pre>
      * @param   params   instance of type {@link us.kbase.kbasedataobjecttofileutils.GenomeAnnotationToFASTAParams GenomeAnnotationToFASTAParams} (original type "GenomeAnnotationToFASTA_Params")
      * @return   instance of type {@link us.kbase.kbasedataobjecttofileutils.GenomeAnnotationToFASTAOutput GenomeAnnotationToFASTAOutput} (original type "GenomeAnnotationToFASTA_Output")

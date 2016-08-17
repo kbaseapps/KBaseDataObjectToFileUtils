@@ -112,6 +112,127 @@ sub new
 
 
 
+=head2 GenomeToFASTA
+
+  $return = $obj->GenomeToFASTA($params)
+
+=over 4
+
+=item Parameter and return types
+
+=begin html
+
+<pre>
+$params is a KBaseDataObjectToFileUtils.GenomeAnnotationToFASTA_Params
+$return is a KBaseDataObjectToFileUtils.GenomeAnnotationToFASTA_Output
+GenomeAnnotationToFASTA_Params is a reference to a hash where the following keys are defined:
+	genome_ref has a value which is a KBaseDataObjectToFileUtils.data_obj_ref
+	file has a value which is a KBaseDataObjectToFileUtils.path_type
+	dir has a value which is a KBaseDataObjectToFileUtils.path_type
+	console has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+	invalid_msgs has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+	residue_type has a value which is a string
+	feature_type has a value which is a string
+	record_id_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+	record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+	case has a value which is a string
+	linewrap has a value which is an int
+data_obj_ref is a string
+path_type is a string
+log_msg is a string
+pattern_type is a string
+GenomeAnnotationToFASTA_Output is a reference to a hash where the following keys are defined:
+	output_file has a value which is a KBaseDataObjectToFileUtils.path_type
+	feature_ids has a value which is a reference to a list where each element is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+$params is a KBaseDataObjectToFileUtils.GenomeAnnotationToFASTA_Params
+$return is a KBaseDataObjectToFileUtils.GenomeAnnotationToFASTA_Output
+GenomeAnnotationToFASTA_Params is a reference to a hash where the following keys are defined:
+	genome_ref has a value which is a KBaseDataObjectToFileUtils.data_obj_ref
+	file has a value which is a KBaseDataObjectToFileUtils.path_type
+	dir has a value which is a KBaseDataObjectToFileUtils.path_type
+	console has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+	invalid_msgs has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+	residue_type has a value which is a string
+	feature_type has a value which is a string
+	record_id_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+	record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+	case has a value which is a string
+	linewrap has a value which is an int
+data_obj_ref is a string
+path_type is a string
+log_msg is a string
+pattern_type is a string
+GenomeAnnotationToFASTA_Output is a reference to a hash where the following keys are defined:
+	output_file has a value which is a KBaseDataObjectToFileUtils.path_type
+	feature_ids has a value which is a reference to a list where each element is a string
+
+
+=end text
+
+=item Description
+
+Methods for converting KBase Data Objects to common bioinformatics format files
+**
+
+=back
+
+=cut
+
+ sub GenomeToFASTA
+{
+    my($self, @args) = @_;
+
+# Authentication: required
+
+    if ((my $n = @args) != 1)
+    {
+	Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
+							       "Invalid argument count for function GenomeToFASTA (received $n, expecting 1)");
+    }
+    {
+	my($params) = @args;
+
+	my @_bad_arguments;
+        (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument 1 \"params\" (value was \"$params\")");
+        if (@_bad_arguments) {
+	    my $msg = "Invalid arguments passed to GenomeToFASTA:\n" . join("", map { "\t$_\n" } @_bad_arguments);
+	    Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
+								   method_name => 'GenomeToFASTA');
+	}
+    }
+
+    my $url = $self->{url};
+    my $result = $self->{client}->call($url, $self->{headers}, {
+	    method => "KBaseDataObjectToFileUtils.GenomeToFASTA",
+	    params => \@args,
+    });
+    if ($result) {
+	if ($result->is_error) {
+	    Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
+					       code => $result->content->{error}->{code},
+					       method_name => 'GenomeToFASTA',
+					       data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
+					      );
+	} else {
+	    return wantarray ? @{$result->result} : $result->result->[0];
+	}
+    } else {
+        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method GenomeToFASTA",
+					    status_line => $self->{client}->status_line,
+					    method_name => 'GenomeToFASTA',
+				       );
+    }
+}
+ 
+
+
 =head2 GenomeAnnotationToFASTA
 
   $return = $obj->GenomeAnnotationToFASTA($params)
@@ -178,8 +299,7 @@ GenomeAnnotationToFASTA_Output is a reference to a hash where the following keys
 
 =item Description
 
-Methods for converting KBase Data Objects to common bioinformatics format files
-**
+
 
 =back
 

@@ -25,7 +25,6 @@ module KBaseDataObjectToFileUtils {
     typedef string log_msg;
 
 
-
     /* GenomeAnnotationToFASTA() Params
     */
     typedef structure {
@@ -51,8 +50,10 @@ module KBaseDataObjectToFileUtils {
     } GenomeAnnotationToFASTA_Output;
 	
 
+
     /*  Methods for converting KBase Data Objects to common bioinformatics format files
     **
     */
+    funcdef GenomeToFASTA (GenomeAnnotationToFASTA_Params params)  returns (GenomeAnnotationToFASTA_Output) authentication required;
     funcdef GenomeAnnotationToFASTA (GenomeAnnotationToFASTA_Params params)  returns (GenomeAnnotationToFASTA_Output) authentication required;
 };
