@@ -235,7 +235,7 @@ path_type is a string
 log_msg is a string
 pattern_type is a string
 GenomeAnnotationToFASTA_Output is a reference to a hash where the following keys are defined:
-	output_file has a value which is a KBaseDataObjectToFileUtils.path_type
+	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
 	feature_ids has a value which is a reference to a list where each element is a string
 
 </pre>
@@ -263,7 +263,7 @@ path_type is a string
 log_msg is a string
 pattern_type is a string
 GenomeAnnotationToFASTA_Output is a reference to a hash where the following keys are defined:
-	output_file has a value which is a KBaseDataObjectToFileUtils.path_type
+	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
 	feature_ids has a value which is a reference to a list where each element is a string
 
 
@@ -355,7 +355,7 @@ path_type is a string
 log_msg is a string
 pattern_type is a string
 GenomeAnnotationToFASTA_Output is a reference to a hash where the following keys are defined:
-	output_file has a value which is a KBaseDataObjectToFileUtils.path_type
+	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
 	feature_ids has a value which is a reference to a list where each element is a string
 
 </pre>
@@ -383,7 +383,7 @@ path_type is a string
 log_msg is a string
 pattern_type is a string
 GenomeAnnotationToFASTA_Output is a reference to a hash where the following keys are defined:
-	output_file has a value which is a KBaseDataObjectToFileUtils.path_type
+	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
 	feature_ids has a value which is a reference to a list where each element is a string
 
 
@@ -869,7 +869,7 @@ GenomeAnnotationToFASTA() Output
 
 <pre>
 a reference to a hash where the following keys are defined:
-output_file has a value which is a KBaseDataObjectToFileUtils.path_type
+fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
 feature_ids has a value which is a reference to a list where each element is a string
 
 </pre>
@@ -879,7 +879,7 @@ feature_ids has a value which is a reference to a list where each element is a s
 =begin text
 
 a reference to a hash where the following keys are defined:
-output_file has a value which is a KBaseDataObjectToFileUtils.path_type
+fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
 feature_ids has a value which is a reference to a list where each element is a string
 
 

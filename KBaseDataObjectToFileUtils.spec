@@ -60,7 +60,7 @@ module KBaseDataObjectToFileUtils {
     /* GenomeAnnotationToFASTA() Output
     */
     typedef structure {
-	path_type     output_file;
+	path_type     fasta_file_path;
 	list<string>  feature_ids;
     } GenomeAnnotationToFASTA_Output;
 	

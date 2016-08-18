@@ -62,8 +62,8 @@ class KBaseDataObjectToFileUtils(object):
            of Long
         :returns: instance of type "GenomeAnnotationToFASTA_Output"
            (GenomeAnnotationToFASTA() Output) -> structure: parameter
-           "output_file" of type "path_type", parameter "feature_ids" of list
-           of String
+           "fasta_file_path" of type "path_type", parameter "feature_ids" of
+           list of String
         """
         return self._client.call_method(
             'KBaseDataObjectToFileUtils.GenomeToFASTA',
@@ -83,8 +83,8 @@ class KBaseDataObjectToFileUtils(object):
            of Long
         :returns: instance of type "GenomeAnnotationToFASTA_Output"
            (GenomeAnnotationToFASTA() Output) -> structure: parameter
-           "output_file" of type "path_type", parameter "feature_ids" of list
-           of String
+           "fasta_file_path" of type "path_type", parameter "feature_ids" of
+           list of String
         """
         return self._client.call_method(
             'KBaseDataObjectToFileUtils.GenomeAnnotationToFASTA',
