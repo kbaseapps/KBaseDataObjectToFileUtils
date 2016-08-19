@@ -290,7 +290,7 @@ class KBaseDataObjectToFileUtils:
 
                             #record = SeqRecord(Seq(seq), id=rec_id, description=rec_desc)
                             #records.append(record)
-                            feature_ids.append(feature['id']
+                            feature_ids.append(feature['id'])
                             fasta_file_handle.write(rec)
 
         # report if no features found
