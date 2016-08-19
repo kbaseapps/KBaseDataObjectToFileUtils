@@ -208,8 +208,7 @@ class KBaseDataObjectToFileUtils:
         if dir == None:
             dir = self.scratch
         fasta_file_path = os.path.join(dir, file)
-        self.log(console, 'KB SDK data2file Genome2Fasta: writing fasta file: '+fasta_
-file_path)
+        self.log(console, 'KB SDK data2file Genome2Fasta: writing fasta file: '+fasta_file_path)
 
         # get genome object
         try:
@@ -220,8 +219,7 @@ file_path)
         #to get the full stack trace: traceback.format_exc()
             
 
-        # FIX: should I write recs as we go to reduce memory footprint, or is a single
- buffer write much faster?  Check later.
+        # FIX: should I write recs as we go to reduce memory footprint, or is a single buffer write much faster?  Check later.
         #
         #records = []
         with open(fasta_file_path, 'w', 0) as fasta_file_handle:
