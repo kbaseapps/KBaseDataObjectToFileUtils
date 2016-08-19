@@ -223,6 +223,8 @@ class KBaseDataObjectToFileUtils:
         # FIX: should I write recs as we go to reduce memory footprint, or is a single buffer write much faster?  Check later.
         #
         #records = []
+        self.log(console,"FASTA_FILE_PATH'"+fasta_file_path+"'\n")  # DEBUG
+
         with open(fasta_file_path, 'w', 0) as fasta_file_handle:
                         
             for feature in genome_object['features']:
