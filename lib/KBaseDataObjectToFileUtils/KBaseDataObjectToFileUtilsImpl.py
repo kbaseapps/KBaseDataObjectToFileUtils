@@ -193,6 +193,7 @@ class KBaseDataObjectToFileUtils:
             linewrap = 0
 
         # init and simplify
+        feature_ids = []
         feature_sequence_found = False
         residue_type = residue_type[0:3].lower()
         feature_type = feature_type.upper()
@@ -257,6 +258,7 @@ class KBaseDataObjectToFileUtils:
 
                             #record = SeqRecord(Seq(seq), id=rec_id, description=rec_desc)
                             #records.append(record)
+                            feature_ids.append(feature['id']
                             fasta_file_handle.write(rec)
 
                     # nuc recs
@@ -286,6 +288,7 @@ class KBaseDataObjectToFileUtils:
 
                             #record = SeqRecord(Seq(seq), id=rec_id, description=rec_desc)
                             #records.append(record)
+                            feature_ids.append(feature['id']
                             fasta_file_handle.write(rec)
 
         # report if no features found
