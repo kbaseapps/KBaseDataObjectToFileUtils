@@ -563,7 +563,6 @@ class KBaseDataObjectToFileUtils:
             merge_fasta_files = False
 
         # init and simplify
-        feature_delim = '.f:'
         fasta_file_path_list = []
         feature_ids_by_genome_id = dict()
         feature_sequence_found = False
@@ -662,7 +661,7 @@ class KBaseDataObjectToFileUtils:
 
                             #record = SeqRecord(Seq(seq), id=rec_id, description=rec_desc)
                             #records.append(record)
-                            feature_ids_by_genome_id[genome_name].append(fid)
+                            feature_ids_by_genome_id[genome_name].append(rec_id)
                             fasta_file_handle.write(rec)
 
                     # nuc recs
