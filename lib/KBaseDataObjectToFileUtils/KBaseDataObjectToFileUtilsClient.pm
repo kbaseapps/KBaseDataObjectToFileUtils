@@ -236,7 +236,8 @@ log_msg is a string
 pattern_type is a string
 GenomeAnnotationToFASTA_Output is a reference to a hash where the following keys are defined:
 	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
-	feature_ids has a value which is a reference to a list where each element is a string
+	feature_ids has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
+feature_id is a string
 
 </pre>
 
@@ -264,7 +265,8 @@ log_msg is a string
 pattern_type is a string
 GenomeAnnotationToFASTA_Output is a reference to a hash where the following keys are defined:
 	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
-	feature_ids has a value which is a reference to a list where each element is a string
+	feature_ids has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
+feature_id is a string
 
 
 =end text
@@ -356,7 +358,8 @@ log_msg is a string
 pattern_type is a string
 GenomeAnnotationToFASTA_Output is a reference to a hash where the following keys are defined:
 	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
-	feature_ids has a value which is a reference to a list where each element is a string
+	feature_ids has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
+feature_id is a string
 
 </pre>
 
@@ -384,7 +387,8 @@ log_msg is a string
 pattern_type is a string
 GenomeAnnotationToFASTA_Output is a reference to a hash where the following keys are defined:
 	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
-	feature_ids has a value which is a reference to a list where each element is a string
+	feature_ids has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
+feature_id is a string
 
 
 =end text
@@ -470,13 +474,17 @@ GenomeSetToFASTA_Params is a reference to a hash where the following keys are de
 	record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
 	case has a value which is a string
 	linewrap has a value which is an int
+	merge_fasta_files has a value which is a KBaseDataObjectToFileUtils.true_false
 data_obj_ref is a string
 path_type is a string
 log_msg is a string
 pattern_type is a string
+true_false is a string
 GenomeSetToFASTA_Output is a reference to a hash where the following keys are defined:
-	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
-	feature_ids has a value which is a reference to a list where each element is a string
+	fasta_file_path_list has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.path_type
+	feature_ids_by_genome_id has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.genome_id and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
+genome_id is a string
+feature_id is a string
 
 </pre>
 
@@ -498,13 +506,17 @@ GenomeSetToFASTA_Params is a reference to a hash where the following keys are de
 	record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
 	case has a value which is a string
 	linewrap has a value which is an int
+	merge_fasta_files has a value which is a KBaseDataObjectToFileUtils.true_false
 data_obj_ref is a string
 path_type is a string
 log_msg is a string
 pattern_type is a string
+true_false is a string
 GenomeSetToFASTA_Output is a reference to a hash where the following keys are defined:
-	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
-	feature_ids has a value which is a reference to a list where each element is a string
+	fasta_file_path_list has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.path_type
+	feature_ids_by_genome_id has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.genome_id and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
+genome_id is a string
+feature_id is a string
 
 
 =end text
@@ -596,7 +608,8 @@ log_msg is a string
 pattern_type is a string
 FeatureSetToFASTA_Output is a reference to a hash where the following keys are defined:
 	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
-	feature_ids has a value which is a reference to a list where each element is a string
+	feature_ids has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
+feature_id is a string
 
 </pre>
 
@@ -624,7 +637,8 @@ log_msg is a string
 pattern_type is a string
 FeatureSetToFASTA_Output is a reference to a hash where the following keys are defined:
 	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
-	feature_ids has a value which is a reference to a list where each element is a string
+	feature_ids has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
+feature_id is a string
 
 
 =end text
@@ -887,6 +901,58 @@ a string
 
 
 
+=head2 feature_id
+
+=over 4
+
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a string
+</pre>
+
+=end html
+
+=begin text
+
+a string
+
+=end text
+
+=back
+
+
+
+=head2 genome_id
+
+=over 4
+
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a string
+</pre>
+
+=end html
+
+=begin text
+
+a string
+
+=end text
+
+=back
+
+
+
 =head2 path_type
 
 =over 4
@@ -940,6 +1006,32 @@ a string
 
 
 =head2 log_msg
+
+=over 4
+
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a string
+</pre>
+
+=end html
+
+=begin text
+
+a string
+
+=end text
+
+=back
+
+
+
+=head2 true_false
 
 =over 4
 
@@ -1110,7 +1202,7 @@ GenomeAnnotationToFASTA() Output
 <pre>
 a reference to a hash where the following keys are defined:
 fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
-feature_ids has a value which is a reference to a list where each element is a string
+feature_ids has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
 
 </pre>
 
@@ -1120,7 +1212,7 @@ feature_ids has a value which is a reference to a list where each element is a s
 
 a reference to a hash where the following keys are defined:
 fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
-feature_ids has a value which is a reference to a list where each element is a string
+feature_ids has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
 
 
 =end text
@@ -1157,6 +1249,7 @@ record_id_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
 record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
 case has a value which is a string
 linewrap has a value which is an int
+merge_fasta_files has a value which is a KBaseDataObjectToFileUtils.true_false
 
 </pre>
 
@@ -1176,6 +1269,7 @@ record_id_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
 record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
 case has a value which is a string
 linewrap has a value which is an int
+merge_fasta_files has a value which is a KBaseDataObjectToFileUtils.true_false
 
 
 =end text
@@ -1201,8 +1295,8 @@ GenomeSetToFASTA() Output
 
 <pre>
 a reference to a hash where the following keys are defined:
-fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
-feature_ids has a value which is a reference to a list where each element is a string
+fasta_file_path_list has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.path_type
+feature_ids_by_genome_id has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.genome_id and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
 
 </pre>
 
@@ -1211,8 +1305,8 @@ feature_ids has a value which is a reference to a list where each element is a s
 =begin text
 
 a reference to a hash where the following keys are defined:
-fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
-feature_ids has a value which is a reference to a list where each element is a string
+fasta_file_path_list has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.path_type
+feature_ids_by_genome_id has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.genome_id and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
 
 
 =end text
@@ -1294,7 +1388,7 @@ FeatureSetToFASTA() Output
 <pre>
 a reference to a hash where the following keys are defined:
 fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
-feature_ids has a value which is a reference to a list where each element is a string
+feature_ids has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
 
 </pre>
 
@@ -1304,7 +1398,7 @@ feature_ids has a value which is a reference to a list where each element is a s
 
 a reference to a hash where the following keys are defined:
 fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
-feature_ids has a value which is a reference to a list where each element is a string
+feature_ids has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
 
 
 =end text

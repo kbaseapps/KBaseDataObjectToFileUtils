@@ -51,7 +51,7 @@ class KBaseDataObjectToFileUtils:
     #########################################
     VERSION = "0.0.1"
     GIT_URL = "https://github.com/kbaseapps/KBaseDataObjectToFileUtils.git"
-    GIT_COMMIT_HASH = "79ff6c5a9ebc800b822a4b8ef9f245cc2c961d52"
+    GIT_COMMIT_HASH = "bb3aa2b2abf7b84a420846a851af08abc843774d"
     
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -159,7 +159,7 @@ class KBaseDataObjectToFileUtils:
         :returns: instance of type "GenomeAnnotationToFASTA_Output"
            (GenomeAnnotationToFASTA() Output) -> structure: parameter
            "fasta_file_path" of type "path_type", parameter "feature_ids" of
-           list of String
+           list of type "feature_id"
         """
         # ctx is the context object
         # return variables are: returnVal
@@ -333,7 +333,7 @@ class KBaseDataObjectToFileUtils:
         :returns: instance of type "GenomeAnnotationToFASTA_Output"
            (GenomeAnnotationToFASTA() Output) -> structure: parameter
            "fasta_file_path" of type "path_type", parameter "feature_ids" of
-           list of String
+           list of type "feature_id"
         """
         # ctx is the context object
         # return variables are: returnVal
@@ -504,7 +504,6 @@ class KBaseDataObjectToFileUtils:
         # return the results
         return [returnVal]
 
-
     def GenomeSetToFASTA(self, ctx, params):
         """
         :param params: instance of type "GenomeSetToFASTA_Params"
@@ -516,11 +515,12 @@ class KBaseDataObjectToFileUtils:
            parameter "feature_type" of String, parameter "record_id_pattern"
            of type "pattern_type", parameter "record_desc_pattern" of type
            "pattern_type", parameter "case" of String, parameter "linewrap"
-           of Long
+           of Long, parameter "merge_fasta_files" of type "true_false"
         :returns: instance of type "GenomeSetToFASTA_Output"
            (GenomeSetToFASTA() Output) -> structure: parameter
-           "fasta_file_path" of type "path_type", parameter "feature_ids" of
-           list of String
+           "fasta_file_path_list" of list of type "path_type", parameter
+           "feature_ids_by_genome_id" of mapping from type "genome_id" to
+           list of type "feature_id"
         """
         # ctx is the context object
         # return variables are: returnVal
@@ -736,7 +736,7 @@ class KBaseDataObjectToFileUtils:
         :returns: instance of type "FeatureSetToFASTA_Output"
            (FeatureSetToFASTA() Output) -> structure: parameter
            "fasta_file_path" of type "path_type", parameter "feature_ids" of
-           list of String
+           list of type "feature_id"
         """
         # ctx is the context object
         # return variables are: returnVal

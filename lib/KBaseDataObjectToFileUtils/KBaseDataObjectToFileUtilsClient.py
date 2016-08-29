@@ -64,7 +64,7 @@ class KBaseDataObjectToFileUtils(object):
         :returns: instance of type "GenomeAnnotationToFASTA_Output"
            (GenomeAnnotationToFASTA() Output) -> structure: parameter
            "fasta_file_path" of type "path_type", parameter "feature_ids" of
-           list of String
+           list of type "feature_id"
         """
         return self._client.call_method(
             'KBaseDataObjectToFileUtils.GenomeToFASTA',
@@ -85,7 +85,7 @@ class KBaseDataObjectToFileUtils(object):
         :returns: instance of type "GenomeAnnotationToFASTA_Output"
            (GenomeAnnotationToFASTA() Output) -> structure: parameter
            "fasta_file_path" of type "path_type", parameter "feature_ids" of
-           list of String
+           list of type "feature_id"
         """
         return self._client.call_method(
             'KBaseDataObjectToFileUtils.GenomeAnnotationToFASTA',
@@ -102,11 +102,12 @@ class KBaseDataObjectToFileUtils(object):
            parameter "feature_type" of String, parameter "record_id_pattern"
            of type "pattern_type", parameter "record_desc_pattern" of type
            "pattern_type", parameter "case" of String, parameter "linewrap"
-           of Long
+           of Long, parameter "merge_fasta_files" of type "true_false"
         :returns: instance of type "GenomeSetToFASTA_Output"
            (GenomeSetToFASTA() Output) -> structure: parameter
-           "fasta_file_path" of type "path_type", parameter "feature_ids" of
-           list of String
+           "fasta_file_path_list" of list of type "path_type", parameter
+           "feature_ids_by_genome_id" of mapping from type "genome_id" to
+           list of type "feature_id"
         """
         return self._client.call_method(
             'KBaseDataObjectToFileUtils.GenomeSetToFASTA',
@@ -127,7 +128,7 @@ class KBaseDataObjectToFileUtils(object):
         :returns: instance of type "FeatureSetToFASTA_Output"
            (FeatureSetToFASTA() Output) -> structure: parameter
            "fasta_file_path" of type "path_type", parameter "feature_ids" of
-           list of String
+           list of type "feature_id"
         """
         return self._client.call_method(
             'KBaseDataObjectToFileUtils.FeatureSetToFASTA',

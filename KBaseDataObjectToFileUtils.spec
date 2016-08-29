@@ -20,6 +20,8 @@ module KBaseDataObjectToFileUtils {
     typedef string sequence;
     typedef string data_obj_name;
     typedef string data_obj_ref;
+    typedef string feature_id;
+    typedef string genome_id;
     typedef string path_type;
     typedef string pattern_type;
     typedef string log_msg;
@@ -61,8 +63,8 @@ module KBaseDataObjectToFileUtils {
     /* GenomeAnnotationToFASTA() Output
     */
     typedef structure {
-	path_type     fasta_file_path;
-	list<string>  feature_ids;
+	path_type         fasta_file_path;
+	list<feature_id>  feature_ids;
     } GenomeAnnotationToFASTA_Output;
 
 
@@ -88,7 +90,7 @@ module KBaseDataObjectToFileUtils {
     */
     typedef structure {
 	list<path_type>        fasta_file_path_list;
-	mapping<list<string>>  feature_ids_by_genome_id;
+	mapping<genome_id, list<feature_id>>  feature_ids_by_genome_id;
     } GenomeSetToFASTA_Output;
 
 
@@ -112,8 +114,8 @@ module KBaseDataObjectToFileUtils {
     /* FeatureSetToFASTA() Output
     */
     typedef structure {
-	path_type     fasta_file_path;
-	list<string>  feature_ids;
+	path_type         fasta_file_path;
+	list<feature_id>  feature_ids;
     } FeatureSetToFASTA_Output;
 
 
