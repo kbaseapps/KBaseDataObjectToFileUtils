@@ -661,7 +661,7 @@ class KBaseDataObjectToFileUtils:
 
                             #record = SeqRecord(Seq(seq), id=rec_id, description=rec_desc)
                             #records.append(record)
-                            feature_ids_by_genome_id[genome_name].append(rec_id)
+                            feature_ids_by_genome_id[genome_name].append(fid)
                             fasta_file_handle.write(rec)
 
                     # nuc recs
