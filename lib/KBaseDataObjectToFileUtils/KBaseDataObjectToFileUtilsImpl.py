@@ -606,13 +606,13 @@ class KBaseDataObjectToFileUtils:
             #
             #records = []
             this_file = file
-            if len(genome_names) > 1 and ! merge_fasta_files:
+            if len(genome_names) > 1 and not merge_fasta_files:
                 this_file = this_file+'.'+genome_name
                 this_file.replace('/', '-')
             fasta_file_path = os.path.join(dir, this_file)
             #self.log(console,"FASTA_FILE_PATH'"+fasta_file_path+"'\n")  # DEBUG
 
-            if i == 0 or ! merge_fasta_files:
+            if i == 0 or not merge_fasta_files:
                 fasta_file_handle = open(fasta_file_path, 'w', 0)
                 self.log(console, 'KB SDK data2file Genome2Fasta: writing fasta file: '+fasta_file_path)
 
@@ -694,7 +694,7 @@ class KBaseDataObjectToFileUtils:
                             feature_ids_by_genome_id[genome_name].append(fid)
                             fasta_file_handle.write(rec)
 
-            if i == len(genome_names)-1 or ! merge_fasta_files:
+            if i == len(genome_names)-1 or not merge_fasta_files:
                 fasta_file_handle.close()
                 fasta_file_path_list.append(fasta_file_path)
 
