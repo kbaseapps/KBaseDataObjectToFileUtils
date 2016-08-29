@@ -200,6 +200,7 @@ public class KBaseDataObjectToFileUtilsClient {
     /**
      * <p>Original spec-file function name: GenomeToFASTA</p>
      * <pre>
+     * this should not be used, but is temporarily being retained to compare speed
      * </pre>
      * @param   params   instance of type {@link us.kbase.kbasedataobjecttofileutils.GenomeAnnotationToFASTAParams GenomeAnnotationToFASTAParams} (original type "GenomeAnnotationToFASTA_Params")
      * @return   instance of type {@link us.kbase.kbasedataobjecttofileutils.GenomeAnnotationToFASTAOutput GenomeAnnotationToFASTAOutput} (original type "GenomeAnnotationToFASTA_Output")
@@ -228,6 +229,40 @@ public class KBaseDataObjectToFileUtilsClient {
         args.add(params);
         TypeReference<List<GenomeAnnotationToFASTAOutput>> retType = new TypeReference<List<GenomeAnnotationToFASTAOutput>>() {};
         List<GenomeAnnotationToFASTAOutput> res = caller.jsonrpcCall("KBaseDataObjectToFileUtils.GenomeAnnotationToFASTA", args, retType, true, true, jsonRpcContext, this.serviceVersion);
+        return res.get(0);
+    }
+
+    /**
+     * <p>Original spec-file function name: GenomeSetToFASTA</p>
+     * <pre>
+     * </pre>
+     * @param   params   instance of type {@link us.kbase.kbasedataobjecttofileutils.GenomeSetToFASTAParams GenomeSetToFASTAParams} (original type "GenomeSetToFASTA_Params")
+     * @return   instance of type {@link us.kbase.kbasedataobjecttofileutils.GenomeSetToFASTAOutput GenomeSetToFASTAOutput} (original type "GenomeSetToFASTA_Output")
+     * @throws IOException if an IO exception occurs
+     * @throws JsonClientException if a JSON RPC exception occurs
+     */
+    public GenomeSetToFASTAOutput genomeSetToFASTA(GenomeSetToFASTAParams params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
+        List<Object> args = new ArrayList<Object>();
+        args.add(params);
+        TypeReference<List<GenomeSetToFASTAOutput>> retType = new TypeReference<List<GenomeSetToFASTAOutput>>() {};
+        List<GenomeSetToFASTAOutput> res = caller.jsonrpcCall("KBaseDataObjectToFileUtils.GenomeSetToFASTA", args, retType, true, true, jsonRpcContext, this.serviceVersion);
+        return res.get(0);
+    }
+
+    /**
+     * <p>Original spec-file function name: FeatureSetToFASTA</p>
+     * <pre>
+     * </pre>
+     * @param   params   instance of type {@link us.kbase.kbasedataobjecttofileutils.FeatureSetToFASTAParams FeatureSetToFASTAParams} (original type "FeatureSetToFASTA_Params")
+     * @return   instance of type {@link us.kbase.kbasedataobjecttofileutils.FeatureSetToFASTAOutput FeatureSetToFASTAOutput} (original type "FeatureSetToFASTA_Output")
+     * @throws IOException if an IO exception occurs
+     * @throws JsonClientException if a JSON RPC exception occurs
+     */
+    public FeatureSetToFASTAOutput featureSetToFASTA(FeatureSetToFASTAParams params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
+        List<Object> args = new ArrayList<Object>();
+        args.add(params);
+        TypeReference<List<FeatureSetToFASTAOutput>> retType = new TypeReference<List<FeatureSetToFASTAOutput>>() {};
+        List<FeatureSetToFASTAOutput> res = caller.jsonrpcCall("KBaseDataObjectToFileUtils.FeatureSetToFASTA", args, retType, true, true, jsonRpcContext, this.serviceVersion);
         return res.get(0);
     }
 

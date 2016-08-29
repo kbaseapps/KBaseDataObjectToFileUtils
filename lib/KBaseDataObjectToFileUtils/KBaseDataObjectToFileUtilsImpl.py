@@ -51,7 +51,7 @@ class KBaseDataObjectToFileUtils:
     #########################################
     VERSION = "0.0.1"
     GIT_URL = "https://github.com/kbaseapps/KBaseDataObjectToFileUtils.git"
-    GIT_COMMIT_HASH = "db0fb60fa160af3cced34b7a0e6fe1db33cb2781"
+    GIT_COMMIT_HASH = "79ff6c5a9ebc800b822a4b8ef9f245cc2c961d52"
     
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -145,6 +145,7 @@ class KBaseDataObjectToFileUtils:
 
     def GenomeToFASTA(self, ctx, params):
         """
+        this should not be used, but is temporarily being retained to compare speed
         :param params: instance of type "GenomeAnnotationToFASTA_Params"
            (GenomeAnnotationToFASTA() Params) -> structure: parameter
            "genome_ref" of type "data_obj_ref", parameter "file" of type
@@ -395,9 +396,6 @@ class KBaseDataObjectToFileUtils:
 #        except Exception as e:
 #            raise ValueError('Unable to fetch input_one_name object from workspace: ' + str(e))
 #        #to get the full stack trace: traceback.format_exc()
-
-
-
             
 
         # FIX: should I write recs as we go to reduce memory footprint, or is a single buffer write much faster?  Check later.
@@ -502,6 +500,417 @@ class KBaseDataObjectToFileUtils:
         # At some point might do deeper type checking...
         if not isinstance(returnVal, dict):
             raise ValueError('Method GenomeAnnotationToFASTA return value ' +
+                             'returnVal is not type dict as required.')
+        # return the results
+        return [returnVal]
+
+
+    def GenomeSetToFASTA(self, ctx, params):
+        """
+        :param params: instance of type "GenomeSetToFASTA_Params"
+           (GenomeSetToFASTA() Params) -> structure: parameter
+           "genomeSet_ref" of type "data_obj_ref", parameter "file" of type
+           "path_type", parameter "dir" of type "path_type", parameter
+           "console" of list of type "log_msg", parameter "invalid_msgs" of
+           list of type "log_msg", parameter "residue_type" of String,
+           parameter "feature_type" of String, parameter "record_id_pattern"
+           of type "pattern_type", parameter "record_desc_pattern" of type
+           "pattern_type", parameter "case" of String, parameter "linewrap"
+           of Long
+        :returns: instance of type "GenomeSetToFASTA_Output"
+           (GenomeSetToFASTA() Output) -> structure: parameter
+           "fasta_file_path" of type "path_type", parameter "feature_ids" of
+           list of String
+        """
+        # ctx is the context object
+        # return variables are: returnVal
+        #BEGIN GenomeSetToFASTA
+
+        # init and clean up params
+        genomeSet_ref = params['genomeSet_ref']
+        file = params['file']
+        dir = params['dir']
+        console = params['console']
+        invalid_msgs = params['invalid_msgs']
+        residue_type = params['residue_type']
+        feature_type = params['feature_type']
+        record_id_pattern = params['record_id_pattern']
+        record_desc_pattern = params['record_desc_pattern']
+        case = params['case']
+        linewrap = params['linewrap']
+        merge_fasta_files = params['merge_fasta_files']
+
+        # Defaults
+        if console == None:
+            console = []
+        if invalid_msgs == None:
+            invalid_msgs = []
+        if residue_type == None:
+            residue_type = 'nuc'
+        if feature_type == None:
+            feature_type = 'ALL';
+        if record_id_pattern == None:
+            record_id_pattern = '%%feature_id%%'
+        if record_desc_pattern == None:
+            record_desc_pattern = '[%%genome_id%%]'
+        if case == None:
+            case = 'UPPER'
+        if linewrap == None:
+            linewrap = 0
+        if merge_fasta_files == None or merge_fasta_files[0:1].upper() == 'T':
+            merge_fasta_files = True
+        else:
+            merge_fasta_files = False
+
+        # init and simplify
+        feature_delim = '.f:'
+        fasta_file_path_list = []
+        feature_ids_by_genome_id = dict()
+        feature_sequence_found = False
+        residue_type = residue_type[0:3].lower()
+        feature_type = feature_type.upper()
+        case = case[0:1].upper()
+        
+        def record_header_sub(str, feature_id, genome_id):
+            str = str.replace('%%feature_id%%', feature_id)
+            str = str.replace('%%genome_id%%', genome_id)
+            return str
+
+        if file == None:
+            file = 'runfile.fasta'
+        if dir == None:
+            dir = self.scratch
+
+        # get genomeSet object
+        try:
+            ws = workspaceService(self.workspaceURL, token=ctx['token'])
+            genomeSet_object = ws.get_objects([{'ref':genomeSet_ref}])[0]['data']
+        except Exception as e:
+            raise ValueError('Unable to fetch input_one_name object from workspace: ' + str(e))
+            #to get the full stack trace: traceback.format_exc()
+
+        # iterate through genomeSet members
+        genome_names = genomeSet_object['elements'].keys()
+        for i in range(len(genome_names)):
+            genome_name = genome_names[i]
+            feature_ids_by_genome_id[genome_name] = []
+
+            if 'ref' not in genomeSet_object['elements'][genome_name] or \
+                    genomeSet_object['elements'][genome_name]['ref'] == None:
+                raise ValueError('GenomeSetToFASTA() cannot handle GenomeSet objects with embedded genome.  Must be a set of genome references')
+                #to get the full stack trace: traceback.format_exc()       
+            else:
+                genome_ref = genomeSet_object['elements'][genome_name]['ref']
+
+
+            # FIX: should I write recs as we go to reduce memory footprint, or is a single buffer write much faster?  Check later.
+            #
+            #records = []
+            this_file = file
+            if len(genome_names) > 1 and ! merge_fasta_files:
+                this_file = this_file+'.'+genome_name
+                this_file.replace('/', '-')
+            fasta_file_path = os.path.join(dir, this_file)
+            #self.log(console,"FASTA_FILE_PATH'"+fasta_file_path+"'\n")  # DEBUG
+
+            if i == 0 or ! merge_fasta_files:
+                fasta_file_handle = open(fasta_file_path, 'w', 0)
+                self.log(console, 'KB SDK data2file Genome2Fasta: writing fasta file: '+fasta_file_path)
+
+            GA = GenomeAnnotationAPI ({"workspace_service_url": self.workspaceURL,
+                                       "shock_service_url": self.shockURL
+                                       },
+                                      token=os.environ["KB_AUTH_TOKEN"],
+                                      ref=genome_ref
+                                      )
+            features = GA.get_features()
+            if residue_type == 'pro' or residue_type == 'pep':
+                proteins = GA.get_proteins()
+
+#            for feature in genome_object['features']:
+            for fid in features.keys():
+                feature = features[fid]
+                
+                if feature_type == 'ALL' or feature_type == feature['feature_type']:
+                    
+                    # protein recs
+                    if residue_type == 'pro' or residue_type == 'pep':
+                        if feature['feature_type'] != 'CDS':
+                            continue
+                        elif fid not in proteins or 'protein_amino_acid_sequence' not in proteins[fid] or proteins[fid]['protein_amino_acid_sequence'] == None:
+                            self.log(invalid_msgs, "bad CDS feature "+fid+": No protein_translation field.")
+                        else:
+                            feature_sequence_found = True
+                            rec_id = record_id_pattern
+                            rec_desc = record_desc_pattern
+                            rec_id = record_header_sub(rec_id, fid, genome_ref)
+                            rec_desc = record_header_sub(rec_desc, fid, genome_ref)
+                            seq = proteins[fid]['protein_amino_acid_sequence']
+                            seq = seq.upper() if case == 'U' else seq.lower()
+
+                            rec_rows = []
+                            rec_rows.append('>'+rec_id+' '+rec_desc)
+                            if linewrap == None or linewrap == 0:
+                                rec_rows.append(seq)
+                            else:
+                                seq_len = len(seq)
+                                base_rows_cnt = seq_len//linewrap
+                                for i in range(base_rows_cnt):
+                                    rec_rows.append(seq[i*linewrap:(i+1)*linewrap])
+                                rec_rows.append(seq[base_rows_cnt*linewrap:])
+                            rec = "\n".join(rec_rows)+"\n"
+
+                            #record = SeqRecord(Seq(seq), id=rec_id, description=rec_desc)
+                            #records.append(record)
+                            feature_ids_by_genome_id[genome_name].append(fid)
+                            fasta_file_handle.write(rec)
+
+                    # nuc recs
+                    else:
+                        if 'dna_sequence' not in feature or feature['dna_sequence'] == None:
+                            self.log(invalid_msgs, "bad feature "+feature['id']+": No dna_sequence field.")
+                        else:
+                            feature_sequence_found = True
+                            rec_id = record_id_pattern
+                            rec_desc = record_desc_pattern
+                            rec_id = record_header_sub(rec_id, fid, genome_ref)
+                            rec_desc = record_header_sub(rec_desc, fid, genome_ref)
+                            seq = feature['dna_sequence']
+                            seq = seq.upper() if case == 'U' else seq.lower()
+                            
+                            rec_rows = []
+                            rec_rows.append('>'+rec_id+' '+rec_desc)
+                            if linewrap == None or linewrap == 0:
+                                rec_rows.append(seq)
+                            else:
+                                seq_len = len(seq)
+                                base_rows_cnt = seq_len//linewrap
+                                for i in range(base_rows_cnt):
+                                    rec_rows.append(seq[i*linewrap:(i+1)*linewrap])
+                                rec_rows.append(seq[base_rows_cnt*linewrap:])
+                            rec = "\n".join(rec_rows)+"\n"
+
+                            #record = SeqRecord(Seq(seq), id=rec_id, description=rec_desc)
+                            #records.append(record)
+                            feature_ids_by_genome_id[genome_name].append(fid)
+                            fasta_file_handle.write(rec)
+
+            if i == len(genome_names)-1 or ! merge_fasta_files:
+                fasta_file_handle.close()
+                fasta_file_path_list.append(fasta_file_path)
+
+
+        # report if no features found
+        if not feature_sequence_found:
+            self.log(invalid_msgs, "No sequence records found in Genome "+genome_object['id']+" of residue_type: "+residue_type+", feature_type: "+feature_type)
+        #else:
+        #    SeqIO.write(records, fasta_file_path, "fasta")
+
+
+        # build returnVal
+        #
+        returnVal = dict()
+        returnVal['fasta_file_path_list'] = fasta_file_path_list
+        returnVal['feature_ids_by_genome_id'] = feature_ids_by_genome_id
+        #END GenomeSetToFASTA
+
+        # At some point might do deeper type checking...
+        if not isinstance(returnVal, dict):
+            raise ValueError('Method GenomeSetToFASTA return value ' +
+                             'returnVal is not type dict as required.')
+        # return the results
+        return [returnVal]
+
+    def FeatureSetToFASTA(self, ctx, params):
+        """
+        :param params: instance of type "FeatureSetToFASTA_Params"
+           (FeatureSetToFASTA() Params) -> structure: parameter
+           "featureSet_ref" of type "data_obj_ref", parameter "file" of type
+           "path_type", parameter "dir" of type "path_type", parameter
+           "console" of list of type "log_msg", parameter "invalid_msgs" of
+           list of type "log_msg", parameter "residue_type" of String,
+           parameter "feature_type" of String, parameter "record_id_pattern"
+           of type "pattern_type", parameter "record_desc_pattern" of type
+           "pattern_type", parameter "case" of String, parameter "linewrap"
+           of Long
+        :returns: instance of type "FeatureSetToFASTA_Output"
+           (FeatureSetToFASTA() Output) -> structure: parameter
+           "fasta_file_path" of type "path_type", parameter "feature_ids" of
+           list of String
+        """
+        # ctx is the context object
+        # return variables are: returnVal
+        #BEGIN FeatureSetToFASTA
+
+        # init and clean up params
+        genome_ref = params['featureset_ref']
+        file = params['file']
+        dir = params['dir']
+        console = params['console']
+        invalid_msgs = params['invalid_msgs']
+        residue_type = params['residue_type']
+        feature_type = params['feature_type']
+        record_id_pattern = params['record_id_pattern']
+        record_desc_pattern = params['record_desc_pattern']
+        case = params['case']
+        linewrap = params['linewrap']
+
+        # Defaults
+        if console == None:
+            console = []
+        if invalid_msgs == None:
+            invalid_msgs = []
+        if residue_type == None:
+            residue_type = 'nuc'
+        if feature_type == None:
+            feature_type = 'ALL';
+        if record_id_pattern == None:
+            record_id_pattern = '%%feature_id%%'
+        if record_desc_pattern == None:
+            record_desc_pattern = '[%%genome_id%%]'
+        if case == None:
+            case = 'UPPER'
+        if linewrap == None:
+            linewrap = 0
+
+        # init and simplify
+        feature_ids = []
+        feature_sequence_found = False
+        residue_type = residue_type[0:3].lower()
+        feature_type = feature_type.upper()
+        case = case[0:1].upper()
+        
+        def record_header_sub(str, feature_id, genome_id):
+            str = str.replace('%%feature_id%%', feature_id)
+            str = str.replace('%%genome_id%%', genome_id)
+            return str
+
+        if file == None:
+            file = 'runfile.fasta'
+        if dir == None:
+            dir = self.scratch
+        fasta_file_path = os.path.join(dir, file)
+        self.log(console, 'KB SDK data2file Genome2Fasta: writing fasta file: '+fasta_file_path)
+
+        # get featureSet object
+        try:
+            ws = workspaceService(self.workspaceURL, token=ctx['token'])
+            featureSet_object = ws.get_objects([{'ref':featureSet_ref}])[0]['data']
+        except Exception as e:
+            raise ValueError('Unable to fetch featureSet object from workspace: ' + str(e))
+            #to get the full stack trace: traceback.format_exc()
+        featureSet_features = featureSet_object['elements']
+        genome2features = {}
+        for fId in featureSet_features.keys():
+            genome_ref = features[fId][0]
+            if genome_ref not in genome2features.keys():
+                genome2features[genome_ref] = []
+            genome2features[genome_ref].append(fId)
+
+        # FIX: should I write recs as we go to reduce memory footprint, or is a single buffer write much faster?  Check later.
+        #
+        #records = []
+        #self.log(console,"FASTA_FILE_PATH'"+fasta_file_path+"'\n")  # DEBUG
+
+        with open(fasta_file_path, 'w', 0) as fasta_file_handle:
+
+            for genome_ref in genome2features.keys():
+
+                GA = GenomeAnnotationAPI ({"workspace_service_url": self.workspaceURL,
+                                           "shock_service_url": self.shockURL
+                                           },
+                                          token=os.environ["KB_AUTH_TOKEN"],
+                                          ref=genome_ref
+                                          )
+                features = GA.get_features(feature_id_list=genome2features[genome_ref])
+                if residue_type == 'pro' or residue_type == 'pep':
+                    proteins = GA.get_proteins(feature_id_list=genome2features[genome_ref])
+
+#                for feature in genome_object['features']:
+                for fid in genome2features[genome_ref]:
+                    feature = features[fid]
+                
+                    if feature_type == 'ALL' or feature_type == feature['feature_type']:
+
+                        # protein recs
+                        if residue_type == 'pro' or residue_type == 'pep':
+                            if feature['feature_type'] != 'CDS':
+                                continue
+                            elif fid not in proteins or 'protein_amino_acid_sequence' not in proteins[fid] or proteins[fid]['protein_amino_acid_sequence'] == None:
+                                self.log(invalid_msgs, "bad CDS feature "+fid+": No protein_translation field.")
+                            else:
+                                feature_sequence_found = True
+                                rec_id = record_id_pattern
+                                rec_desc = record_desc_pattern
+                                rec_id = record_header_sub(rec_id, fid, genome_ref)
+                                rec_desc = record_header_sub(rec_desc, fid, genome_ref)
+                                seq = proteins[fid]['protein_amino_acid_sequence']
+                                seq = seq.upper() if case == 'U' else seq.lower()
+
+                                rec_rows = []
+                                rec_rows.append('>'+rec_id+' '+rec_desc)
+                                if linewrap == None or linewrap == 0:
+                                    rec_rows.append(seq)
+                                else:
+                                    seq_len = len(seq)
+                                    base_rows_cnt = seq_len//linewrap
+                                    for i in range(base_rows_cnt):
+                                        rec_rows.append(seq[i*linewrap:(i+1)*linewrap])
+                                    rec_rows.append(seq[base_rows_cnt*linewrap:])
+                                rec = "\n".join(rec_rows)+"\n"
+
+                                #record = SeqRecord(Seq(seq), id=rec_id, description=rec_desc)
+                                #records.append(record)
+                                feature_ids.append(fid)
+                                fasta_file_handle.write(rec)
+
+                        # nuc recs
+                        else:
+                            if 'dna_sequence' not in feature or feature['dna_sequence'] == None:
+                                self.log(invalid_msgs, "bad feature "+feature['id']+": No dna_sequence field.")
+                            else:
+                                feature_sequence_found = True
+                                rec_id = record_id_pattern
+                                rec_desc = record_desc_pattern
+                                rec_id = record_header_sub(rec_id, fid, genome_ref)
+                                rec_desc = record_header_sub(rec_desc, fid, genome_ref)
+                                seq = feature['dna_sequence']
+                                seq = seq.upper() if case == 'U' else seq.lower()
+
+                                rec_rows = []
+                                rec_rows.append('>'+rec_id+' '+rec_desc)
+                                if linewrap == None or linewrap == 0:
+                                    rec_rows.append(seq)
+                                else:
+                                    seq_len = len(seq)
+                                    base_rows_cnt = seq_len//linewrap
+                                    for i in range(base_rows_cnt):
+                                        rec_rows.append(seq[i*linewrap:(i+1)*linewrap])
+                                    rec_rows.append(seq[base_rows_cnt*linewrap:])
+                                rec = "\n".join(rec_rows)+"\n"
+
+                                #record = SeqRecord(Seq(seq), id=rec_id, description=rec_desc)
+                                #records.append(record)
+                                feature_ids.append(fid)
+                                fasta_file_handle.write(rec)
+
+        # report if no features found
+        if not feature_sequence_found:
+            self.log(invalid_msgs, "No sequence records found in Genome "+genome_object['id']+" of residue_type: "+residue_type+", feature_type: "+feature_type)
+        #else:
+        #    SeqIO.write(records, fasta_file_path, "fasta")
+
+
+        # build returnVal
+        #
+        returnVal = dict()
+        returnVal['fasta_file_path'] = fasta_file_path
+        returnVal['feature_ids'] = feature_ids
+        #END FeatureSetToFASTA
+
+        # At some point might do deeper type checking...
+        if not isinstance(returnVal, dict):
+            raise ValueError('Method FeatureSetToFASTA return value ' +
                              'returnVal is not type dict as required.')
         # return the results
         return [returnVal]

@@ -271,7 +271,7 @@ GenomeAnnotationToFASTA_Output is a reference to a hash where the following keys
 
 =item Description
 
-
+this should not be used, but is temporarily being retained to compare speed
 
 =back
 
@@ -443,6 +443,246 @@ GenomeAnnotationToFASTA_Output is a reference to a hash where the following keys
     }
 }
  
+
+
+=head2 GenomeSetToFASTA
+
+  $return = $obj->GenomeSetToFASTA($params)
+
+=over 4
+
+=item Parameter and return types
+
+=begin html
+
+<pre>
+$params is a KBaseDataObjectToFileUtils.GenomeSetToFASTA_Params
+$return is a KBaseDataObjectToFileUtils.GenomeSetToFASTA_Output
+GenomeSetToFASTA_Params is a reference to a hash where the following keys are defined:
+	genomeSet_ref has a value which is a KBaseDataObjectToFileUtils.data_obj_ref
+	file has a value which is a KBaseDataObjectToFileUtils.path_type
+	dir has a value which is a KBaseDataObjectToFileUtils.path_type
+	console has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+	invalid_msgs has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+	residue_type has a value which is a string
+	feature_type has a value which is a string
+	record_id_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+	record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+	case has a value which is a string
+	linewrap has a value which is an int
+data_obj_ref is a string
+path_type is a string
+log_msg is a string
+pattern_type is a string
+GenomeSetToFASTA_Output is a reference to a hash where the following keys are defined:
+	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
+	feature_ids has a value which is a reference to a list where each element is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+$params is a KBaseDataObjectToFileUtils.GenomeSetToFASTA_Params
+$return is a KBaseDataObjectToFileUtils.GenomeSetToFASTA_Output
+GenomeSetToFASTA_Params is a reference to a hash where the following keys are defined:
+	genomeSet_ref has a value which is a KBaseDataObjectToFileUtils.data_obj_ref
+	file has a value which is a KBaseDataObjectToFileUtils.path_type
+	dir has a value which is a KBaseDataObjectToFileUtils.path_type
+	console has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+	invalid_msgs has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+	residue_type has a value which is a string
+	feature_type has a value which is a string
+	record_id_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+	record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+	case has a value which is a string
+	linewrap has a value which is an int
+data_obj_ref is a string
+path_type is a string
+log_msg is a string
+pattern_type is a string
+GenomeSetToFASTA_Output is a reference to a hash where the following keys are defined:
+	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
+	feature_ids has a value which is a reference to a list where each element is a string
+
+
+=end text
+
+=item Description
+
+
+
+=back
+
+=cut
+
+ sub GenomeSetToFASTA
+{
+    my($self, @args) = @_;
+
+# Authentication: required
+
+    if ((my $n = @args) != 1)
+    {
+	Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
+							       "Invalid argument count for function GenomeSetToFASTA (received $n, expecting 1)");
+    }
+    {
+	my($params) = @args;
+
+	my @_bad_arguments;
+        (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument 1 \"params\" (value was \"$params\")");
+        if (@_bad_arguments) {
+	    my $msg = "Invalid arguments passed to GenomeSetToFASTA:\n" . join("", map { "\t$_\n" } @_bad_arguments);
+	    Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
+								   method_name => 'GenomeSetToFASTA');
+	}
+    }
+
+    my $url = $self->{url};
+    my $result = $self->{client}->call($url, $self->{headers}, {
+	    method => "KBaseDataObjectToFileUtils.GenomeSetToFASTA",
+	    params => \@args,
+    });
+    if ($result) {
+	if ($result->is_error) {
+	    Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
+					       code => $result->content->{error}->{code},
+					       method_name => 'GenomeSetToFASTA',
+					       data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
+					      );
+	} else {
+	    return wantarray ? @{$result->result} : $result->result->[0];
+	}
+    } else {
+        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method GenomeSetToFASTA",
+					    status_line => $self->{client}->status_line,
+					    method_name => 'GenomeSetToFASTA',
+				       );
+    }
+}
+ 
+
+
+=head2 FeatureSetToFASTA
+
+  $return = $obj->FeatureSetToFASTA($params)
+
+=over 4
+
+=item Parameter and return types
+
+=begin html
+
+<pre>
+$params is a KBaseDataObjectToFileUtils.FeatureSetToFASTA_Params
+$return is a KBaseDataObjectToFileUtils.FeatureSetToFASTA_Output
+FeatureSetToFASTA_Params is a reference to a hash where the following keys are defined:
+	featureSet_ref has a value which is a KBaseDataObjectToFileUtils.data_obj_ref
+	file has a value which is a KBaseDataObjectToFileUtils.path_type
+	dir has a value which is a KBaseDataObjectToFileUtils.path_type
+	console has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+	invalid_msgs has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+	residue_type has a value which is a string
+	feature_type has a value which is a string
+	record_id_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+	record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+	case has a value which is a string
+	linewrap has a value which is an int
+data_obj_ref is a string
+path_type is a string
+log_msg is a string
+pattern_type is a string
+FeatureSetToFASTA_Output is a reference to a hash where the following keys are defined:
+	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
+	feature_ids has a value which is a reference to a list where each element is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+$params is a KBaseDataObjectToFileUtils.FeatureSetToFASTA_Params
+$return is a KBaseDataObjectToFileUtils.FeatureSetToFASTA_Output
+FeatureSetToFASTA_Params is a reference to a hash where the following keys are defined:
+	featureSet_ref has a value which is a KBaseDataObjectToFileUtils.data_obj_ref
+	file has a value which is a KBaseDataObjectToFileUtils.path_type
+	dir has a value which is a KBaseDataObjectToFileUtils.path_type
+	console has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+	invalid_msgs has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+	residue_type has a value which is a string
+	feature_type has a value which is a string
+	record_id_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+	record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+	case has a value which is a string
+	linewrap has a value which is an int
+data_obj_ref is a string
+path_type is a string
+log_msg is a string
+pattern_type is a string
+FeatureSetToFASTA_Output is a reference to a hash where the following keys are defined:
+	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
+	feature_ids has a value which is a reference to a list where each element is a string
+
+
+=end text
+
+=item Description
+
+
+
+=back
+
+=cut
+
+ sub FeatureSetToFASTA
+{
+    my($self, @args) = @_;
+
+# Authentication: required
+
+    if ((my $n = @args) != 1)
+    {
+	Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
+							       "Invalid argument count for function FeatureSetToFASTA (received $n, expecting 1)");
+    }
+    {
+	my($params) = @args;
+
+	my @_bad_arguments;
+        (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument 1 \"params\" (value was \"$params\")");
+        if (@_bad_arguments) {
+	    my $msg = "Invalid arguments passed to FeatureSetToFASTA:\n" . join("", map { "\t$_\n" } @_bad_arguments);
+	    Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
+								   method_name => 'FeatureSetToFASTA');
+	}
+    }
+
+    my $url = $self->{url};
+    my $result = $self->{client}->call($url, $self->{headers}, {
+	    method => "KBaseDataObjectToFileUtils.FeatureSetToFASTA",
+	    params => \@args,
+    });
+    if ($result) {
+	if ($result->is_error) {
+	    Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
+					       code => $result->content->{error}->{code},
+					       method_name => 'FeatureSetToFASTA',
+					       data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
+					      );
+	} else {
+	    return wantarray ? @{$result->result} : $result->result->[0];
+	}
+    } else {
+        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method FeatureSetToFASTA",
+					    status_line => $self->{client}->status_line,
+					    method_name => 'FeatureSetToFASTA',
+				       );
+    }
+}
+ 
   
 sub status
 {
@@ -486,16 +726,16 @@ sub version {
             Bio::KBase::Exceptions::JSONRPC->throw(
                 error => $result->error_message,
                 code => $result->content->{code},
-                method_name => 'GenomeAnnotationToFASTA',
+                method_name => 'FeatureSetToFASTA',
             );
         } else {
             return wantarray ? @{$result->result} : $result->result->[0];
         }
     } else {
         Bio::KBase::Exceptions::HTTP->throw(
-            error => "Error invoking method GenomeAnnotationToFASTA",
+            error => "Error invoking method FeatureSetToFASTA",
             status_line => $self->{client}->status_line,
-            method_name => 'GenomeAnnotationToFASTA',
+            method_name => 'FeatureSetToFASTA',
         );
     }
 }
@@ -861,6 +1101,190 @@ linewrap has a value which is an int
 =item Description
 
 GenomeAnnotationToFASTA() Output
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
+feature_ids has a value which is a reference to a list where each element is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
+feature_ids has a value which is a reference to a list where each element is a string
+
+
+=end text
+
+=back
+
+
+
+=head2 GenomeSetToFASTA_Params
+
+=over 4
+
+
+
+=item Description
+
+GenomeSetToFASTA() Params
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+genomeSet_ref has a value which is a KBaseDataObjectToFileUtils.data_obj_ref
+file has a value which is a KBaseDataObjectToFileUtils.path_type
+dir has a value which is a KBaseDataObjectToFileUtils.path_type
+console has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+invalid_msgs has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+residue_type has a value which is a string
+feature_type has a value which is a string
+record_id_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+case has a value which is a string
+linewrap has a value which is an int
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+genomeSet_ref has a value which is a KBaseDataObjectToFileUtils.data_obj_ref
+file has a value which is a KBaseDataObjectToFileUtils.path_type
+dir has a value which is a KBaseDataObjectToFileUtils.path_type
+console has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+invalid_msgs has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+residue_type has a value which is a string
+feature_type has a value which is a string
+record_id_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+case has a value which is a string
+linewrap has a value which is an int
+
+
+=end text
+
+=back
+
+
+
+=head2 GenomeSetToFASTA_Output
+
+=over 4
+
+
+
+=item Description
+
+GenomeSetToFASTA() Output
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
+feature_ids has a value which is a reference to a list where each element is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
+feature_ids has a value which is a reference to a list where each element is a string
+
+
+=end text
+
+=back
+
+
+
+=head2 FeatureSetToFASTA_Params
+
+=over 4
+
+
+
+=item Description
+
+FeatureSetToFASTA() Params
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+featureSet_ref has a value which is a KBaseDataObjectToFileUtils.data_obj_ref
+file has a value which is a KBaseDataObjectToFileUtils.path_type
+dir has a value which is a KBaseDataObjectToFileUtils.path_type
+console has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+invalid_msgs has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+residue_type has a value which is a string
+feature_type has a value which is a string
+record_id_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+case has a value which is a string
+linewrap has a value which is an int
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+featureSet_ref has a value which is a KBaseDataObjectToFileUtils.data_obj_ref
+file has a value which is a KBaseDataObjectToFileUtils.path_type
+dir has a value which is a KBaseDataObjectToFileUtils.path_type
+console has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+invalid_msgs has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+residue_type has a value which is a string
+feature_type has a value which is a string
+record_id_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+case has a value which is a string
+linewrap has a value which is an int
+
+
+=end text
+
+=back
+
+
+
+=head2 FeatureSetToFASTA_Output
+
+=over 4
+
+
+
+=item Description
+
+FeatureSetToFASTA() Output
 
 
 =item Definition

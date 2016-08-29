@@ -340,6 +340,14 @@ class Application(object):
                              name='KBaseDataObjectToFileUtils.GenomeAnnotationToFASTA',
                              types=[dict])
         self.method_authentication['KBaseDataObjectToFileUtils.GenomeAnnotationToFASTA'] = 'required'
+        self.rpc_service.add(impl_KBaseDataObjectToFileUtils.GenomeSetToFASTA,
+                             name='KBaseDataObjectToFileUtils.GenomeSetToFASTA',
+                             types=[dict])
+        self.method_authentication['KBaseDataObjectToFileUtils.GenomeSetToFASTA'] = 'required'
+        self.rpc_service.add(impl_KBaseDataObjectToFileUtils.FeatureSetToFASTA,
+                             name='KBaseDataObjectToFileUtils.FeatureSetToFASTA',
+                             types=[dict])
+        self.method_authentication['KBaseDataObjectToFileUtils.FeatureSetToFASTA'] = 'required'
         self.rpc_service.add(impl_KBaseDataObjectToFileUtils.status,
                              name='KBaseDataObjectToFileUtils.status',
                              types=[dict])
