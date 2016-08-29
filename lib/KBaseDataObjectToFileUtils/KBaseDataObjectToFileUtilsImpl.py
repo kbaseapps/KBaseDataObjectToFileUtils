@@ -51,7 +51,7 @@ class KBaseDataObjectToFileUtils:
     #########################################
     VERSION = "0.0.1"
     GIT_URL = "https://github.com/kbaseapps/KBaseDataObjectToFileUtils.git"
-    GIT_COMMIT_HASH = "bb3aa2b2abf7b84a420846a851af08abc843774d"
+    GIT_COMMIT_HASH = "4b6f5b53fc07f0d44f1d659ccfb8cd45e5832119"
     
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -213,7 +213,7 @@ class KBaseDataObjectToFileUtils:
         if dir == None:
             dir = self.scratch
         fasta_file_path = os.path.join(dir, file)
-        self.log(console, 'KB SDK data2file Genome2Fasta: writing fasta file: '+fasta_file_path)
+        self.log(console, 'KB SDK data2file Genome2FASTA(): writing fasta file: '+fasta_file_path)
 
         # get genome object
         try:
@@ -387,7 +387,7 @@ class KBaseDataObjectToFileUtils:
         if dir == None:
             dir = self.scratch
         fasta_file_path = os.path.join(dir, file)
-        self.log(console, 'KB SDK data2file Genome2Fasta: writing fasta file: '+fasta_file_path)
+        self.log(console, 'KB SDK data2file GenomeAnnotationToFASTA(): writing fasta file: '+fasta_file_path)
 
         # get genome object
 #        try:
@@ -614,7 +614,7 @@ class KBaseDataObjectToFileUtils:
 
             if i == 0 or not merge_fasta_files:
                 fasta_file_handle = open(fasta_file_path, 'w', 0)
-                self.log(console, 'KB SDK data2file Genome2Fasta: writing fasta file: '+fasta_file_path)
+                self.log(console, 'KB SDK data2file GenomeSet2FASTA(): writing fasta file: '+fasta_file_path)
 
             GA = GenomeAnnotationAPI ({"workspace_service_url": self.workspaceURL,
                                        "shock_service_url": self.shockURL
@@ -789,7 +789,7 @@ class KBaseDataObjectToFileUtils:
         if dir == None:
             dir = self.scratch
         fasta_file_path = os.path.join(dir, file)
-        self.log(console, 'KB SDK data2file Genome2Fasta: writing fasta file: '+fasta_file_path)
+        self.log(console, 'KB SDK data2file FeatureSetToFASTA(): writing fasta file: '+fasta_file_path)
 
         # get featureSet object
         try:
