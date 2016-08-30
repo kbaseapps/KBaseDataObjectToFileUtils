@@ -611,7 +611,9 @@ class KBaseDataObjectToFileUtils:
                 this_file.replace('/', '-')
             fasta_file_path = os.path.join(dir, this_file)
             #self.log(console,"FASTA_FILE_PATH'"+fasta_file_path+"'\n")  # DEBUG
-
+            # DEBUG
+            self.log(console, "ADDING GENOME: "+i+" of "+str(len(genome_names)-1)
+            
             if i == 0 or not merge_fasta_files:
                 fasta_file_handle = open(fasta_file_path, 'w', 0)
                 self.log(console, 'KB SDK data2file GenomeSet2FASTA(): writing fasta file: '+fasta_file_path)
@@ -694,6 +696,7 @@ class KBaseDataObjectToFileUtils:
                             feature_ids_by_genome_id[genome_name].append(fid)
                             fasta_file_handle.write(rec)
 
+            self.log(console,"HELLO THERE MY PRETTY KITTY")  # DEBUG
             if i == len(genome_names)-1 or not merge_fasta_files:
                 self.log(console,"CLOSING FILE: '"+fasta_file_path+"'")  # DEBUG
                 fasta_file_handle.close()
