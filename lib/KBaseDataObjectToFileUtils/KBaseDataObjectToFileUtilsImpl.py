@@ -364,7 +364,7 @@ class KBaseDataObjectToFileUtils:
         if record_id_pattern == None:
             record_id_pattern = '%%feature_id%%'
         if record_desc_pattern == None:
-            record_desc_pattern = '[%%genome_id%%]'
+            record_desc_pattern = '[%%genome_ref%%]'
         if case == None:
             case = 'UPPER'
         if linewrap == None:
@@ -377,9 +377,10 @@ class KBaseDataObjectToFileUtils:
         feature_type = feature_type.upper()
         case = case[0:1].upper()
         
-        def record_header_sub(str, feature_id, genome_id):
+        def record_header_sub(str, feature_id, genome_id, genome_ref):
             str = str.replace('%%feature_id%%', feature_id)
             str = str.replace('%%genome_id%%', genome_id)
+            str = str.replace('%%genome_ref%%', genome_ref)
             return str
 
         if file == None:
@@ -431,8 +432,10 @@ class KBaseDataObjectToFileUtils:
                             feature_sequence_found = True
                             rec_id = record_id_pattern
                             rec_desc = record_desc_pattern
-                            rec_id = record_header_sub(rec_id, fid, genome_ref)
-                            rec_desc = record_header_sub(rec_desc, fid, genome_ref)
+                            #rec_id = record_header_sub(rec_id, fid, genome_id, genome_ref)
+                            #rec_desc = record_header_sub(rec_desc, fid, genome_id, genome_ref)
+                            rec_id = record_header_sub(rec_id, fid, genome_ref, genome_ref)
+                            rec_desc = record_header_sub(rec_desc, fid, genome_ref, genome_ref)
                             seq = proteins[fid]['protein_amino_acid_sequence']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
@@ -461,8 +464,10 @@ class KBaseDataObjectToFileUtils:
                             feature_sequence_found = True
                             rec_id = record_id_pattern
                             rec_desc = record_desc_pattern
-                            rec_id = record_header_sub(rec_id, fid, genome_ref)
-                            rec_desc = record_header_sub(rec_desc, fid, genome_ref)
+                            #rec_id = record_header_sub(rec_id, fid, genome_id, genome_ref)
+                            #rec_desc = record_header_sub(rec_desc, fid, genome_id, genome_ref)
+                            rec_id = record_header_sub(rec_id, fid, genome_ref, genome_ref)
+                            rec_desc = record_header_sub(rec_desc, fid, genome_ref, genome_ref)
                             seq = feature['dna_sequence']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
@@ -550,9 +555,9 @@ class KBaseDataObjectToFileUtils:
         if feature_type == None:
             feature_type = 'ALL';
         if record_id_pattern == None:
-            record_id_pattern = 'g:%%genome_id%%.f:%%feature_id%%'
+            record_id_pattern = '%%genome_ref%%.f:%%feature_id%%'
         if record_desc_pattern == None:
-            record_desc_pattern = '[%%genome_id%%]'
+            record_desc_pattern = '[%%genome_ref%%]'
         if case == None:
             case = 'UPPER'
         if linewrap == None:
@@ -570,9 +575,10 @@ class KBaseDataObjectToFileUtils:
         feature_type = feature_type.upper()
         case = case[0:1].upper()
         
-        def record_header_sub(str, feature_id, genome_id):
+        def record_header_sub(str, feature_id, genome_id, genome_ref):
             str = str.replace('%%feature_id%%', feature_id)
             str = str.replace('%%genome_id%%', genome_id)
+            str = str.replace('%%genome_ref%%', genome_ref)
             return str
 
         if file == None:
@@ -644,8 +650,8 @@ class KBaseDataObjectToFileUtils:
                             feature_sequence_found = True
                             rec_id = record_id_pattern
                             rec_desc = record_desc_pattern
-                            rec_id = record_header_sub(rec_id, fid, genome_id)
-                            rec_desc = record_header_sub(rec_desc, fid, genome_id)
+                            rec_id = record_header_sub(rec_id, fid, genome_id, genome_ref)
+                            rec_desc = record_header_sub(rec_desc, fid, genome_id, genome_ref)
                             seq = proteins[fid]['protein_amino_acid_sequence']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
@@ -674,8 +680,8 @@ class KBaseDataObjectToFileUtils:
                             feature_sequence_found = True
                             rec_id = record_id_pattern
                             rec_desc = record_desc_pattern
-                            rec_id = record_header_sub(rec_id, fid, genome_id)
-                            rec_desc = record_header_sub(rec_desc, fid, genome_id)
+                            rec_id = record_header_sub(rec_id, fid, genome_id, genome_ref)
+                            rec_desc = record_header_sub(rec_desc, fid, genome_id, genome_ref)
                             seq = feature['dna_sequence']
                             seq = seq.upper() if case == 'U' else seq.lower()
                             
