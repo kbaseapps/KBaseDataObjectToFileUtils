@@ -549,7 +549,7 @@ class KBaseDataObjectToFileUtils:
         if feature_type == None:
             feature_type = 'ALL';
         if record_id_pattern == None:
-            record_id_pattern = '%%genome_ref%%.f:%%feature_id%%'
+            record_id_pattern = 'g:%%genome_ref%%.f:%%feature_id%%'
         if record_desc_pattern == None:
             record_desc_pattern = '[%%genome_ref%%]'
         if case == None:
@@ -642,8 +642,8 @@ class KBaseDataObjectToFileUtils:
                             self.log(invalid_msgs, "bad CDS feature "+fid+": No protein_translation field.")
                         else:
                             feature_sequence_found = True
-                            rec_id = record_header_sub(rec_id_pattern, fid, genome_id, genome_ref)
-                            rec_desc = record_header_sub(rec_desc_pattern, fid, genome_id, genome_ref)
+                            rec_id = record_header_sub(record_id_pattern, fid, genome_id, genome_ref)
+                            rec_desc = record_header_sub(record_desc_pattern, fid, genome_id, genome_ref)
                             seq = proteins[fid]['protein_amino_acid_sequence']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
@@ -670,8 +670,8 @@ class KBaseDataObjectToFileUtils:
                             self.log(invalid_msgs, "bad feature "+feature['id']+": No dna_sequence field.")
                         else:
                             feature_sequence_found = True
-                            rec_id = record_header_sub(rec_id_pattern, fid, genome_id, genome_ref)
-                            rec_desc = record_header_sub(rec_desc_pattern, fid, genome_id, genome_ref)
+                            rec_id = record_header_sub(record_id_pattern, fid, genome_id, genome_ref)
+                            rec_desc = record_header_sub(record_desc_pattern, fid, genome_id, genome_ref)
                             seq = feature['dna_sequence']
                             seq = seq.upper() if case == 'U' else seq.lower()
                             
