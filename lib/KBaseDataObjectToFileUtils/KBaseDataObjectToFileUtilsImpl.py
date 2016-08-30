@@ -594,8 +594,8 @@ class KBaseDataObjectToFileUtils:
             genome_id = genome_ids[genome_i]
             feature_ids_by_genome_id[genome_id] = []
 
-            if 'ref' not in genomeSet_object['elements'][genome_name] or \
-                    genomeSet_object['elements'][genome_name]['ref'] == None:
+            if 'ref' not in genomeSet_object['elements'][genome_id] or \
+                    genomeSet_object['elements'][genome_id]['ref'] == None:
                 raise ValueError('GenomeSetToFASTA() cannot handle GenomeSet objects with embedded genome.  Must be a set of genome references')
                 #to get the full stack trace: traceback.format_exc()       
             else:
