@@ -243,10 +243,8 @@ class KBaseDataObjectToFileUtils:
                             self.log(invalid_msgs, "bad CDS feature "+feature['id']+": No protein_translation field.")
                         else:
                             feature_sequence_found = True
-                            rec_id = record_id_pattern
-                            rec_desc = record_desc_pattern
-                            rec_id = record_header_sub(rec_id, feature['id'], genome_object['id'])
-                            rec_desc = record_header_sub(rec_desc, feature['id'], genome_object['id'])
+                            rec_id = record_header_sub(record_id_pattern, feature['id'], genome_object['id'])
+                            rec_desc = record_header_sub(record_desc_pattern, feature['id'], genome_object['id'])
                             seq = feature['protein_translation']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
@@ -273,10 +271,8 @@ class KBaseDataObjectToFileUtils:
                             self.log(invalid_msgs, "bad feature "+feature['id']+": No dna_sequence field.")
                         else:
                             feature_sequence_found = True
-                            rec_id = record_id_pattern
-                            rec_desc = record_desc_pattern
-                            rec_id = record_header_sub(rec_id, feature['id'], genome_object['id'])
-                            rec_desc = record_header_sub(rec_desc, feature['id'], genome_object['id'])
+                            rec_id = record_header_sub(record_id_pattern, feature['id'], genome_object['id'])
+                            rec_desc = record_header_sub(record_desc_pattern, feature['id'], genome_object['id'])
                             seq = feature['dna_sequence']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
@@ -430,12 +426,11 @@ class KBaseDataObjectToFileUtils:
                             self.log(invalid_msgs, "bad CDS feature "+fid+": No protein_translation field.")
                         else:
                             feature_sequence_found = True
-                            rec_id = record_id_pattern
-                            rec_desc = record_desc_pattern
-                            #rec_id = record_header_sub(rec_id, fid, genome_id, genome_ref)
-                            #rec_desc = record_header_sub(rec_desc, fid, genome_id, genome_ref)
-                            rec_id = record_header_sub(rec_id, fid, genome_ref, genome_ref)
-                            rec_desc = record_header_sub(rec_desc, fid, genome_ref, genome_ref)
+                            # can't get genome_id from GenomeAnnotationAPI
+                            #rec_id = record_header_sub(record_id_pattern, fid, genome_id, genome_ref)
+                            #rec_desc = record_header_sub(record_desc_pattern, fid, genome_id, genome_ref)
+                            rec_id = record_header_sub(record_id_pattern, fid, genome_ref, genome_ref)
+                            rec_desc = record_header_sub(record_desc_pattern, fid, genome_ref, genome_ref)
                             seq = proteins[fid]['protein_amino_acid_sequence']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
@@ -462,12 +457,11 @@ class KBaseDataObjectToFileUtils:
                             self.log(invalid_msgs, "bad feature "+feature['id']+": No dna_sequence field.")
                         else:
                             feature_sequence_found = True
-                            rec_id = record_id_pattern
-                            rec_desc = record_desc_pattern
-                            #rec_id = record_header_sub(rec_id, fid, genome_id, genome_ref)
-                            #rec_desc = record_header_sub(rec_desc, fid, genome_id, genome_ref)
-                            rec_id = record_header_sub(rec_id, fid, genome_ref, genome_ref)
-                            rec_desc = record_header_sub(rec_desc, fid, genome_ref, genome_ref)
+                            # can't get genome_id from GenomeAnnotationAPI
+                            #rec_id = record_header_sub(record_id_pattern, fid, genome_id, genome_ref)
+                            #rec_desc = record_header_sub(record_desc_pattern, fid, genome_id, genome_ref)
+                            rec_id = record_header_sub(record_id_pattern, fid, genome_ref, genome_ref)
+                            rec_desc = record_header_sub(record_desc_pattern, fid, genome_ref, genome_ref)
                             seq = feature['dna_sequence']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
@@ -648,10 +642,8 @@ class KBaseDataObjectToFileUtils:
                             self.log(invalid_msgs, "bad CDS feature "+fid+": No protein_translation field.")
                         else:
                             feature_sequence_found = True
-                            rec_id = record_id_pattern
-                            rec_desc = record_desc_pattern
-                            rec_id = record_header_sub(rec_id, fid, genome_id, genome_ref)
-                            rec_desc = record_header_sub(rec_desc, fid, genome_id, genome_ref)
+                            rec_id = record_header_sub(rec_id_pattern, fid, genome_id, genome_ref)
+                            rec_desc = record_header_sub(rec_desc_pattern, fid, genome_id, genome_ref)
                             seq = proteins[fid]['protein_amino_acid_sequence']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
@@ -678,10 +670,8 @@ class KBaseDataObjectToFileUtils:
                             self.log(invalid_msgs, "bad feature "+feature['id']+": No dna_sequence field.")
                         else:
                             feature_sequence_found = True
-                            rec_id = record_id_pattern
-                            rec_desc = record_desc_pattern
-                            rec_id = record_header_sub(rec_id, fid, genome_id, genome_ref)
-                            rec_desc = record_header_sub(rec_desc, fid, genome_id, genome_ref)
+                            rec_id = record_header_sub(rec_id_pattern, fid, genome_id, genome_ref)
+                            rec_desc = record_header_sub(rec_desc_pattern, fid, genome_id, genome_ref)
                             seq = feature['dna_sequence']
                             seq = seq.upper() if case == 'U' else seq.lower()
                             
