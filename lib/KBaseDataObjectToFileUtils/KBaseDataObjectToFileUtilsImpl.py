@@ -696,9 +696,8 @@ class KBaseDataObjectToFileUtils:
                             feature_ids_by_genome_id[genome_name].append(fid)
                             fasta_file_handle.write(rec)
 
-            self.log(console,"HELLO THERE MY PRETTY KITTY")  # DEBUG 
-            #if i == (len(genome_names)-1) or not merge_fasta_files:
-            if i == len(genome_names)-1:
+            self.log(console,"HELLO THERE MY PRETTY KITTY "+str(i)+" "+str((len(genome_names)-1)))  # DEBUG 
+            if i == (len(genome_names)-1) or not merge_fasta_files:
                 self.log(console,"CLOSING FILE: '"+fasta_file_path+"'")  # DEBUG
                 fasta_file_handle.close()
                 fasta_file_path_list.append(fasta_file_path)
