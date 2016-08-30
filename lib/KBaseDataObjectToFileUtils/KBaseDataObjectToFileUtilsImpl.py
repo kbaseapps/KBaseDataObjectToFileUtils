@@ -550,7 +550,7 @@ class KBaseDataObjectToFileUtils:
         if feature_type == None:
             feature_type = 'ALL';
         if record_id_pattern == None:
-            record_id_pattern = '%%feature_id%%'
+            record_id_pattern = 'g:%%genome_id%%.f:%%feature_id%%'
         if record_desc_pattern == None:
             record_desc_pattern = '[%%genome_id%%]'
         if case == None:
@@ -696,8 +696,9 @@ class KBaseDataObjectToFileUtils:
                             feature_ids_by_genome_id[genome_name].append(fid)
                             fasta_file_handle.write(rec)
 
-            self.log(console,"HELLO THERE MY PRETTY KITTY")  # DEBUG
-            if i == (len(genome_names)-1) or not merge_fasta_files:
+            self.log(console,"HELLO THERE MY PRETTY KITTY")  # DEBUG 
+            #if i == (len(genome_names)-1) or not merge_fasta_files:
+            if i == len(genome_names)-1:
                 self.log(console,"CLOSING FILE: '"+fasta_file_path+"'")  # DEBUG
                 fasta_file_handle.close()
                 fasta_file_path_list.append(fasta_file_path)
