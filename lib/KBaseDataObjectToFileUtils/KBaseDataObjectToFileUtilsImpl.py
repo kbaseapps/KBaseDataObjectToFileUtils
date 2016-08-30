@@ -629,6 +629,7 @@ class KBaseDataObjectToFileUtils:
                 proteins = GA.get_proteins()
 
 #            for feature in genome_object['features']:
+            cnt = 0  # DEBUG
             for fid in features.keys():
                 feature = features[fid]
                 
@@ -644,6 +645,11 @@ class KBaseDataObjectToFileUtils:
                             feature_sequence_found = True
                             rec_id = record_header_sub(record_id_pattern, fid, genome_id, genome_ref)
                             rec_desc = record_header_sub(record_desc_pattern, fid, genome_id, genome_ref)
+                            # DEBUG
+                            ++cnt
+                            if (cnt % 1000) == 0:
+                                self.log(console,"HEADER: >$rec_id $rec_desc")
+
                             seq = proteins[fid]['protein_amino_acid_sequence']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
