@@ -589,34 +589,34 @@ class KBaseDataObjectToFileUtils:
             #to get the full stack trace: traceback.format_exc()
 
         # iterate through genomeSet members
-        genome_names = genomeSet_object['elements'].keys()
-        for genome_i in range(len(genome_names)):
-            genome_name = genome_names[genome_i]
-            feature_ids_by_genome_id[genome_name] = []
+        genome_ids = genomeSet_object['elements'].keys()
+        for genome_i in range(len(genome_ids)):
+            genome_id = genome_ids[genome_i]
+            feature_ids_by_genome_id[genome_id] = []
 
             if 'ref' not in genomeSet_object['elements'][genome_name] or \
                     genomeSet_object['elements'][genome_name]['ref'] == None:
                 raise ValueError('GenomeSetToFASTA() cannot handle GenomeSet objects with embedded genome.  Must be a set of genome references')
                 #to get the full stack trace: traceback.format_exc()       
             else:
-                genome_ref = genomeSet_object['elements'][genome_name]['ref']
+                genome_ref = genomeSet_object['elements'][genome_id]['ref']
 
 
             # FIX: should I write recs as we go to reduce memory footprint, or is a single buffer write much faster?  Check later.
             #
             #records = []
             this_file = file
-            if len(genome_names) > 1 and not merge_fasta_files:
-                this_file = this_file+'.'+genome_name
+            if len(genome_ids) > 1 and not merge_fasta_files:
+                this_file = this_file+'.'+genome_id
                 this_file.replace('/', '-')
             fasta_file_path = os.path.join(dir, this_file)
             #self.log(console,"FASTA_FILE_PATH'"+fasta_file_path+"'\n")  # DEBUG
-            # DEBUG
-            self.log(console, "ADDING GENOME: "+str(genome_i+1)+" of "+str(len(genome_names))+" "+genome_names[genome_i])
             
             if genome_i == 0 or not merge_fasta_files:
                 fasta_file_handle = open(fasta_file_path, 'w', 0)
                 self.log(console, 'KB SDK data2file GenomeSet2FASTA(): writing fasta file: '+fasta_file_path)
+            # DEBUG
+            self.log(console, "ADDING GENOME: "+str(genome_i+1)+" of "+str(len(genome_ids))+" "+genome_ids[genome_i])
 
             GA = GenomeAnnotationAPI ({"workspace_service_url": self.workspaceURL,
                                        "shock_service_url": self.shockURL
@@ -644,8 +644,8 @@ class KBaseDataObjectToFileUtils:
                             feature_sequence_found = True
                             rec_id = record_id_pattern
                             rec_desc = record_desc_pattern
-                            rec_id = record_header_sub(rec_id, fid, genome_ref)
-                            rec_desc = record_header_sub(rec_desc, fid, genome_ref)
+                            rec_id = record_header_sub(rec_id, fid, genome_id)
+                            rec_desc = record_header_sub(rec_desc, fid, genome_id)
                             seq = proteins[fid]['protein_amino_acid_sequence']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
@@ -663,7 +663,7 @@ class KBaseDataObjectToFileUtils:
 
                             #record = SeqRecord(Seq(seq), id=rec_id, description=rec_desc)
                             #records.append(record)
-                            feature_ids_by_genome_id[genome_name].append(fid)
+                            feature_ids_by_genome_id[genome_id].append(fid)
                             fasta_file_handle.write(rec)
 
                     # nuc recs
@@ -674,8 +674,8 @@ class KBaseDataObjectToFileUtils:
                             feature_sequence_found = True
                             rec_id = record_id_pattern
                             rec_desc = record_desc_pattern
-                            rec_id = record_header_sub(rec_id, fid, genome_ref)
-                            rec_desc = record_header_sub(rec_desc, fid, genome_ref)
+                            rec_id = record_header_sub(rec_id, fid, genome_id)
+                            rec_desc = record_header_sub(rec_desc, fid, genome_id)
                             seq = feature['dna_sequence']
                             seq = seq.upper() if case == 'U' else seq.lower()
                             
@@ -693,10 +693,10 @@ class KBaseDataObjectToFileUtils:
 
                             #record = SeqRecord(Seq(seq), id=rec_id, description=rec_desc)
                             #records.append(record)
-                            feature_ids_by_genome_id[genome_name].append(fid)
+                            feature_ids_by_genome_id[genome_id].append(fid)
                             fasta_file_handle.write(rec)
 
-            if genome_i == (len(genome_names)-1) or not merge_fasta_files:
+            if genome_i == (len(genome_ids)-1) or not merge_fasta_files:
                 self.log(console,"CLOSING FILE: '"+fasta_file_path+"'")  # DEBUG
                 fasta_file_handle.close()
                 fasta_file_path_list.append(fasta_file_path)
