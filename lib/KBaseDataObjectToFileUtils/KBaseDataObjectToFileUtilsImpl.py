@@ -590,8 +590,8 @@ class KBaseDataObjectToFileUtils:
 
         # iterate through genomeSet members
         genome_names = genomeSet_object['elements'].keys()
-        for i in range(len(genome_names)):
-            genome_name = genome_names[i]
+        for genome_i in range(len(genome_names)):
+            genome_name = genome_names[genome_i]
             feature_ids_by_genome_id[genome_name] = []
 
             if 'ref' not in genomeSet_object['elements'][genome_name] or \
@@ -612,9 +612,9 @@ class KBaseDataObjectToFileUtils:
             fasta_file_path = os.path.join(dir, this_file)
             #self.log(console,"FASTA_FILE_PATH'"+fasta_file_path+"'\n")  # DEBUG
             # DEBUG
-            self.log(console, "ADDING GENOME: "+str(i)+" of "+str(len(genome_names)-1))
+            self.log(console, "ADDING GENOME: "+str(genome_i)+" of "+str(len(genome_names)-1))
             
-            if i == 0 or not merge_fasta_files:
+            if genome_i == 0 or not merge_fasta_files:
                 fasta_file_handle = open(fasta_file_path, 'w', 0)
                 self.log(console, 'KB SDK data2file GenomeSet2FASTA(): writing fasta file: '+fasta_file_path)
 
@@ -696,8 +696,7 @@ class KBaseDataObjectToFileUtils:
                             feature_ids_by_genome_id[genome_name].append(fid)
                             fasta_file_handle.write(rec)
 
-            self.log(console,"HELLO THERE MY PRETTY KITTY "+str(i)+" "+str((len(genome_names)-1)))  # DEBUG 
-            if i == (len(genome_names)-1) or not merge_fasta_files:
+            if genome_i == (len(genome_names)-1) or not merge_fasta_files:
                 self.log(console,"CLOSING FILE: '"+fasta_file_path+"'")  # DEBUG
                 fasta_file_handle.close()
                 fasta_file_path_list.append(fasta_file_path)
