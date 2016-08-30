@@ -646,9 +646,9 @@ class KBaseDataObjectToFileUtils:
                             rec_id = record_header_sub(record_id_pattern, fid, genome_id, genome_ref)
                             rec_desc = record_header_sub(record_desc_pattern, fid, genome_id, genome_ref)
                             # DEBUG
-                            ++cnt
+                            cnt += 1
                             if (cnt % 1000) == 0:
-                                self.log(console,"HEADER: >$rec_id $rec_desc")
+                                self.log(console,"HEADER: >"+rec_id+" "+rec_desc)
 
                             seq = proteins[fid]['protein_amino_acid_sequence']
                             seq = seq.upper() if case == 'U' else seq.lower()
