@@ -612,7 +612,7 @@ class KBaseDataObjectToFileUtils:
             fasta_file_path = os.path.join(dir, this_file)
             #self.log(console,"FASTA_FILE_PATH'"+fasta_file_path+"'\n")  # DEBUG
             # DEBUG
-            self.log(console, "ADDING GENOME: "+str(genome_i)+" of "+str(len(genome_names)-1))
+            self.log(console, "ADDING GENOME: "+str(genome_i+1)+" of "+str(len(genome_names))+" "+genome_names[i])
             
             if genome_i == 0 or not merge_fasta_files:
                 fasta_file_handle = open(fasta_file_path, 'w', 0)
