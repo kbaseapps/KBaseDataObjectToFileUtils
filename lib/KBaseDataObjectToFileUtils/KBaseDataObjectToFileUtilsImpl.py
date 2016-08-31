@@ -51,7 +51,7 @@ class KBaseDataObjectToFileUtils:
     #########################################
     VERSION = "0.0.1"
     GIT_URL = "https://github.com/kbaseapps/KBaseDataObjectToFileUtils.git"
-    GIT_COMMIT_HASH = "f1b7730d5af8e4cc61b7760b92f8d92c2904d11a"
+    GIT_COMMIT_HASH = "776637388b0f2a010662a25f5d67b78fd6df8fbb"
     
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -740,7 +740,7 @@ class KBaseDataObjectToFileUtils:
         :returns: instance of type "FeatureSetToFASTA_Output"
            (FeatureSetToFASTA() Output) -> structure: parameter
            "fasta_file_path" of type "path_type", parameter
-           "feature_ids_by_genome_id" of mapping from type "genome_id" to
+           "feature_ids_by_genome_ref" of mapping from type "data_obj_ref" to
            list of type "feature_id"
         """
         # ctx is the context object
@@ -748,7 +748,7 @@ class KBaseDataObjectToFileUtils:
         #BEGIN FeatureSetToFASTA
 
         # init and clean up params
-        genome_ref = params['featureset_ref']
+        featureSet_ref = params['featureset_ref']
         file = params['file']
         dir = params['dir']
         console = params['console']
@@ -770,24 +770,25 @@ class KBaseDataObjectToFileUtils:
         if feature_type == None:
             feature_type = 'ALL';
         if record_id_pattern == None:
-            record_id_pattern = '%%feature_id%%'
+            record_id_pattern = 'g:%%genome_ref%%.f:%%feature_id%%'
         if record_desc_pattern == None:
-            record_desc_pattern = '[%%genome_id%%]'
+            record_desc_pattern = '[%%genome_ref%%]'
         if case == None:
             case = 'UPPER'
         if linewrap == None:
             linewrap = 0
 
         # init and simplify
-        feature_ids = []
+        feature_ids_by_genome_ref = dict()
         feature_sequence_found = False
         residue_type = residue_type[0:3].lower()
         feature_type = feature_type.upper()
         case = case[0:1].upper()
         
-        def record_header_sub(str, feature_id, genome_id):
+        def record_header_sub(str, feature_id, genome_id, genome_ref):
             str = str.replace('%%feature_id%%', feature_id)
             str = str.replace('%%genome_id%%', genome_id)
+            str = str.replace('%%genome_ref%%', genome_ref)
             return str
 
         if file == None:
@@ -820,6 +821,7 @@ class KBaseDataObjectToFileUtils:
         with open(fasta_file_path, 'w', 0) as fasta_file_handle:
 
             for genome_ref in genome2features.keys():
+                feature_ids_by_genome_ref[genome_ref] = []
 
                 GA = GenomeAnnotationAPI ({"workspace_service_url": self.workspaceURL,
                                            "shock_service_url": self.shockURL
@@ -845,10 +847,10 @@ class KBaseDataObjectToFileUtils:
                                 self.log(invalid_msgs, "bad CDS feature "+fid+": No protein_translation field.")
                             else:
                                 feature_sequence_found = True
-                                rec_id = record_id_pattern
-                                rec_desc = record_desc_pattern
-                                rec_id = record_header_sub(rec_id, fid, genome_ref)
-                                rec_desc = record_header_sub(rec_desc, fid, genome_ref)
+                                #rec_id = record_header_sub(record_id_pattern, fid, genome_ref, genome_ref)
+                                #rec_desc = record_header_sub(record_desc_pattern, fid, genome_ref, genome_ref)
+                                rec_id = record_header_sub(record_id_pattern, fid, genome_ref, genome_ref)
+                                rec_desc = record_header_sub(record_desc_pattern, fid, genome_ref, genome_ref)
                                 seq = proteins[fid]['protein_amino_acid_sequence']
                                 seq = seq.upper() if case == 'U' else seq.lower()
 
@@ -866,7 +868,7 @@ class KBaseDataObjectToFileUtils:
 
                                 #record = SeqRecord(Seq(seq), id=rec_id, description=rec_desc)
                                 #records.append(record)
-                                feature_ids.append(fid)
+                                feature_ids_by_genome_ref[genome_ref].append(fid)
                                 fasta_file_handle.write(rec)
 
                         # nuc recs
@@ -896,7 +898,7 @@ class KBaseDataObjectToFileUtils:
 
                                 #record = SeqRecord(Seq(seq), id=rec_id, description=rec_desc)
                                 #records.append(record)
-                                feature_ids.append(fid)
+                                feature_ids_by_genome_ref[genome_ref].append(fid)
                                 fasta_file_handle.write(rec)
 
         # report if no features found
@@ -910,7 +912,7 @@ class KBaseDataObjectToFileUtils:
         #
         returnVal = dict()
         returnVal['fasta_file_path'] = fasta_file_path
-        returnVal['feature_ids'] = feature_ids
+        returnVal['feature_ids_by_genome_ref'] = feature_ids_by_genome_ref
         #END FeatureSetToFASTA
 
         # At some point might do deeper type checking...

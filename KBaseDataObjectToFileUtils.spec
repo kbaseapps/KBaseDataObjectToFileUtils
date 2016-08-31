@@ -114,8 +114,8 @@ module KBaseDataObjectToFileUtils {
     /* FeatureSetToFASTA() Output
     */
     typedef structure {
-	path_type                             fasta_file_path;
-	mapping<genome_id, list<feature_id>>  feature_ids_by_genome_id;
+	path_type                                fasta_file_path;
+	mapping<data_obj_ref, list<feature_id>>  feature_ids_by_genome_ref;
     } FeatureSetToFASTA_Output;
 
 

@@ -128,7 +128,7 @@ class KBaseDataObjectToFileUtils(object):
         :returns: instance of type "FeatureSetToFASTA_Output"
            (FeatureSetToFASTA() Output) -> structure: parameter
            "fasta_file_path" of type "path_type", parameter
-           "feature_ids_by_genome_id" of mapping from type "genome_id" to
+           "feature_ids_by_genome_ref" of mapping from type "data_obj_ref" to
            list of type "feature_id"
         """
         return self._client.call_method(

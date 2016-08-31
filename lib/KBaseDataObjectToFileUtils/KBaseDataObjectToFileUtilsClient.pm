@@ -608,8 +608,7 @@ log_msg is a string
 pattern_type is a string
 FeatureSetToFASTA_Output is a reference to a hash where the following keys are defined:
 	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
-	feature_ids_by_genome_id has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.genome_id and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
-genome_id is a string
+	feature_ids_by_genome_ref has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
 feature_id is a string
 
 </pre>
@@ -638,8 +637,7 @@ log_msg is a string
 pattern_type is a string
 FeatureSetToFASTA_Output is a reference to a hash where the following keys are defined:
 	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
-	feature_ids_by_genome_id has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.genome_id and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
-genome_id is a string
+	feature_ids_by_genome_ref has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
 feature_id is a string
 
 
@@ -1390,7 +1388,7 @@ FeatureSetToFASTA() Output
 <pre>
 a reference to a hash where the following keys are defined:
 fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
-feature_ids_by_genome_id has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.genome_id and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
+feature_ids_by_genome_ref has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
 
 </pre>
 
@@ -1400,7 +1398,7 @@ feature_ids_by_genome_id has a value which is a reference to a hash where the ke
 
 a reference to a hash where the following keys are defined:
 fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
-feature_ids_by_genome_id has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.genome_id and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
+feature_ids_by_genome_ref has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
 
 
 =end text
