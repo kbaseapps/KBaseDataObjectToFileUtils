@@ -51,7 +51,7 @@ class KBaseDataObjectToFileUtils:
     #########################################
     VERSION = "0.0.1"
     GIT_URL = "https://github.com/kbaseapps/KBaseDataObjectToFileUtils.git"
-    GIT_COMMIT_HASH = "4b6f5b53fc07f0d44f1d659ccfb8cd45e5832119"
+    GIT_COMMIT_HASH = "f1b7730d5af8e4cc61b7760b92f8d92c2904d11a"
     
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -629,7 +629,7 @@ class KBaseDataObjectToFileUtils:
                 proteins = GA.get_proteins()
 
 #            for feature in genome_object['features']:
-            cnt = 0  # DEBUG
+            #cnt = 0  # DEBUG
             for fid in features.keys():
                 feature = features[fid]
                 
@@ -646,9 +646,9 @@ class KBaseDataObjectToFileUtils:
                             rec_id = record_header_sub(record_id_pattern, fid, genome_id, genome_ref)
                             rec_desc = record_header_sub(record_desc_pattern, fid, genome_id, genome_ref)
                             # DEBUG
-                            cnt += 1
-                            if (cnt % 1000) == 0:
-                                self.log(console,"HEADER: >"+rec_id+" "+rec_desc)
+                            #cnt += 1
+                            #if (cnt % 1000) == 0:
+                            #    self.log(console,"HEADER: >"+rec_id+" "+rec_desc)
 
                             seq = proteins[fid]['protein_amino_acid_sequence']
                             seq = seq.upper() if case == 'U' else seq.lower()
@@ -739,7 +739,8 @@ class KBaseDataObjectToFileUtils:
            of Long
         :returns: instance of type "FeatureSetToFASTA_Output"
            (FeatureSetToFASTA() Output) -> structure: parameter
-           "fasta_file_path" of type "path_type", parameter "feature_ids" of
+           "fasta_file_path" of type "path_type", parameter
+           "feature_ids_by_genome_id" of mapping from type "genome_id" to
            list of type "feature_id"
         """
         # ctx is the context object
