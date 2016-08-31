@@ -832,7 +832,9 @@ class KBaseDataObjectToFileUtils:
                                           )
                 features = GA.get_features(feature_id_list=genome2features[genome_ref])
                 if residue_type == 'pro' or residue_type == 'pep':
-                    proteins = GA.get_proteins(feature_id_list=genome2features[genome_ref])
+                    # feature_id_list not working for get_proteins()
+                    #proteins = GA.get_proteins(feature_id_list=genome2features[genome_ref])
+                    proteins = GA.get_proteins()
 
 #                for feature in genome_object['features']:
                 for fid in genome2features[genome_ref]:
