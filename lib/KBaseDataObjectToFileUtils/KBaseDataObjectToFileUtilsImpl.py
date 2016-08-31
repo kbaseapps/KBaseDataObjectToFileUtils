@@ -748,7 +748,7 @@ class KBaseDataObjectToFileUtils:
         #BEGIN FeatureSetToFASTA
 
         # init and clean up params
-        featureSet_ref = params['featureset_ref']
+        featureSet_ref = params['featureSet_ref']
         file = params['file']
         dir = params['dir']
         console = params['console']
