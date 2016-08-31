@@ -808,10 +808,11 @@ class KBaseDataObjectToFileUtils:
         featureSet_features = featureSet_object['elements']
         genome2features = {}
         for fId in featureSet_features.keys():
-            genome_ref = features[fId][0]
-            if genome_ref not in genome2features.keys():
-                genome2features[genome_ref] = []
-            genome2features[genome_ref].append(fId)
+            for genome_ref in featureSet_features[fId]:
+                genome_ref = featureSet_features[fId][0]
+                if genome_ref not in genome2features.keys():
+                    genome2features[genome_ref] = []
+                genome2features[genome_ref].append(fId)
 
         # FIX: should I write recs as we go to reduce memory footprint, or is a single buffer write much faster?  Check later.
         #
