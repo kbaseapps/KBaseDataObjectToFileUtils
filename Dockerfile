@@ -10,7 +10,8 @@ MAINTAINER KBase Developer
 # -----------------------------------------
 
 # Install KBase Data API Library + dependencies
-RUN mkdir -p /kb/module && cd /kb/module && git clone -b develop https://github.com/kbase/data_api && \
+RUN mkdir -p /kb/module && cd /kb/module && \
+    git https://github.com/kbase/data_api -b 0.4.0-dev && \
     mkdir -p lib/ && cp -a data_api/lib/doekbase lib/ && \
     pip install -r /kb/module/data_api/requirements.txt
 
