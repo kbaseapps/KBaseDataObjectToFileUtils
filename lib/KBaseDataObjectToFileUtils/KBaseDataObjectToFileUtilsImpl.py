@@ -484,7 +484,7 @@ class KBaseDataObjectToFileUtils:
 
         # report if no features found
         if not feature_sequence_found:
-            self.log(invalid_msgs, "No sequence records found in Genome "+genome_object['id']+" of residue_type: "+residue_type+", feature_type: "+feature_type)
+            self.log(invalid_msgs, "No sequence records found in Genome "+genome_ref+" of residue_type: "+residue_type+", feature_type: "+feature_type)
         #else:
         #    SeqIO.write(records, fasta_file_path, "fasta")
 
@@ -564,7 +564,6 @@ class KBaseDataObjectToFileUtils:
         # init and simplify
         fasta_file_path_list = []
         feature_ids_by_genome_id = dict()
-        feature_sequence_found = False
         residue_type = residue_type[0:3].lower()
         feature_type = feature_type.upper()
         case = case[0:1].upper()
@@ -592,6 +591,7 @@ class KBaseDataObjectToFileUtils:
         # iterate through genomeSet members
         genome_ids = genomeSet_object['elements'].keys()
         for genome_i in range(len(genome_ids)):
+            feature_sequence_found = False
             genome_id = genome_ids[genome_i]
             feature_ids_by_genome_id[genome_id] = []
 
@@ -705,12 +705,9 @@ class KBaseDataObjectToFileUtils:
                 fasta_file_path_list.append(fasta_file_path)
 
 
-        # report if no features found
-        if not feature_sequence_found:
-            self.log(invalid_msgs, "No sequence records found in Genome "+genome_object['id']+" of residue_type: "+residue_type+", feature_type: "+feature_type)
-        #else:
-        #    SeqIO.write(records, fasta_file_path, "fasta")
-
+            # report if no features found
+            if not feature_sequence_found:
+                self.log(invalid_msgs, "No sequence records found in Genome "+genome_id+" of residue_type: "+residue_type+", feature_type: "+feature_type)
 
         # build returnVal
         #
@@ -781,7 +778,6 @@ class KBaseDataObjectToFileUtils:
 
         # init and simplify
         feature_ids_by_genome_ref = dict()
-        feature_sequence_found = False
         residue_type = residue_type[0:3].lower()
         feature_type = feature_type.upper()
         case = case[0:1].upper()
@@ -824,6 +820,7 @@ class KBaseDataObjectToFileUtils:
         with open(fasta_file_path, 'w', 0) as fasta_file_handle:
 
             for genome_ref in genome2features.keys():
+                feature_sequence_found = False
                 feature_ids_by_genome_ref[genome_ref] = []
 
                 GA = GenomeAnnotationAPI ({"workspace_service_url": self.workspaceURL,
@@ -906,12 +903,9 @@ class KBaseDataObjectToFileUtils:
                                 feature_ids_by_genome_ref[genome_ref].append(fid)
                                 fasta_file_handle.write(rec)
 
-        # report if no features found
-        if not feature_sequence_found:
-            self.log(invalid_msgs, "No sequence records found in Genome "+genome_object['id']+" of residue_type: "+residue_type+", feature_type: "+feature_type)
-        #else:
-        #    SeqIO.write(records, fasta_file_path, "fasta")
-
+                # report if no features found
+                if not feature_sequence_found:
+                    self.log(invalid_msgs, "No sequence records found in Genome "+genome_ref+" of residue_type: "+residue_type+", feature_type: "+feature_type)
 
         # build returnVal
         #
