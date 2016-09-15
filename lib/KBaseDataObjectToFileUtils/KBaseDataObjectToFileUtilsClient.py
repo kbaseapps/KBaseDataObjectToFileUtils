@@ -48,6 +48,21 @@ class KBaseDataObjectToFileUtils(object):
             'KBaseDataObjectToFileUtils.TranslateNucToProtSeq',
             [params], self._service_ver, context)
 
+    def ParseFastaStr(self, params, context=None):
+        """
+        :param params: instance of type "ParseFastaStr_Params"
+           (ParseFastaStr() Params) -> structure: parameter "fasta_str" of
+           String, parameter "residue_type" of String, parameter "case" of
+           String, parameter "console" of type "log_msg", parameter
+           "invalid_msgs" of type "log_msg"
+        :returns: instance of type "ParseFastaStr_Output" (ParseFastaStr()
+           Output) -> structure: parameter "id" of String, parameter "desc"
+           of String, parameter "seq" of String
+        """
+        return self._client.call_method(
+            'KBaseDataObjectToFileUtils.ParseFastaStr',
+            [params], self._service_ver, context)
+
     def GenomeToFASTA(self, params, context=None):
         """
         this should not be used, but is temporarily being retained to compare speed

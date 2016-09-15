@@ -332,6 +332,10 @@ class Application(object):
                              name='KBaseDataObjectToFileUtils.TranslateNucToProtSeq',
                              types=[dict])
         self.method_authentication['KBaseDataObjectToFileUtils.TranslateNucToProtSeq'] = 'required'
+        self.rpc_service.add(impl_KBaseDataObjectToFileUtils.ParseFastaStr,
+                             name='KBaseDataObjectToFileUtils.ParseFastaStr',
+                             types=[dict])
+        self.method_authentication['KBaseDataObjectToFileUtils.ParseFastaStr'] = 'required'
         self.rpc_service.add(impl_KBaseDataObjectToFileUtils.GenomeToFASTA,
                              name='KBaseDataObjectToFileUtils.GenomeToFASTA',
                              types=[dict])

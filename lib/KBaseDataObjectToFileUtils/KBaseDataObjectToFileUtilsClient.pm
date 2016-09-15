@@ -205,6 +205,110 @@ Methods for converting KBase Data Objects to common bioinformatics format files
  
 
 
+=head2 ParseFastaStr
+
+  $return = $obj->ParseFastaStr($params)
+
+=over 4
+
+=item Parameter and return types
+
+=begin html
+
+<pre>
+$params is a KBaseDataObjectToFileUtils.ParseFastaStr_Params
+$return is a KBaseDataObjectToFileUtils.ParseFastaStr_Output
+ParseFastaStr_Params is a reference to a hash where the following keys are defined:
+	fasta_str has a value which is a string
+	residue_type has a value which is a string
+	case has a value which is a string
+	console has a value which is a KBaseDataObjectToFileUtils.log_msg
+	invalid_msgs has a value which is a KBaseDataObjectToFileUtils.log_msg
+log_msg is a string
+ParseFastaStr_Output is a reference to a hash where the following keys are defined:
+	id has a value which is a string
+	desc has a value which is a string
+	seq has a value which is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+$params is a KBaseDataObjectToFileUtils.ParseFastaStr_Params
+$return is a KBaseDataObjectToFileUtils.ParseFastaStr_Output
+ParseFastaStr_Params is a reference to a hash where the following keys are defined:
+	fasta_str has a value which is a string
+	residue_type has a value which is a string
+	case has a value which is a string
+	console has a value which is a KBaseDataObjectToFileUtils.log_msg
+	invalid_msgs has a value which is a KBaseDataObjectToFileUtils.log_msg
+log_msg is a string
+ParseFastaStr_Output is a reference to a hash where the following keys are defined:
+	id has a value which is a string
+	desc has a value which is a string
+	seq has a value which is a string
+
+
+=end text
+
+=item Description
+
+
+
+=back
+
+=cut
+
+ sub ParseFastaStr
+{
+    my($self, @args) = @_;
+
+# Authentication: required
+
+    if ((my $n = @args) != 1)
+    {
+	Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
+							       "Invalid argument count for function ParseFastaStr (received $n, expecting 1)");
+    }
+    {
+	my($params) = @args;
+
+	my @_bad_arguments;
+        (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument 1 \"params\" (value was \"$params\")");
+        if (@_bad_arguments) {
+	    my $msg = "Invalid arguments passed to ParseFastaStr:\n" . join("", map { "\t$_\n" } @_bad_arguments);
+	    Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
+								   method_name => 'ParseFastaStr');
+	}
+    }
+
+    my $url = $self->{url};
+    my $result = $self->{client}->call($url, $self->{headers}, {
+	    method => "KBaseDataObjectToFileUtils.ParseFastaStr",
+	    params => \@args,
+    });
+    if ($result) {
+	if ($result->is_error) {
+	    Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
+					       code => $result->content->{error}->{code},
+					       method_name => 'ParseFastaStr',
+					       data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
+					      );
+	} else {
+	    return wantarray ? @{$result->result} : $result->result->[0];
+	}
+    } else {
+        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method ParseFastaStr",
+					    status_line => $self->{client}->status_line,
+					    method_name => 'ParseFastaStr',
+				       );
+    }
+}
+ 
+
+
 =head2 GenomeToFASTA
 
   $return = $obj->GenomeToFASTA($params)
@@ -1121,6 +1225,88 @@ prot_seq has a value which is a string
 
 a reference to a hash where the following keys are defined:
 prot_seq has a value which is a string
+
+
+=end text
+
+=back
+
+
+
+=head2 ParseFastaStr_Params
+
+=over 4
+
+
+
+=item Description
+
+ParseFastaStr() Params
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+fasta_str has a value which is a string
+residue_type has a value which is a string
+case has a value which is a string
+console has a value which is a KBaseDataObjectToFileUtils.log_msg
+invalid_msgs has a value which is a KBaseDataObjectToFileUtils.log_msg
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+fasta_str has a value which is a string
+residue_type has a value which is a string
+case has a value which is a string
+console has a value which is a KBaseDataObjectToFileUtils.log_msg
+invalid_msgs has a value which is a KBaseDataObjectToFileUtils.log_msg
+
+
+=end text
+
+=back
+
+
+
+=head2 ParseFastaStr_Output
+
+=over 4
+
+
+
+=item Description
+
+ParseFastaStr() Output
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+id has a value which is a string
+desc has a value which is a string
+seq has a value which is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+id has a value which is a string
+desc has a value which is a string
+seq has a value which is a string
 
 
 =end text

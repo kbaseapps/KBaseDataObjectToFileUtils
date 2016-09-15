@@ -51,7 +51,7 @@ class KBaseDataObjectToFileUtils:
     #########################################
     VERSION = "0.0.1"
     GIT_URL = "https://github.com/kbaseapps/KBaseDataObjectToFileUtils.git"
-    GIT_COMMIT_HASH = "776637388b0f2a010662a25f5d67b78fd6df8fbb"
+    GIT_COMMIT_HASH = "1e49b74a07f1a6569c4da002160454662faf4912"
     
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -139,6 +139,186 @@ class KBaseDataObjectToFileUtils:
         # At some point might do deeper type checking...
         if not isinstance(returnVal, dict):
             raise ValueError('Method TranslateNucToProtSeq return value ' +
+                             'returnVal is not type dict as required.')
+        # return the results
+        return [returnVal]
+
+    def ParseFastaStr(self, ctx, params):
+        """
+        :param params: instance of type "ParseFastaStr_Params"
+           (ParseFastaStr() Params) -> structure: parameter "fasta_str" of
+           String, parameter "residue_type" of String, parameter "case" of
+           String, parameter "console" of type "log_msg", parameter
+           "invalid_msgs" of type "log_msg"
+        :returns: instance of type "ParseFastaStr_Output" (ParseFastaStr()
+           Output) -> structure: parameter "id" of String, parameter "desc"
+           of String, parameter "seq" of String
+        """
+        # ctx is the context object
+        # return variables are: returnVal
+        #BEGIN ParseFastaStr
+
+        # init
+        if 'fasta_str' != params or params['fasta_str'] == None:
+            raise ValueError('Method ParseFastaStr() requires fasta_str parameter')
+        input_sequence_buf = params['fasta_str']
+        residue_type       = params['residue_type']
+        case               = params['case']
+        console            = params['console']
+        invalid_msgs       = params['invalid_msgs']
+
+        now = (datetime.utcnow() - datetime.utcfromtimestamp(0)).total_seconds()
+        header_id = 'id.'+str(now)
+        header_desc = 'desc.'+str(now)
+        if residue_type == None:
+            residue_type = 'NUC'
+        if case == None:
+            case = 'UPPER'
+
+        residue_type = residue_type[0:1].upper()
+        case = case[0:1].upper()
+
+        PROT_pattern = re.compile("^[acdefghiklmnpqrstvwyACDEFGHIKLMNPQRSTVWYxX ]+$")
+        DNA_pattern = re.compile("^[acgtuACGTUnryNRY ]+$")
+        space_pattern = re.compile("^[ \t]*$")
+
+        
+        # money rock on
+        #
+        sequence_str_buf = ''
+        fastq_format = False
+        input_sequence_buf = input_sequence_buf.strip()
+        if input_sequence_buf.startswith('@'):
+            fastq_format = True
+        input_sequence_buf = re.sub ('&apos;', "'", input_sequence_buf)
+        input_sequence_buf = re.sub ('&quot;', '"', input_sequence_buf)
+#        input_sequence_buf = re.sub ('&#39;',  "'", input_sequence_buf)
+#        input_sequence_buf = re.sub ('&#34;',  '"', input_sequence_buf)
+#        input_sequence_buf = re.sub ('&lt;;',  '<', input_sequence_buf)
+#        input_sequence_buf = re.sub ('&#60;',  '<', input_sequence_buf)
+#        input_sequence_buf = re.sub ('&gt;',   '>', input_sequence_buf)
+#        input_sequence_buf = re.sub ('&#62;',  '>', input_sequence_buf)
+#        input_sequence_buf = re.sub ('&#36;',  '$', input_sequence_buf)
+#        input_sequence_buf = re.sub ('&#37;',  '%', input_sequence_buf)
+#        input_sequence_buf = re.sub ('&#47;',  '/', input_sequence_buf)
+#        input_sequence_buf = re.sub ('&#63;',  '?', input_sequence_buf)
+##        input_sequence_buf = re.sub ('&#92;',  chr(92), input_sequence_buf)  # FIX LATER
+#        input_sequence_buf = re.sub ('&#96;',  '`', input_sequence_buf)
+#        input_sequence_buf = re.sub ('&#124;', '|', input_sequence_buf)
+#        input_sequence_buf = re.sub ('&amp;', '&', input_sequence_buf)
+#        input_sequence_buf = re.sub ('&#38;', '&', input_sequence_buf)
+#        self.log(console,"INPUT_SEQ AFTER: '''\n"+input_sequence_buf+"\n'''")  # DEBUG
+
+        split_input_sequence_buf = input_sequence_buf.split("\n")
+
+        # no header rows, just sequence
+        if not input_sequence_buf.startswith('>') and not input_sequence_buf.startswith('@'):
+            for line in split_input_sequence_buf:
+                if not space_pattern.match(line):
+                    line = re.sub (" ","",line)
+                    line = re.sub ("\t","",line)
+                    line = re.sub ("\r","",line)
+                    if (residue_type == 'N' and not DNA_pattern.match(line)) \
+                            or (residue_type == 'P' and not PROT_pattern.match(line)):
+                        self.log(invalid_msgs,"BAD record:\n"+line+"\n")
+                    continue
+                    sequence_str_buf += line
+        else:
+            # format checks
+            for i,line in enumerate(split_input_sequence_buf):
+                if line.startswith('>') or line.startswith('@'):
+                    if (residue_type == 'N' and not DNA_pattern.match(split_input_sequence_buf[i+1])) \
+                            or (residue_type == 'P' and not PROT_pattern.match(split_input_sequence_buf[i+1])):
+                        if fastq_format:
+                            bad_record = "\n".join([split_input_sequence_buf[i],
+                                                    split_input_sequence_buf[i+1],
+                                                    split_input_sequence_buf[i+2],
+                                                    split_input_sequence_buf[i+3]])
+                        else:
+                            bad_record = "\n".join([split_input_sequence_buf[i],
+                                                    split_input_sequence_buf[i+1]])
+                        self.log(invalid_msgs,"BAD record:\n"+bad_record+"\n")
+                    if fastq_format and line.startswith('@'):
+                        format_ok = True
+                        seq_len = len(split_input_sequence_buf[i+1])
+                        if not seq_len > 0:
+                            format_ok = False
+                        if not split_input_sequence_buf[i+2].startswith('+'):
+                            format_ok = False
+                        if not seq_len == len(split_input_sequence_buf[i+3]):
+                            format_ok = False
+                        if not format_ok:
+                            bad_record = "\n".join([split_input_sequence_buf[i],
+                                                    split_input_sequence_buf[i+1],
+                                                    split_input_sequence_buf[i+2],
+                                                    split_input_sequence_buf[i+3]])
+                            self.log(invalid_msgs,"BAD record:\n"+bad_record+"\n")
+
+            # store that sucker, removing spaces
+            for i,line in enumerate(split_input_sequence_buf):
+                if line.startswith('>'):
+                    if line.find(" ") < 0 and line.find("\t") < 0:
+                        header_id = line
+                    elif line.find(" ") < 0:
+                        (header_id, header_desc) = line.split("\t", 1)
+                    elif line.find("\t") < 0:
+                        (header_id, header_desc) = line.split(" ", 1)
+                    elif line.find(" ") < line.find("\t"):
+                        (header_id, header_desc) = line.split(" ", 1)
+                    else:
+                        (header_id, header_desc) = line.split("\t", 1)
+
+                    for j in range(i+1,len(split_input_sequence_buf)):
+                        if split_input_sequence_buf[j].startswith('>'):
+                            break
+                        seq_line = re.sub (" ","",split_input_sequence_buf[j])
+                        seq_line = re.sub ("\t","",seq_line)
+                        seq_line = re.sub ("\r","",seq_line)
+                        seq_line = seq_line.lower()
+                        sequence_str_buf += seq_line
+
+                    break  # only want first record
+                elif line.startswith('@'):
+                    if line.find(" ") < 0 and line.find("\t") < 0:
+                        header_id = line
+                    elif line.find(" ") < 0:
+                        (header_id, header_desc) = line.split("\t", 1)
+                    elif line.find("\t") < 0:
+                        (header_id, header_desc) = line.split(" ", 1)
+                    elif line.find(" ") < line.find("\t"):
+                        (header_id, header_desc) = line.split(" ", 1)
+                    else:
+                        (header_id, header_desc) = line.split("\t", 1)
+
+                    seq_line = re.sub (" ","",split_input_sequence_buf[i+1])
+                    seq_line = re.sub ("\t","",seq_line)
+                    seq_line = re.sub ("\r","",seq_line)
+                    seq_line = seq_line.lower()
+                    #qual_line = re.sub (" ","",split_input_sequence_buf[i+3])
+                    #qual_line = re.sub ("\t","",qual_line)
+                    sequence_str_buf += seq_line
+                    break  # only want first record
+
+        # set case
+        if case == 'U':
+            sequence_str_buf = sequence_str_buf.upper()
+        else:
+            sequence_str_buf = sequence_str_buf.lower()
+
+
+        # Done
+        #
+        if sequence_str_buf == '':
+            raise ValueError ("No sequence found in fasta_str: '"+fasta_str+"'")
+        returnVal = dict()
+        returnVal['id']   = header_id
+        returnVal['desc'] = header_desc
+        returnVal['seq']  = sequence_str_buf
+        #END ParseFastaStr
+
+        # At some point might do deeper type checking...
+        if not isinstance(returnVal, dict):
+            raise ValueError('Method ParseFastaStr return value ' +
                              'returnVal is not type dict as required.')
         # return the results
         return [returnVal]
