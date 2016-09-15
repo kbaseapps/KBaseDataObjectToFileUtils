@@ -35,12 +35,30 @@ module KBaseDataObjectToFileUtils {
 	string  genetic_code;
     } TranslateNucToProtSeq_Params;
 
-
     /* TranslateNucToProtSeq() Output
     */
     typedef structure {
 	string  prot_seq;
     } TranslateNucToProtSeq_Output;
+
+
+    /* ParseFastaStr() Params
+    */
+    typedef structure {
+	string  fasta_str;
+	string  residue_type;
+	string  case;
+	log_msg console;
+	log_msg invalid_msgs;
+    } ParseFastaStr_Params;
+
+    /* ParseFastaStr() Output
+    */
+    typedef structure {
+	string id;
+	string desc;
+	string seq;
+    } ParseFastaStr_Output;
 
 
     /* GenomeAnnotationToFASTA() Params
@@ -58,7 +76,6 @@ module KBaseDataObjectToFileUtils {
 	string         case;
 	int            linewrap;
     } GenomeAnnotationToFASTA_Params;
-
 
     /* GenomeAnnotationToFASTA() Output
     */
@@ -84,7 +101,6 @@ module KBaseDataObjectToFileUtils {
 	int            linewrap;
 	true_false     merge_fasta_files;
     } GenomeSetToFASTA_Params;
-
 
     /* GenomeSetToFASTA() Output
     */
@@ -123,6 +139,8 @@ module KBaseDataObjectToFileUtils {
     **
     */
     funcdef TranslateNucToProtSeq (TranslateNucToProtSeq_Params params)  returns (TranslateNucToProtSeq_Output) authentication required;
+
+    funcdef ParseFastaStr (ParseFastaStr_Params params)  returns (ParseFastaStr_Output) authentication required;
 
     /* this should not be used, but is temporarily being retained to compare speed */
     funcdef GenomeToFASTA (GenomeAnnotationToFASTA_Params params)  returns (GenomeAnnotationToFASTA_Output) authentication required;

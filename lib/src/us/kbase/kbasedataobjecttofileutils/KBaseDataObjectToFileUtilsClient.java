@@ -198,6 +198,23 @@ public class KBaseDataObjectToFileUtilsClient {
     }
 
     /**
+     * <p>Original spec-file function name: ParseFastaStr</p>
+     * <pre>
+     * </pre>
+     * @param   params   instance of type {@link us.kbase.kbasedataobjecttofileutils.ParseFastaStrParams ParseFastaStrParams} (original type "ParseFastaStr_Params")
+     * @return   instance of type {@link us.kbase.kbasedataobjecttofileutils.ParseFastaStrOutput ParseFastaStrOutput} (original type "ParseFastaStr_Output")
+     * @throws IOException if an IO exception occurs
+     * @throws JsonClientException if a JSON RPC exception occurs
+     */
+    public ParseFastaStrOutput parseFastaStr(ParseFastaStrParams params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
+        List<Object> args = new ArrayList<Object>();
+        args.add(params);
+        TypeReference<List<ParseFastaStrOutput>> retType = new TypeReference<List<ParseFastaStrOutput>>() {};
+        List<ParseFastaStrOutput> res = caller.jsonrpcCall("KBaseDataObjectToFileUtils.ParseFastaStr", args, retType, true, true, jsonRpcContext, this.serviceVersion);
+        return res.get(0);
+    }
+
+    /**
      * <p>Original spec-file function name: GenomeToFASTA</p>
      * <pre>
      * this should not be used, but is temporarily being retained to compare speed
