@@ -299,11 +299,16 @@ class KBaseDataObjectToFileUtils:
                     sequence_str_buf += seq_line
                     break  # only want first record
 
-        # set case
+        # tidy up
+        #
         if case == 'U':
             sequence_str_buf = sequence_str_buf.upper()
         else:
             sequence_str_buf = sequence_str_buf.lower()
+        if header_id[0:1] == '@':
+            header_id = re.sub('^@','',header_id)
+        elif header_id[0:1] == '>':
+            header_id = re.sub('^>','',header_id)
 
 
         # Done
