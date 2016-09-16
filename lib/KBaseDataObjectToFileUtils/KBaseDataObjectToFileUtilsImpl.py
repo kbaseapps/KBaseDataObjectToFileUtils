@@ -538,7 +538,7 @@ class KBaseDataObjectToFileUtils:
         if invalid_msgs == None:
             invalid_msgs = []
         if residue_type == None:
-            residue_type = 'nuc'
+            residue_type = 'NUC'
         if feature_type == None:
             feature_type = 'ALL';
         if record_id_pattern == None:
@@ -553,7 +553,7 @@ class KBaseDataObjectToFileUtils:
         # init and simplify
         feature_ids = []
         feature_sequence_found = False
-        residue_type = residue_type[0:3].lower()
+        residue_type = residue_type[0:1].upper()
         feature_type = feature_type.upper()
         case = case[0:1].upper()
         
@@ -593,8 +593,8 @@ class KBaseDataObjectToFileUtils:
                                       ref=genome_ref
                                      )
             features = GA.get_features()
-            if residue_type == 'pro' or residue_type == 'pep':
-                proteins = GA.get_proteins()
+            if residue_type == 'P':
+                sequences = GA.get_proteins()
             else:
                 sequences = GA.get_feature_dna()
 
@@ -604,71 +604,39 @@ class KBaseDataObjectToFileUtils:
                 
                 if feature_type == 'ALL' or feature_type == feature['feature_type']:
 
-                    # protein recs
-                    if residue_type == 'pro' or residue_type == 'pep':
-                        if feature['feature_type'] != 'CDS':
-                            continue
-                        elif fid not in proteins or 'protein_amino_acid_sequence' not in proteins[fid] or proteins[fid]['protein_amino_acid_sequence'] == None:
-                            self.log(invalid_msgs, "bad CDS feature "+fid+": No protein_translation field.")
-                        else:
-                            feature_sequence_found = True
-                            # can't get genome_id from GenomeAnnotationAPI
-                            #rec_id = record_header_sub(record_id_pattern, fid, genome_id, genome_ref)
-                            #rec_desc = record_header_sub(record_desc_pattern, fid, genome_id, genome_ref)
-                            rec_id = record_header_sub(record_id_pattern, fid, genome_ref, genome_ref)
-                            rec_desc = record_header_sub(record_desc_pattern, fid, genome_ref, genome_ref)
-                            seq = proteins[fid]['protein_amino_acid_sequence']
-                            seq = seq.upper() if case == 'U' else seq.lower()
-
-                            rec_rows = []
-                            rec_rows.append('>'+rec_id+' '+rec_desc)
-                            if linewrap == None or linewrap == 0:
-                                rec_rows.append(seq)
-                            else:
-                                seq_len = len(seq)
-                                base_rows_cnt = seq_len//linewrap
-                                for i in range(base_rows_cnt):
-                                    rec_rows.append(seq[i*linewrap:(i+1)*linewrap])
-                                rec_rows.append(seq[base_rows_cnt*linewrap:])
-                            rec = "\n".join(rec_rows)+"\n"
-
-                            #record = SeqRecord(Seq(seq), id=rec_id, description=rec_desc)
-                            #records.append(record)
-                            feature_ids.append(fid)
-                            fasta_file_handle.write(rec)
-
-                    # nuc recs
+                    if residue_type == 'P' and feature['feature_type'] != 'CDS':
+                        continue
+                    elif residue_type == 'P' and (fid not in sequences or 'protein_amino_acid_sequence' not in sequences[fid] or sequences[fid]['protein_amino_acid_sequence'] == None):
+                        self.log(invalid_msgs, "bad CDS feature "+fid+": No protein_translation field.")
+                    elif residue_type == 'N' and (fid not in sequences or sequences[fid] == None):
+                        self.log(invalid_msgs, "bad feature "+fid+": No dna_sequence field.")
                     else:
-                        #if fid not in sequences or 'dna_sequence' not in sequences[fid] or sequences[fid]['dna_sequence'] == None:
-                        if fid not in sequences or sequences[fid] == None:
-                            self.log(invalid_msgs, "bad feature "+fid+": No dna_sequence field.")
+                        feature_sequence_found = True
+                        # can't get genome_id from GenomeAnnotationAPI
+                        #rec_id = record_header_sub(record_id_pattern, fid, genome_id, genome_ref)
+                        #rec_desc = record_header_sub(record_desc_pattern, fid, genome_id, genome_ref)
+                        rec_id = record_header_sub(record_id_pattern, fid, genome_ref, genome_ref)
+                        rec_desc = record_header_sub(record_desc_pattern, fid, genome_ref, genome_ref)
+                        if residue_type == 'P':
+                            seq = sequences[fid]['protein_amino_acid_sequence']
                         else:
-                            feature_sequence_found = True
-                            # can't get genome_id from GenomeAnnotationAPI
-                            #rec_id = record_header_sub(record_id_pattern, fid, genome_id, genome_ref)
-                            #rec_desc = record_header_sub(record_desc_pattern, fid, genome_id, genome_ref)
-                            rec_id = record_header_sub(record_id_pattern, fid, genome_ref, genome_ref)
-                            rec_desc = record_header_sub(record_desc_pattern, fid, genome_ref, genome_ref)
-                            #seq = sequences[fid]['dna_sequence']
                             seq = sequences[fid]
-                            seq = seq.upper() if case == 'U' else seq.lower()
+                        seq = seq.upper() if case == 'U' else seq.lower()
 
-                            rec_rows = []
-                            rec_rows.append('>'+rec_id+' '+rec_desc)
-                            if linewrap == None or linewrap == 0:
-                                rec_rows.append(seq)
-                            else:
-                                seq_len = len(seq)
-                                base_rows_cnt = seq_len//linewrap
-                                for i in range(base_rows_cnt):
-                                    rec_rows.append(seq[i*linewrap:(i+1)*linewrap])
-                                rec_rows.append(seq[base_rows_cnt*linewrap:])
-                            rec = "\n".join(rec_rows)+"\n"
+                        rec_rows = []
+                        rec_rows.append('>'+rec_id+' '+rec_desc)
+                        if linewrap == None or linewrap == 0:
+                            rec_rows.append(seq)
+                        else:
+                            seq_len = len(seq)
+                            base_rows_cnt = seq_len//linewrap
+                            for i in range(base_rows_cnt):
+                                rec_rows.append(seq[i*linewrap:(i+1)*linewrap])
+                            rec_rows.append(seq[base_rows_cnt*linewrap:])
+                        rec = "\n".join(rec_rows)+"\n"
 
-                            #record = SeqRecord(Seq(seq), id=rec_id, description=rec_desc)
-                            #records.append(record)
-                            feature_ids.append(fid)
-                            fasta_file_handle.write(rec)
+                        feature_ids.append(fid)
+                        fasta_file_handle.write(rec)
 
         # report if no features found
         if not feature_sequence_found:
@@ -733,7 +701,7 @@ class KBaseDataObjectToFileUtils:
         if invalid_msgs == None:
             invalid_msgs = []
         if residue_type == None:
-            residue_type = 'nuc'
+            residue_type = 'NUC'
         if feature_type == None:
             feature_type = 'ALL';
         if record_id_pattern == None:
@@ -752,7 +720,7 @@ class KBaseDataObjectToFileUtils:
         # init and simplify
         fasta_file_path_list = []
         feature_ids_by_genome_id = dict()
-        residue_type = residue_type[0:3].lower()
+        residue_type = residue_type[0:1].upper()
         feature_type = feature_type.upper()
         case = case[0:1].upper()
         
@@ -814,8 +782,10 @@ class KBaseDataObjectToFileUtils:
                                       ref=genome_ref
                                       )
             features = GA.get_features()
-            if residue_type == 'pro' or residue_type == 'pep':
-                proteins = GA.get_proteins()
+            if residue_type == 'P':
+                sequences = GA.get_proteins()
+            else:
+                sequences = GA.get_feature_dna()
 
 #            for feature in genome_object['features']:
             #cnt = 0  # DEBUG
@@ -824,68 +794,39 @@ class KBaseDataObjectToFileUtils:
                 
                 if feature_type == 'ALL' or feature_type == feature['feature_type']:
                     
-                    # protein recs
-                    if residue_type == 'pro' or residue_type == 'pep':
-                        if feature['feature_type'] != 'CDS':
-                            continue
-                        elif fid not in proteins or 'protein_amino_acid_sequence' not in proteins[fid] or proteins[fid]['protein_amino_acid_sequence'] == None:
-                            self.log(invalid_msgs, "bad CDS feature "+fid+": No protein_translation field.")
-                        else:
-                            feature_sequence_found = True
-                            rec_id = record_header_sub(record_id_pattern, fid, genome_id, genome_ref)
-                            rec_desc = record_header_sub(record_desc_pattern, fid, genome_id, genome_ref)
-                            # DEBUG
-                            #cnt += 1
-                            #if (cnt % 1000) == 0:
-                            #    self.log(console,"HEADER: >"+rec_id+" "+rec_desc)
-
-                            seq = proteins[fid]['protein_amino_acid_sequence']
-                            seq = seq.upper() if case == 'U' else seq.lower()
-
-                            rec_rows = []
-                            rec_rows.append('>'+rec_id+' '+rec_desc)
-                            if linewrap == None or linewrap == 0:
-                                rec_rows.append(seq)
-                            else:
-                                seq_len = len(seq)
-                                base_rows_cnt = seq_len//linewrap
-                                for i in range(base_rows_cnt):
-                                    rec_rows.append(seq[i*linewrap:(i+1)*linewrap])
-                                rec_rows.append(seq[base_rows_cnt*linewrap:])
-                            rec = "\n".join(rec_rows)+"\n"
-
-                            #record = SeqRecord(Seq(seq), id=rec_id, description=rec_desc)
-                            #records.append(record)
-                            feature_ids_by_genome_id[genome_id].append(fid)
-                            fasta_file_handle.write(rec)
-
-                    # nuc recs
+                    if residue_type == 'P' and feature['feature_type'] != 'CDS':
+                        continue
+                    elif residue_type == 'P' and (fid not in sequences or 'protein_amino_acid_sequence' not in sequences[fid] or sequences[fid]['protein_amino_acid_sequence'] == None):
+                        self.log(invalid_msgs, "bad CDS feature "+fid+": No protein_translation field.")
+                    elif residue_type == 'N' and (fid not in sequences or sequences[fid] == None):
+                        self.log(invalid_msgs, "bad feature "+fid+": No dna_sequence field.")
                     else:
-                        if 'dna_sequence' not in feature or feature['dna_sequence'] == None:
-                            self.log(invalid_msgs, "bad feature "+fid+": No dna_sequence field.")
+                        feature_sequence_found = True
+                        rec_id = record_header_sub(record_id_pattern, fid, genome_id, genome_ref)
+                        rec_desc = record_header_sub(record_desc_pattern, fid, genome_id, genome_ref)
+                        if residue_type == 'P':
+                            seq = sequences[fid]['protein_amino_acid_sequence']
                         else:
-                            feature_sequence_found = True
-                            rec_id = record_header_sub(record_id_pattern, fid, genome_id, genome_ref)
-                            rec_desc = record_header_sub(record_desc_pattern, fid, genome_id, genome_ref)
-                            seq = feature['dna_sequence']
-                            seq = seq.upper() if case == 'U' else seq.lower()
-                            
-                            rec_rows = []
-                            rec_rows.append('>'+rec_id+' '+rec_desc)
-                            if linewrap == None or linewrap == 0:
-                                rec_rows.append(seq)
-                            else:
-                                seq_len = len(seq)
-                                base_rows_cnt = seq_len//linewrap
-                                for i in range(base_rows_cnt):
-                                    rec_rows.append(seq[i*linewrap:(i+1)*linewrap])
-                                rec_rows.append(seq[base_rows_cnt*linewrap:])
-                            rec = "\n".join(rec_rows)+"\n"
+                            seq = sequences[fid]
 
-                            #record = SeqRecord(Seq(seq), id=rec_id, description=rec_desc)
-                            #records.append(record)
-                            feature_ids_by_genome_id[genome_id].append(fid)
-                            fasta_file_handle.write(rec)
+                        seq = seq.upper() if case == 'U' else seq.lower()
+
+                        rec_rows = []
+                        rec_rows.append('>'+rec_id+' '+rec_desc)
+                        if linewrap == None or linewrap == 0:
+                            rec_rows.append(seq)
+                        else:
+                            seq_len = len(seq)
+                            base_rows_cnt = seq_len//linewrap
+                            for i in range(base_rows_cnt):
+                                rec_rows.append(seq[i*linewrap:(i+1)*linewrap])
+                            rec_rows.append(seq[base_rows_cnt*linewrap:])
+                        rec = "\n".join(rec_rows)+"\n"
+
+                        #record = SeqRecord(Seq(seq), id=rec_id, description=rec_desc)
+                        #records.append(record)
+                        feature_ids_by_genome_id[genome_id].append(fid)
+                        fasta_file_handle.write(rec)
 
             if genome_i == (len(genome_ids)-1) or not merge_fasta_files:
                 self.log(console,"CLOSING FILE: '"+fasta_file_path+"'")  # DEBUG
@@ -952,7 +893,7 @@ class KBaseDataObjectToFileUtils:
         if invalid_msgs == None:
             invalid_msgs = []
         if residue_type == None:
-            residue_type = 'nuc'
+            residue_type = 'NUC'
         if feature_type == None:
             feature_type = 'ALL';
         if record_id_pattern == None:
@@ -966,7 +907,7 @@ class KBaseDataObjectToFileUtils:
 
         # init and simplify
         feature_ids_by_genome_ref = dict()
-        residue_type = residue_type[0:3].lower()
+        residue_type = residue_type[0:1].upper()
         feature_type = feature_type.upper()
         case = case[0:1].upper()
         feature_sequence_found = False
@@ -1018,10 +959,12 @@ class KBaseDataObjectToFileUtils:
                                           ref=genome_ref
                                           )
                 features = GA.get_features(feature_id_list=genome2features[genome_ref])
-                if residue_type == 'pro' or residue_type == 'pep':
+                if residue_type == 'P':
                     # feature_id_list not working for get_proteins()
-                    #proteins = GA.get_proteins(feature_id_list=genome2features[genome_ref])
-                    proteins = GA.get_proteins()
+                    #sequences = GA.get_proteins(feature_id_list=genome2features[genome_ref])
+                    sequences = GA.get_proteins()
+                else:
+                    sequences = GA.get_feature_dna(filter_id_list=genome2features[genome_ref])
 
 #                for feature in genome_object['features']:
                 for fid in genome2features[genome_ref]:
@@ -1029,67 +972,40 @@ class KBaseDataObjectToFileUtils:
                 
                     if feature_type == 'ALL' or feature_type == feature['feature_type']:
 
-                        # protein recs
-                        if residue_type == 'pro' or residue_type == 'pep':
-                            if feature['feature_type'] != 'CDS':
-                                continue
-                            elif fid not in proteins or 'protein_amino_acid_sequence' not in proteins[fid] or proteins[fid]['protein_amino_acid_sequence'] == None:
-                                self.log(invalid_msgs, "bad CDS feature "+fid+": No protein_translation field.")
-                            else:
-                                feature_sequence_found = True
-                                #rec_id = record_header_sub(record_id_pattern, fid, genome_ref, genome_ref)
-                                #rec_desc = record_header_sub(record_desc_pattern, fid, genome_ref, genome_ref)
-                                rec_id = record_header_sub(record_id_pattern, fid, genome_ref, genome_ref)
-                                rec_desc = record_header_sub(record_desc_pattern, fid, genome_ref, genome_ref)
-                                seq = proteins[fid]['protein_amino_acid_sequence']
-                                seq = seq.upper() if case == 'U' else seq.lower()
-
-                                rec_rows = []
-                                rec_rows.append('>'+rec_id+' '+rec_desc)
-                                if linewrap == None or linewrap == 0:
-                                    rec_rows.append(seq)
-                                else:
-                                    seq_len = len(seq)
-                                    base_rows_cnt = seq_len//linewrap
-                                    for i in range(base_rows_cnt):
-                                        rec_rows.append(seq[i*linewrap:(i+1)*linewrap])
-                                    rec_rows.append(seq[base_rows_cnt*linewrap:])
-                                rec = "\n".join(rec_rows)+"\n"
-
-                                #record = SeqRecord(Seq(seq), id=rec_id, description=rec_desc)
-                                #records.append(record)
-                                feature_ids_by_genome_ref[genome_ref].append(fid)
-                                fasta_file_handle.write(rec)
-
-                        # nuc recs
+                        if residue_type == 'P' and feature['feature_type'] != 'CDS':
+                            continue
+                        elif residue_type == 'P' and (fid not in sequences or 'protein_amino_acid_sequence' not in sequences[fid] or sequences[fid]['protein_amino_acid_sequence'] == None):
+                            self.log(invalid_msgs, "bad CDS feature "+fid+": No protein_translation field.")
+                        elif residue_type == 'N' and (fid not in sequences or sequences[fid] == None):
+                            self.log(invalid_msgs, "bad feature "+fid+": No dna_sequence field.")
                         else:
-                            if 'dna_sequence' not in feature or feature['dna_sequence'] == None:
-                                self.log(invalid_msgs, "bad feature "+fid+": No dna_sequence field.")
+                            feature_sequence_found = True
+                            #rec_id = record_header_sub(record_id_pattern, fid, genome_ref, genome_ref)
+                            #rec_desc = record_header_sub(record_desc_pattern, fid, genome_ref, genome_ref)
+                            rec_id = record_header_sub(record_id_pattern, fid, genome_ref, genome_ref)
+                            rec_desc = record_header_sub(record_desc_pattern, fid, genome_ref, genome_ref)
+                            if residue_type == 'P':
+                                seq = sequences[fid]['protein_amino_acid_sequence']
                             else:
-                                feature_sequence_found = True
-                                rec_id = record_id_pattern
-                                rec_desc = record_desc_pattern
-                                rec_id = record_header_sub(rec_id, fid, genome_ref)
-                                rec_desc = record_header_sub(rec_desc, fid, genome_ref)
-                                seq = feature['dna_sequence']
-                                seq = seq.upper() if case == 'U' else seq.lower()
+                                seq = sequences[fid]
+                            seq = seq.upper() if case == 'U' else seq.lower()
+                                
+                            rec_rows = []
+                            rec_rows.append('>'+rec_id+' '+rec_desc)
+                            if linewrap == None or linewrap == 0:
+                                rec_rows.append(seq)
+                            else:
+                                seq_len = len(seq)
+                                base_rows_cnt = seq_len//linewrap
+                                for i in range(base_rows_cnt):
+                                    rec_rows.append(seq[i*linewrap:(i+1)*linewrap])
+                                rec_rows.append(seq[base_rows_cnt*linewrap:])
+                            rec = "\n".join(rec_rows)+"\n"
 
-                                rec_rows = []
-                                rec_rows.append('>'+rec_id+' '+rec_desc)
-                                if linewrap == None or linewrap == 0:
-                                    rec_rows.append(seq)
-                                else:
-                                    seq_len = len(seq)
-                                    base_rows_cnt = seq_len//linewrap
-                                    for i in range(base_rows_cnt):
-                                        rec_rows.append(seq[i*linewrap:(i+1)*linewrap])
-                                    rec_rows.append(seq[base_rows_cnt*linewrap:])
-                                rec = "\n".join(rec_rows)+"\n"
-
-                                #record = SeqRecord(Seq(seq), id=rec_id, description=rec_desc)
-                                #records.append(record)
-                                feature_ids_by_genome_ref[genome_ref].append(fid)
-                                fasta_file_handle.write(rec)
+                            #record = SeqRecord(Seq(seq), id=rec_id, description=rec_desc)
+                            #records.append(record)
+                            feature_ids_by_genome_ref[genome_ref].append(fid)
+                            fasta_file_handle.write(rec)
 
         # report if no features found
         if not feature_sequence_found:
