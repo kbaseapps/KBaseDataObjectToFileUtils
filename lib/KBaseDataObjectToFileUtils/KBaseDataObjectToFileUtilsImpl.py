@@ -214,45 +214,43 @@ class KBaseDataObjectToFileUtils:
         # no header rows, just sequence
         if not input_sequence_buf.startswith('>') and not input_sequence_buf.startswith('@'):
             for line in split_input_sequence_buf:
-                if not space_pattern.match(line):
-                    line = re.sub (" ","",line)
-                    line = re.sub ("\t","",line)
-                    line = re.sub ("\r","",line)
-                    if (residue_type == 'N' and not DNA_pattern.match(line)) \
-                            or (residue_type == 'P' and not PROT_pattern.match(line)):
-                        self.log(invalid_msgs,"BAD record:\n"+line+"\n")
-                        break
-                    sequence_str_buf += line
+                if space_pattern.match(line):
+                    continue
+                line = re.sub (" ","",line)
+                line = re.sub ("\t","",line)
+                line = re.sub ("\r","",line)
+                if (residue_type == 'N' and not DNA_pattern.match(line)) \
+                        or (residue_type == 'P' and not PROT_pattern.match(line)):
+                    self.log(invalid_msgs,"BAD record:\n"+line+"\n")
+                    break
+                sequence_str_buf += line
         else:
             # format checks
             for i,line in enumerate(split_input_sequence_buf):
-                if line.startswith('>') or line.startswith('@'):
-                    if (residue_type == 'N' and not DNA_pattern.match(split_input_sequence_buf[i+1])) \
-                            or (residue_type == 'P' and not PROT_pattern.match(split_input_sequence_buf[i+1])):
-                        if fastq_format:
-                            bad_record = "\n".join([split_input_sequence_buf[i],
-                                                    split_input_sequence_buf[i+1],
-                                                    split_input_sequence_buf[i+2],
-                                                    split_input_sequence_buf[i+3]])
-                        else:
-                            bad_record = "\n".join([split_input_sequence_buf[i],
-                                                    split_input_sequence_buf[i+1]])
+                if fastq_format and line.startswith('@'):
+                    format_ok = True
+                    seq_len = len(split_input_sequence_buf[i+1])
+                    if not DNA_pattern.match(split_input_sequence_buf[i+1]) \
+                            or not seq_len > 0 \
+                            or not split_input_sequence_buf[i+2].startswith('+') \
+                            or not seq_len == len(split_input_sequence_buf[i+3]):
+                        format_ok = False
+                    if not format_ok:
+                        bad_record = "\n".join([split_input_sequence_buf[i],
+                                                split_input_sequence_buf[i+1],
+                                                split_input_sequence_buf[i+2],
+                                                split_input_sequence_buf[i+3]])
                         self.log(invalid_msgs,"BAD record:\n"+bad_record+"\n")
-                    if fastq_format and line.startswith('@'):
-                        format_ok = True
-                        seq_len = len(split_input_sequence_buf[i+1])
-                        if not seq_len > 0:
-                            format_ok = False
-                        if not split_input_sequence_buf[i+2].startswith('+'):
-                            format_ok = False
-                        if not seq_len == len(split_input_sequence_buf[i+3]):
-                            format_ok = False
-                        if not format_ok:
-                            bad_record = "\n".join([split_input_sequence_buf[i],
-                                                    split_input_sequence_buf[i+1],
-                                                    split_input_sequence_buf[i+2],
-                                                    split_input_sequence_buf[i+3]])
-                            self.log(invalid_msgs,"BAD record:\n"+bad_record+"\n")
+                        break
+                elif line.startswith('>'):
+                    continue
+                else:
+                    if space_pattern.match(line):
+                        continue
+                    if (residue_type == 'N' and not DNA_pattern.match(line)) \
+                            or (residue_type == 'P' and not PROT_pattern.match(line)):
+                        self.log(invalid_msgs,"BAD record:\n"+("\n".join(split_input_sequence_buf))+"\n")
+                        break
 
             # store that sucker, removing spaces
             for i,line in enumerate(split_input_sequence_buf):
@@ -269,6 +267,8 @@ class KBaseDataObjectToFileUtils:
                         (header_id, header_desc) = line.split("\t", 1)
 
                     for j in range(i+1,len(split_input_sequence_buf)):
+                        if space_pattern.match(split_input_sequence_buf[j]):
+                            continue
                         if split_input_sequence_buf[j].startswith('>'):
                             break
                         seq_line = re.sub (" ","",split_input_sequence_buf[j])
@@ -309,7 +309,6 @@ class KBaseDataObjectToFileUtils:
             header_id = re.sub('^@','',header_id)
         elif header_id[0:1] == '>':
             header_id = re.sub('^>','',header_id)
-
 
         # Done
         #
