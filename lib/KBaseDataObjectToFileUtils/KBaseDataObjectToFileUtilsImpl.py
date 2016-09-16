@@ -100,9 +100,9 @@ class KBaseDataObjectToFileUtils:
         # ctx is the context object
         # return variables are: returnVal
         #BEGIN TranslateNucToProtSeq
-        if 'nuc_seq' != params or params['nuc_seq'] == None:
+        if 'nuc_seq' not in params or params['nuc_seq'] == None:
             raise ValueError('Method TranslateNucToProtSeq() requires nuc_seq parameter')
-        if 'genetic_code' != params or params['genetic_code'] == None:
+        if 'genetic_code' not in params or params['genetic_code'] == None:
             params['genetic_code'] = '11'
 
         if params['genetic_cde'] != '11':
@@ -159,7 +159,7 @@ class KBaseDataObjectToFileUtils:
         #BEGIN ParseFastaStr
 
         # init
-        if 'fasta_str' != params or params['fasta_str'] == None:
+        if 'fasta_str' not in params or params['fasta_str'] == None:
             raise ValueError('Method ParseFastaStr() requires fasta_str parameter')
         input_sequence_buf = params['fasta_str']
         residue_type       = params['residue_type']
