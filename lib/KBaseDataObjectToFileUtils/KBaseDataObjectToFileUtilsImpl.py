@@ -639,8 +639,9 @@ class KBaseDataObjectToFileUtils:
 
                     # nuc recs
                     else:
-                        if fid not in sequences or 'dna_sequence' not in sequences[fid] or sequences[fid]['dna_sequence'] == None:
-                            self.log(invalid_msgs, "bad feature "+fid+": No dna_sequence_field.")
+                        #if fid not in sequences or 'dna_sequence' not in sequences[fid] or sequences[fid]['dna_sequence'] == None:
+                        if fid not in sequences or sequences[fid] == None:
+                            self.log(invalid_msgs, "bad feature "+fid+": No dna_sequence field.")
                         else:
                             feature_sequence_found = True
                             # can't get genome_id from GenomeAnnotationAPI
@@ -648,7 +649,8 @@ class KBaseDataObjectToFileUtils:
                             #rec_desc = record_header_sub(record_desc_pattern, fid, genome_id, genome_ref)
                             rec_id = record_header_sub(record_id_pattern, fid, genome_ref, genome_ref)
                             rec_desc = record_header_sub(record_desc_pattern, fid, genome_ref, genome_ref)
-                            seq = sequences[fid]['dna_sequence']
+                            #seq = sequences[fid]['dna_sequence']
+                            seq = sequences[fid]
                             seq = seq.upper() if case == 'U' else seq.lower()
 
                             rec_rows = []
