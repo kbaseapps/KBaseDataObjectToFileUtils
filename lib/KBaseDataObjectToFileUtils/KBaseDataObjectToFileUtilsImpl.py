@@ -620,7 +620,6 @@ class KBaseDataObjectToFileUtils:
                         if residue_type == 'P':
                             seq = sequences[fid]['protein_amino_acid_sequence']
                         else:
-                            print ("FID:'"+fid+"' SEQ:'"+str(sequences[fid])+"'")  # DEBUG
                             seq = sequences[fid]
                         seq = seq.upper() if case == 'U' else seq.lower()
 
@@ -638,6 +637,7 @@ class KBaseDataObjectToFileUtils:
 
                         feature_ids.append(fid)
                         fasta_file_handle.write(rec)
+                        self.log (console, rec)  # DEBUG
 
         # report if no features found
         if not feature_sequence_found:
