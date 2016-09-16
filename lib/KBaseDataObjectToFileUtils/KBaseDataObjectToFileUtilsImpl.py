@@ -178,8 +178,8 @@ class KBaseDataObjectToFileUtils:
         residue_type = residue_type[0:1].upper()
         case = case[0:1].upper()
 
-        PROT_pattern = re.compile("^[acdefghiklmnpqrstvwyACDEFGHIKLMNPQRSTVWYxX ]+$")
-        DNA_pattern = re.compile("^[acgtuACGTUnryNRY ]+$")
+        PROT_pattern  = re.compile("^[acdefghiklmnpqrstvwyACDEFGHIKLMNPQRSTVWYxX ]+$")
+        DNA_pattern   = re.compile("^[acgtuACGTUnryNRY ]+$")
         space_pattern = re.compile("^[ \t]*$")
 
         
@@ -221,7 +221,7 @@ class KBaseDataObjectToFileUtils:
                     if (residue_type == 'N' and not DNA_pattern.match(line)) \
                             or (residue_type == 'P' and not PROT_pattern.match(line)):
                         self.log(invalid_msgs,"BAD record:\n"+line+"\n")
-                    continue
+                        break
                     sequence_str_buf += line
         else:
             # format checks
