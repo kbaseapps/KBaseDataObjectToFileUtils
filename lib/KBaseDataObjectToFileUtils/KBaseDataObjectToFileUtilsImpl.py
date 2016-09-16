@@ -637,7 +637,7 @@ class KBaseDataObjectToFileUtils:
 
                         feature_ids.append(fid)
                         fasta_file_handle.write(rec)
-                        self.log (console, rec)  # DEBUG
+                        #self.log (console, rec)  # DEBUG
 
         # report if no features found
         if not feature_sequence_found:
