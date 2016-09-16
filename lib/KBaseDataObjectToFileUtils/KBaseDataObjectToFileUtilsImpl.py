@@ -595,6 +595,8 @@ class KBaseDataObjectToFileUtils:
             features = GA.get_features()
             if residue_type == 'pro' or residue_type == 'pep':
                 proteins = GA.get_proteins()
+            else:
+                sequences = GA.get_feature_dna()
 
 #            for feature in genome_object['features']:
             for fid in features.keys():
@@ -637,8 +639,8 @@ class KBaseDataObjectToFileUtils:
 
                     # nuc recs
                     else:
-                        if 'dna_sequence' not in feature or feature['dna_sequence'] == None:
-                            self.log(invalid_msgs, "bad feature "+fid+": No dna_sequence field.")
+                        if fid not in sequences or 'dna_sequence' not in sequences[fid] or sequences[fid]['dna_sequence'] == None:
+                            self.log(invalid_msgs, "bad feature "+fid+": No dna_sequence_field.")
                         else:
                             feature_sequence_found = True
                             # can't get genome_id from GenomeAnnotationAPI
@@ -646,7 +648,7 @@ class KBaseDataObjectToFileUtils:
                             #rec_desc = record_header_sub(record_desc_pattern, fid, genome_id, genome_ref)
                             rec_id = record_header_sub(record_id_pattern, fid, genome_ref, genome_ref)
                             rec_desc = record_header_sub(record_desc_pattern, fid, genome_ref, genome_ref)
-                            seq = feature['dna_sequence']
+                            seq = sequences[fid]['dna_sequence']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
                             rec_rows = []
