@@ -51,7 +51,7 @@ class KBaseDataObjectToFileUtils:
     #########################################
     VERSION = "0.0.1"
     GIT_URL = "https://github.com/kbaseapps/KBaseDataObjectToFileUtils.git"
-    GIT_COMMIT_HASH = "1e49b74a07f1a6569c4da002160454662faf4912"
+    GIT_COMMIT_HASH = "1a092210346774da92859451d357b1d8c50998b2"
     
     #BEGIN_CLASS_HEADER
     workspaceURL = None
