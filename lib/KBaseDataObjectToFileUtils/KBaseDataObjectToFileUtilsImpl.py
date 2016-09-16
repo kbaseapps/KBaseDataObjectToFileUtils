@@ -314,7 +314,7 @@ class KBaseDataObjectToFileUtils:
         # Done
         #
         if sequence_str_buf == '':
-            raise ValueError ("No sequence found in fasta_str: '"+fasta_str+"'")
+            raise ValueError ("No sequence found in fasta_str: '"+params['fasta_str']+"'")
         returnVal = dict()
         returnVal['id']   = header_id
         returnVal['desc'] = header_desc
