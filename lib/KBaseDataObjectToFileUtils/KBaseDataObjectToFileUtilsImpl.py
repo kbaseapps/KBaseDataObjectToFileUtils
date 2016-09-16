@@ -620,7 +620,7 @@ class KBaseDataObjectToFileUtils:
                         if residue_type == 'P':
                             seq = sequences[fid]['protein_amino_acid_sequence']
                         else:
-                            print ("FID:'"+fid"' SEQ:'"+str(sequences[fid])+"'")  # DEBUG
+                            print ("FID:'"+fid+"' SEQ:'"+str(sequences[fid])+"'")  # DEBUG
                             seq = sequences[fid]
                         seq = seq.upper() if case == 'U' else seq.lower()
 
