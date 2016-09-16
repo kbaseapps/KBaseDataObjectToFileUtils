@@ -167,7 +167,7 @@ class KBaseDataObjectToFileUtils:
         console            = params['console']
         invalid_msgs       = params['invalid_msgs']
 
-        now = (datetime.utcnow() - datetime.utcfromtimestamp(0)).total_seconds()
+        now = int(100*(datetime.utcnow() - datetime.utcfromtimestamp(0)).total_seconds())
         header_id = 'id.'+str(now)
         header_desc = 'desc.'+str(now)
         if residue_type == None:
