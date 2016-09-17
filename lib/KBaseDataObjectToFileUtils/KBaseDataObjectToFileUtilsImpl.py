@@ -601,6 +601,10 @@ class KBaseDataObjectToFileUtils:
 #            for feature in genome_object['features']:
             for fid in features.keys():
                 feature = features[fid]
+
+                # DEBUG
+                if fid == 'WP_053463618.1':
+                    self.log(console, "RECOVERED SEQ FOR FEATURE ID WP_053463618.1: '"+sequences[fid])
                 
                 if feature_type == 'ALL' or feature_type == feature['feature_type']:
 
