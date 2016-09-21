@@ -604,8 +604,11 @@ class KBaseDataObjectToFileUtils:
 
                 if feature_type == 'ALL' or feature_type == feature['feature_type']:
 
-                    if residue_type == 'P' and feature['feature_type'] != 'CDS':
+                    if (residue_type == 'P' and feature['feature_type'] != 'CDS') \
+                            or (residue_type == 'N' and feature_type != 'CDS' and feature['feature_type'] == 'CDS'):
                         continue
+                    elif residue_type == 'N' and features['feature_type'] == 'CDS':
+                        cont
                     elif residue_type == 'P' and (fid not in sequences or 'protein_amino_acid_sequence' not in sequences[fid] or sequences[fid]['protein_amino_acid_sequence'] == None):
                         self.log(invalid_msgs, "bad CDS feature "+fid+": No protein_translation field.")
                     elif residue_type == 'N' and (fid not in sequences or sequences[fid] == None):
@@ -795,7 +798,8 @@ class KBaseDataObjectToFileUtils:
                 
                 if feature_type == 'ALL' or feature_type == feature['feature_type']:
                     
-                    if residue_type == 'P' and feature['feature_type'] != 'CDS':
+                    if (residue_type == 'P' and feature['feature_type'] != 'CDS') \
+                            or (residue_type == 'N' and feature_type != 'CDS' and feature['feature_type'] == 'CDS'):
                         continue
                     elif residue_type == 'P' and (fid not in sequences or 'protein_amino_acid_sequence' not in sequences[fid] or sequences[fid]['protein_amino_acid_sequence'] == None):
                         self.log(invalid_msgs, "bad CDS feature "+fid+": No protein_translation field.")
