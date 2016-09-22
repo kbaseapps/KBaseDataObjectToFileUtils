@@ -609,7 +609,7 @@ class KBaseDataObjectToFileUtils:
                     cnt += 1
                     self.log(console,"cnt:"+str(cnt)+" fid:"+str(fid))  # DEBUG
                     for k in feature.keys():
-                        self.log(console,"k:"+str(k)+" v:"+feature[k])
+                        self.log(console,"k:"+str(k)+" v:"+str(feature[k]))
                 continue  # DEBUG
 
                 if feature_type == 'ALL' or feature_type == feature['feature_type']:
