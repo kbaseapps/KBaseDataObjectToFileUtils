@@ -584,9 +584,6 @@ class KBaseDataObjectToFileUtils:
         #records = []
         self.log(console,"FASTA_FILE_PATH'"+fasta_file_path+"'\n")  # DEBUG
 
-
-        self.log(console,"feature_type: '"+feature_type+"'")  # DEBUG
-
         with open(fasta_file_path, 'w', 0) as fasta_file_handle:
 
             GA = GenomeAnnotationAPI ({"workspace_service_url": self.workspaceURL,
@@ -601,9 +598,13 @@ class KBaseDataObjectToFileUtils:
             else:
                 sequences = GA.get_feature_dna()
 
+            self.log(console,"feature_type: '"+feature_type+"'")  # DEBUG
+
 #            for feature in genome_object['features']:
             for fid in features.keys():
                 feature = features[fid]
+
+                continue  # DEBUG
 
                 if feature_type == 'ALL' or feature_type == feature['feature_type']:
 
