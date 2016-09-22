@@ -584,6 +584,9 @@ class KBaseDataObjectToFileUtils:
         #records = []
         self.log(console,"FASTA_FILE_PATH'"+fasta_file_path+"'\n")  # DEBUG
 
+
+        self.log(console,"feature_type: '"+feature_type+"'")  # DEBUG
+
         with open(fasta_file_path, 'w', 0) as fasta_file_handle:
 
             GA = GenomeAnnotationAPI ({"workspace_service_url": self.workspaceURL,
