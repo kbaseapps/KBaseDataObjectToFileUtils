@@ -602,6 +602,8 @@ class KBaseDataObjectToFileUtils:
 
 #            for feature in genome_object['features']:
             for fid in features.keys():
+                self.log(console,"FID: '"+str(fid)+"'")  # DEBUG
+
                 feature = features[fid]
 
                 # DEBUG
