@@ -605,7 +605,7 @@ class KBaseDataObjectToFileUtils:
                 feature = features[fid]
 
                 # DEBUG
-                if cnt % 1000 == 0:
+                if cnt % 10 == 0:
                     cnt += 1
                     self.log(console,"cnt:"+str(cnt)+" fid:"+str(fid))  # DEBUG
                     for k in feature.keys():
