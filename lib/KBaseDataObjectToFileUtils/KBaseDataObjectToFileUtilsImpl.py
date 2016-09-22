@@ -604,7 +604,7 @@ class KBaseDataObjectToFileUtils:
             for fid in features.keys():
                 feature = features[fid]
 
-                continue  # DEBUG
+                #continue  # DEBUG
 
                 if feature_type == 'ALL' or feature_type == feature['feature_type']:
 
