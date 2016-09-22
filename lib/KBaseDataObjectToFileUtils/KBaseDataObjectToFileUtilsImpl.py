@@ -604,14 +604,15 @@ class KBaseDataObjectToFileUtils:
             for fid in features.keys():
                 feature = features[fid]
 
+                # DEBUG
+                if cnt % 1000 == 0:
+                    cnt += 1
+                    self.log(console,"cnt:"+str(cnt)+" fid:"+str(fid))  # DEBUG
+                    for k in feature.keys():
+                        self.log("k:"+str(k)+" v:"+feature[k])
+                continue  # DEBUG
+
                 if feature_type == 'ALL' or feature_type == feature['feature_type']:
-                    # DEBUG
-                    if cnt % 1000 == 0:
-                        cnt += 1
-                        self.log(console,"feature_type: '"+feature_type+"'")  # DEBUG
-                    continue  # DEBUG
-
-
                     if (residue_type == 'P' and feature['feature_type'] != 'CDS') \
                             or (residue_type == 'N' and feature_type != 'CDS' and feature['feature_type'] == 'CDS'):
                         continue
