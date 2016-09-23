@@ -608,9 +608,11 @@ class KBaseDataObjectToFileUtils:
                 #if cnt % 10 == 0:
                 #    cnt += 1
                 #    self.log(console,"cnt:"+str(cnt)+" fid:"+str(fid))  # DEBUG
-                #    for k in feature.keys():
-                #        self.log(console,"k:"+str(k)+" v:"+str(feature[k]))
+                self.log(console,"NEW FEATURE")
+                for k in feature.keys():
+                    self.log(console,"k:"+str(k)+" v:"+str(feature[k]))
                 #continue  # DEBUG
+
 
                 if feature_type == 'ALL' or feature_type == feature['feature_type']:
                     if (residue_type == 'P' and feature['feature_type'] != 'CDS') \
