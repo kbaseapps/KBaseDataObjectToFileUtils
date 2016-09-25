@@ -593,12 +593,22 @@ class KBaseDataObjectToFileUtils:
                                       ref=genome_ref
                                      )
             features = GA.get_features()
+            gene_id_by_cds_id = GA.get_gene_by_cds()
+            cds_id_by_gene_id = GA.get_cds_by_gene()  # FIX: do I need this?
             if residue_type == 'P':
                 sequences = GA.get_proteins()
             else:
                 sequences = GA.get_feature_dna()
 
+            # DEBUG
             cnt = 0
+            self.log (console,"GENE_ID_BY_CDS_ID()")
+            for cds_id in gene_id_by_cds_id.keys():
+                self.log (console,"cds_id:"+cds_id+" gene_id:"+gene_id_by_cds_id[cds_id])
+            self.log (console,"\nCDS_ID_BY_GENE_ID()")
+            for gene_id in cds_id_by_gene_id.keys():
+                self.log (console,"cds_id:"+cds_id+" gene_id:"+gene_id_by_cds_id[cds_id])                
+
 
 #            for feature in genome_object['features']:
             for fid in features.keys():
@@ -608,9 +618,9 @@ class KBaseDataObjectToFileUtils:
                 #if cnt % 10 == 0:
                 #    cnt += 1
                 #    self.log(console,"cnt:"+str(cnt)+" fid:"+str(fid))  # DEBUG
-                self.log(console,"NEW FEATURE")
-                for k in feature.keys():
-                    self.log(console,"k:"+str(k)+" v:"+str(feature[k]))
+                #self.log(console,"NEW FEATURE")
+                #for k in feature.keys():
+                #    self.log(console,"k:"+str(k)+" v:"+str(feature[k]))
                 #continue  # DEBUG
 
 
