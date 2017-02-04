@@ -100,9 +100,9 @@ class KBaseDataObjectToFileUtils:
         # ctx is the context object
         # return variables are: returnVal
         #BEGIN TranslateNucToProtSeq
-        if 'nuc_seq' not in params or params['nuc_seq'] == None:
+        if 'nuc_seq' not in params or params['nuc_seq'] == None or params['nuc_seq'] == '':
             raise ValueError('Method TranslateNucToProtSeq() requires nuc_seq parameter')
-        if 'genetic_code' not in params or params['genetic_code'] == None:
+        if 'genetic_code' not in params or params['genetic_code'] == None or params['genentic_code'] == '':
             params['genetic_code'] = '11'
 
         if params['genetic_cde'] != '11':
@@ -159,7 +159,7 @@ class KBaseDataObjectToFileUtils:
         #BEGIN ParseFastaStr
 
         # init
-        if 'fasta_str' not in params or params['fasta_str'] == None:
+        if 'fasta_str' not in params or params['fasta_str'] == None or params['fasta_str'] == '':
             raise ValueError('Method ParseFastaStr() requires fasta_str parameter')
         input_sequence_buf = params['fasta_str']
         residue_type       = params['residue_type']
@@ -422,7 +422,7 @@ class KBaseDataObjectToFileUtils:
                     if residue_type == 'P':
                         #if feature['type'] != 'CDS':
                         #    continue
-                        if 'protein_translation' not in feature or feature['protein_translation'] == None or feature['protein_translation'] = '':
+                        if 'protein_translation' not in feature or feature['protein_translation'] == None or feature['protein_translation'] == '':
                             #self.log(invalid_msgs, "bad CDS feature "+feature['id']+": No protein_translation field.")
                             continue
                         else:
@@ -453,7 +453,7 @@ class KBaseDataObjectToFileUtils:
                     else:
                         if feature_type eq 'CDS' and ('protein_translation' not in feature or feature['protein_translation'] == None or feature_protein['protein_translation'] == ''):
                             continue
-                        elif 'dna_sequence' not in feature or feature['dna_sequence'] == None:
+                        elif 'dna_sequence' not in feature or feature['dna_sequence'] == None or feature['dna_sequence'] == '':
                             self.log(invalid_msgs, "bad feature "+feature['id']+": No dna_sequence field.")
                         else:
                             feature_sequence_found = True
@@ -593,7 +593,8 @@ class KBaseDataObjectToFileUtils:
             feature_ids_by_genome_id[genome_id] = []
 
             if 'ref' not in genomeSet_object['elements'][genome_id] or \
-                    genomeSet_object['elements'][genome_id]['ref'] == None:
+                    genomeSet_object['elements'][genome_id]['ref'] == None or \
+                    genomeSet_object['elements'][genome_id]['ref'] == '':
                 raise ValueError('GenomeSetToFASTA() cannot handle GenomeSet objects with embedded genome.  Must be a set of genome references')
                 #to get the full stack trace: traceback.format_exc()       
             else:
@@ -639,7 +640,7 @@ class KBaseDataObjectToFileUtils:
                     if residue_type == 'P':
                         #if feature['type'] != 'CDS':
                         #    continue
-                        if 'protein_translation' not in feature or feature['protein_translation'] == None or feature['protein_translation'] = '':
+                        if 'protein_translation' not in feature or feature['protein_translation'] == None or feature['protein_translation'] == '':
                             #self.log(invalid_msgs, "bad CDS feature "+feature['id']+": No protein_translation field.")
                             continue
                         else:
@@ -670,7 +671,7 @@ class KBaseDataObjectToFileUtils:
                     else:
                         if feature_type eq 'CDS' and ('protein_translation' not in feature or feature['protein_translation'] == None or feature_protein['protein_translation'] == ''):
                             continue
-                        elif 'dna_sequence' not in feature or feature['dna_sequence'] == None:
+                        elif 'dna_sequence' not in feature or feature['dna_sequence'] == None or feature['dna_sequence'] == '':
                             self.log(invalid_msgs, "bad feature "+feature['id']+": No dna_sequence field.")
                         else:
                             feature_sequence_found = True
@@ -844,7 +845,7 @@ class KBaseDataObjectToFileUtils:
                     if residue_type == 'P':
                         #if feature['type'] != 'CDS':
                         #    continue
-                        if 'protein_translation' not in feature or feature['protein_translation'] == None or feature['protein_translation'] = '':
+                        if 'protein_translation' not in feature or feature['protein_translation'] == None or feature['protein_translation'] == '':
                             #self.log(invalid_msgs, "bad CDS feature "+feature['id']+": No protein_translation field.")
                             continue
                         else:
@@ -875,7 +876,7 @@ class KBaseDataObjectToFileUtils:
                     else:
                         if feature_type eq 'CDS' and ('protein_translation' not in feature or feature['protein_translation'] == None or feature_protein['protein_translation'] == ''):
                             continue
-                        elif 'dna_sequence' not in feature or feature['dna_sequence'] == None:
+                        elif 'dna_sequence' not in feature or feature['dna_sequence'] == None or feature['dna_sequence'] == '':
                             self.log(invalid_msgs, "bad feature "+feature['id']+": No dna_sequence field.")
                         else:
                             feature_sequence_found = True
