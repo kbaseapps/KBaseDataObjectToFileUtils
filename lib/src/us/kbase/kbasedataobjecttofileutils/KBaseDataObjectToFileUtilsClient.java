@@ -16,7 +16,7 @@ import us.kbase.common.service.UnauthorizedException;
 /**
  * <p>Original spec-file module name: KBaseDataObjectToFileUtils</p>
  * <pre>
- * ** A KBase module: kb_blast
+ * ** A KBase module: KBaseDataObjectToFileUtils
  * **
  * ** This module contains methods for converting KBase Data Objects to common bioinformatics file formats
  * **

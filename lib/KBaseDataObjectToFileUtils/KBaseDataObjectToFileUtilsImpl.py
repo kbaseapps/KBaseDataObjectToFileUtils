@@ -37,7 +37,7 @@ class KBaseDataObjectToFileUtils:
     KBaseDataObjectToFileUtils
 
     Module Description:
-    ** A KBase module: kb_blast
+    ** A KBase module: KBaseDataObjectToFileUtils
 **
 ** This module contains methods for converting KBase Data Objects to common bioinformatics file formats
 **
@@ -49,9 +49,9 @@ class KBaseDataObjectToFileUtils:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "0.0.2"
+    VERSION = "0.0.3"
     GIT_URL = "https://github.com/kbaseapps/KBaseDataObjectToFileUtils.git"
-    GIT_COMMIT_HASH = "4c173a8c06d95380dd644921e7697f57c27b2220"
+    GIT_COMMIT_HASH = "fbc51fe6a8086e14f03e6f94f3123184c1bd3f63"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
