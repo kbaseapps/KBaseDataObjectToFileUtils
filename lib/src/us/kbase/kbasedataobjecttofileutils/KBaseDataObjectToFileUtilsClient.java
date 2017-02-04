@@ -44,19 +44,6 @@ public class KBaseDataObjectToFileUtilsClient {
         caller = new JsonClientCaller(url, token);
     }
 
-    /** Constructs a client with a custom URL
-     * and a custom authorization service URL.
-     * @param url the URL of the service.
-     * @param token the user's authorization token.
-     * @param auth the URL of the authorization server.
-     * @throws UnauthorizedException if the token is not valid.
-     * @throws IOException if an IOException occurs when checking the token's
-     * validity.
-     */
-    public KBaseDataObjectToFileUtilsClient(URL url, AuthToken token, URL auth) throws UnauthorizedException, IOException {
-        caller = new JsonClientCaller(url, token, auth);
-    }
-
     /** Constructs a client with a custom URL.
      * @param url the URL of the service.
      * @param user the user name.
@@ -217,35 +204,17 @@ public class KBaseDataObjectToFileUtilsClient {
     /**
      * <p>Original spec-file function name: GenomeToFASTA</p>
      * <pre>
-     * this should not be used, but is temporarily being retained to compare speed
      * </pre>
-     * @param   params   instance of type {@link us.kbase.kbasedataobjecttofileutils.GenomeAnnotationToFASTAParams GenomeAnnotationToFASTAParams} (original type "GenomeAnnotationToFASTA_Params")
-     * @return   instance of type {@link us.kbase.kbasedataobjecttofileutils.GenomeAnnotationToFASTAOutput GenomeAnnotationToFASTAOutput} (original type "GenomeAnnotationToFASTA_Output")
+     * @param   params   instance of type {@link us.kbase.kbasedataobjecttofileutils.GenomeToFASTAParams GenomeToFASTAParams} (original type "GenomeToFASTA_Params")
+     * @return   instance of type {@link us.kbase.kbasedataobjecttofileutils.GenomeToFASTAOutput GenomeToFASTAOutput} (original type "GenomeToFASTA_Output")
      * @throws IOException if an IO exception occurs
      * @throws JsonClientException if a JSON RPC exception occurs
      */
-    public GenomeAnnotationToFASTAOutput genomeToFASTA(GenomeAnnotationToFASTAParams params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
+    public GenomeToFASTAOutput genomeToFASTA(GenomeToFASTAParams params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
         List<Object> args = new ArrayList<Object>();
         args.add(params);
-        TypeReference<List<GenomeAnnotationToFASTAOutput>> retType = new TypeReference<List<GenomeAnnotationToFASTAOutput>>() {};
-        List<GenomeAnnotationToFASTAOutput> res = caller.jsonrpcCall("KBaseDataObjectToFileUtils.GenomeToFASTA", args, retType, true, true, jsonRpcContext, this.serviceVersion);
-        return res.get(0);
-    }
-
-    /**
-     * <p>Original spec-file function name: GenomeAnnotationToFASTA</p>
-     * <pre>
-     * </pre>
-     * @param   params   instance of type {@link us.kbase.kbasedataobjecttofileutils.GenomeAnnotationToFASTAParams GenomeAnnotationToFASTAParams} (original type "GenomeAnnotationToFASTA_Params")
-     * @return   instance of type {@link us.kbase.kbasedataobjecttofileutils.GenomeAnnotationToFASTAOutput GenomeAnnotationToFASTAOutput} (original type "GenomeAnnotationToFASTA_Output")
-     * @throws IOException if an IO exception occurs
-     * @throws JsonClientException if a JSON RPC exception occurs
-     */
-    public GenomeAnnotationToFASTAOutput genomeAnnotationToFASTA(GenomeAnnotationToFASTAParams params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
-        List<Object> args = new ArrayList<Object>();
-        args.add(params);
-        TypeReference<List<GenomeAnnotationToFASTAOutput>> retType = new TypeReference<List<GenomeAnnotationToFASTAOutput>>() {};
-        List<GenomeAnnotationToFASTAOutput> res = caller.jsonrpcCall("KBaseDataObjectToFileUtils.GenomeAnnotationToFASTA", args, retType, true, true, jsonRpcContext, this.serviceVersion);
+        TypeReference<List<GenomeToFASTAOutput>> retType = new TypeReference<List<GenomeToFASTAOutput>>() {};
+        List<GenomeToFASTAOutput> res = caller.jsonrpcCall("KBaseDataObjectToFileUtils.GenomeToFASTA", args, retType, true, true, jsonRpcContext, this.serviceVersion);
         return res.get(0);
     }
 

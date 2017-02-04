@@ -61,7 +61,7 @@ module KBaseDataObjectToFileUtils {
     } ParseFastaStr_Output;
 
 
-    /* GenomeAnnotationToFASTA() Params
+    /* GenomeToFASTA() Params
     */
     typedef structure {
 	data_obj_ref   genome_ref;
@@ -75,14 +75,14 @@ module KBaseDataObjectToFileUtils {
 	pattern_type   record_desc_pattern;
 	string         case;
 	int            linewrap;
-    } GenomeAnnotationToFASTA_Params;
+    } GenomeToFASTA_Params;
 
-    /* GenomeAnnotationToFASTA() Output
+    /* GenomeToFASTA() Output
     */
     typedef structure {
 	path_type         fasta_file_path;
 	list<feature_id>  feature_ids;
-    } GenomeAnnotationToFASTA_Output;
+    } GenomeToFASTA_Output;
 
 
     /* GenomeSetToFASTA() Params
@@ -142,10 +142,7 @@ module KBaseDataObjectToFileUtils {
 
     funcdef ParseFastaStr (ParseFastaStr_Params params)  returns (ParseFastaStr_Output) authentication required;
 
-    /* this should not be used, but is temporarily being retained to compare speed */
-    funcdef GenomeToFASTA (GenomeAnnotationToFASTA_Params params)  returns (GenomeAnnotationToFASTA_Output) authentication required;
-
-    funcdef GenomeAnnotationToFASTA (GenomeAnnotationToFASTA_Params params)  returns (GenomeAnnotationToFASTA_Output) authentication required;
+    funcdef GenomeToFASTA (GenomeToFASTA_Params params)  returns (GenomeToFASTA_Output) authentication required;
 
     funcdef GenomeSetToFASTA (GenomeSetToFASTA_Params params)  returns (GenomeSetToFASTA_Output) authentication required;
 
