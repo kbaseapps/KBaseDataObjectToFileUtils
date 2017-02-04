@@ -1,5 +1,5 @@
 /*
-** A KBase module: kb_blast
+** A KBase module: KBaseDataObjectToFileUtils
 **
 ** This module contains methods for converting KBase Data Objects to common bioinformatics file formats
 ** 
