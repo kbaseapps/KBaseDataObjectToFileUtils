@@ -65,45 +65,22 @@ class KBaseDataObjectToFileUtils(object):
 
     def GenomeToFASTA(self, params, context=None):
         """
-        this should not be used, but is temporarily being retained to compare speed
-        :param params: instance of type "GenomeAnnotationToFASTA_Params"
-           (GenomeAnnotationToFASTA() Params) -> structure: parameter
-           "genome_ref" of type "data_obj_ref", parameter "file" of type
-           "path_type", parameter "dir" of type "path_type", parameter
-           "console" of list of type "log_msg", parameter "invalid_msgs" of
-           list of type "log_msg", parameter "residue_type" of String,
-           parameter "feature_type" of String, parameter "record_id_pattern"
-           of type "pattern_type", parameter "record_desc_pattern" of type
+        :param params: instance of type "GenomeToFASTA_Params"
+           (GenomeToFASTA() Params) -> structure: parameter "genome_ref" of
+           type "data_obj_ref", parameter "file" of type "path_type",
+           parameter "dir" of type "path_type", parameter "console" of list
+           of type "log_msg", parameter "invalid_msgs" of list of type
+           "log_msg", parameter "residue_type" of String, parameter
+           "feature_type" of String, parameter "record_id_pattern" of type
+           "pattern_type", parameter "record_desc_pattern" of type
            "pattern_type", parameter "case" of String, parameter "linewrap"
            of Long
-        :returns: instance of type "GenomeAnnotationToFASTA_Output"
-           (GenomeAnnotationToFASTA() Output) -> structure: parameter
-           "fasta_file_path" of type "path_type", parameter "feature_ids" of
-           list of type "feature_id"
+        :returns: instance of type "GenomeToFASTA_Output" (GenomeToFASTA()
+           Output) -> structure: parameter "fasta_file_path" of type
+           "path_type", parameter "feature_ids" of list of type "feature_id"
         """
         return self._client.call_method(
             'KBaseDataObjectToFileUtils.GenomeToFASTA',
-            [params], self._service_ver, context)
-
-    def GenomeAnnotationToFASTA(self, params, context=None):
-        """
-        :param params: instance of type "GenomeAnnotationToFASTA_Params"
-           (GenomeAnnotationToFASTA() Params) -> structure: parameter
-           "genome_ref" of type "data_obj_ref", parameter "file" of type
-           "path_type", parameter "dir" of type "path_type", parameter
-           "console" of list of type "log_msg", parameter "invalid_msgs" of
-           list of type "log_msg", parameter "residue_type" of String,
-           parameter "feature_type" of String, parameter "record_id_pattern"
-           of type "pattern_type", parameter "record_desc_pattern" of type
-           "pattern_type", parameter "case" of String, parameter "linewrap"
-           of Long
-        :returns: instance of type "GenomeAnnotationToFASTA_Output"
-           (GenomeAnnotationToFASTA() Output) -> structure: parameter
-           "fasta_file_path" of type "path_type", parameter "feature_ids" of
-           list of type "feature_id"
-        """
-        return self._client.call_method(
-            'KBaseDataObjectToFileUtils.GenomeAnnotationToFASTA',
             [params], self._service_ver, context)
 
     def GenomeSetToFASTA(self, params, context=None):
@@ -152,4 +129,4 @@ class KBaseDataObjectToFileUtils(object):
 
     def status(self, context=None):
         return self._client.call_method('KBaseDataObjectToFileUtils.status',
-            [], self._service_ver, context)
+                                        [], self._service_ver, context)

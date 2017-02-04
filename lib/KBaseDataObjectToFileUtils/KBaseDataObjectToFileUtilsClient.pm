@@ -320,9 +320,9 @@ ParseFastaStr_Output is a reference to a hash where the following keys are defin
 =begin html
 
 <pre>
-$params is a KBaseDataObjectToFileUtils.GenomeAnnotationToFASTA_Params
-$return is a KBaseDataObjectToFileUtils.GenomeAnnotationToFASTA_Output
-GenomeAnnotationToFASTA_Params is a reference to a hash where the following keys are defined:
+$params is a KBaseDataObjectToFileUtils.GenomeToFASTA_Params
+$return is a KBaseDataObjectToFileUtils.GenomeToFASTA_Output
+GenomeToFASTA_Params is a reference to a hash where the following keys are defined:
 	genome_ref has a value which is a KBaseDataObjectToFileUtils.data_obj_ref
 	file has a value which is a KBaseDataObjectToFileUtils.path_type
 	dir has a value which is a KBaseDataObjectToFileUtils.path_type
@@ -338,7 +338,7 @@ data_obj_ref is a string
 path_type is a string
 log_msg is a string
 pattern_type is a string
-GenomeAnnotationToFASTA_Output is a reference to a hash where the following keys are defined:
+GenomeToFASTA_Output is a reference to a hash where the following keys are defined:
 	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
 	feature_ids has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
 feature_id is a string
@@ -349,9 +349,9 @@ feature_id is a string
 
 =begin text
 
-$params is a KBaseDataObjectToFileUtils.GenomeAnnotationToFASTA_Params
-$return is a KBaseDataObjectToFileUtils.GenomeAnnotationToFASTA_Output
-GenomeAnnotationToFASTA_Params is a reference to a hash where the following keys are defined:
+$params is a KBaseDataObjectToFileUtils.GenomeToFASTA_Params
+$return is a KBaseDataObjectToFileUtils.GenomeToFASTA_Output
+GenomeToFASTA_Params is a reference to a hash where the following keys are defined:
 	genome_ref has a value which is a KBaseDataObjectToFileUtils.data_obj_ref
 	file has a value which is a KBaseDataObjectToFileUtils.path_type
 	dir has a value which is a KBaseDataObjectToFileUtils.path_type
@@ -367,7 +367,7 @@ data_obj_ref is a string
 path_type is a string
 log_msg is a string
 pattern_type is a string
-GenomeAnnotationToFASTA_Output is a reference to a hash where the following keys are defined:
+GenomeToFASTA_Output is a reference to a hash where the following keys are defined:
 	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
 	feature_ids has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
 feature_id is a string
@@ -377,7 +377,7 @@ feature_id is a string
 
 =item Description
 
-this should not be used, but is temporarily being retained to compare speed
+
 
 =back
 
@@ -425,128 +425,6 @@ this should not be used, but is temporarily being retained to compare speed
         Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method GenomeToFASTA",
 					    status_line => $self->{client}->status_line,
 					    method_name => 'GenomeToFASTA',
-				       );
-    }
-}
- 
-
-
-=head2 GenomeAnnotationToFASTA
-
-  $return = $obj->GenomeAnnotationToFASTA($params)
-
-=over 4
-
-=item Parameter and return types
-
-=begin html
-
-<pre>
-$params is a KBaseDataObjectToFileUtils.GenomeAnnotationToFASTA_Params
-$return is a KBaseDataObjectToFileUtils.GenomeAnnotationToFASTA_Output
-GenomeAnnotationToFASTA_Params is a reference to a hash where the following keys are defined:
-	genome_ref has a value which is a KBaseDataObjectToFileUtils.data_obj_ref
-	file has a value which is a KBaseDataObjectToFileUtils.path_type
-	dir has a value which is a KBaseDataObjectToFileUtils.path_type
-	console has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
-	invalid_msgs has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
-	residue_type has a value which is a string
-	feature_type has a value which is a string
-	record_id_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
-	record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
-	case has a value which is a string
-	linewrap has a value which is an int
-data_obj_ref is a string
-path_type is a string
-log_msg is a string
-pattern_type is a string
-GenomeAnnotationToFASTA_Output is a reference to a hash where the following keys are defined:
-	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
-	feature_ids has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
-feature_id is a string
-
-</pre>
-
-=end html
-
-=begin text
-
-$params is a KBaseDataObjectToFileUtils.GenomeAnnotationToFASTA_Params
-$return is a KBaseDataObjectToFileUtils.GenomeAnnotationToFASTA_Output
-GenomeAnnotationToFASTA_Params is a reference to a hash where the following keys are defined:
-	genome_ref has a value which is a KBaseDataObjectToFileUtils.data_obj_ref
-	file has a value which is a KBaseDataObjectToFileUtils.path_type
-	dir has a value which is a KBaseDataObjectToFileUtils.path_type
-	console has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
-	invalid_msgs has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
-	residue_type has a value which is a string
-	feature_type has a value which is a string
-	record_id_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
-	record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
-	case has a value which is a string
-	linewrap has a value which is an int
-data_obj_ref is a string
-path_type is a string
-log_msg is a string
-pattern_type is a string
-GenomeAnnotationToFASTA_Output is a reference to a hash where the following keys are defined:
-	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
-	feature_ids has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
-feature_id is a string
-
-
-=end text
-
-=item Description
-
-
-
-=back
-
-=cut
-
- sub GenomeAnnotationToFASTA
-{
-    my($self, @args) = @_;
-
-# Authentication: required
-
-    if ((my $n = @args) != 1)
-    {
-	Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
-							       "Invalid argument count for function GenomeAnnotationToFASTA (received $n, expecting 1)");
-    }
-    {
-	my($params) = @args;
-
-	my @_bad_arguments;
-        (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument 1 \"params\" (value was \"$params\")");
-        if (@_bad_arguments) {
-	    my $msg = "Invalid arguments passed to GenomeAnnotationToFASTA:\n" . join("", map { "\t$_\n" } @_bad_arguments);
-	    Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
-								   method_name => 'GenomeAnnotationToFASTA');
-	}
-    }
-
-    my $url = $self->{url};
-    my $result = $self->{client}->call($url, $self->{headers}, {
-	    method => "KBaseDataObjectToFileUtils.GenomeAnnotationToFASTA",
-	    params => \@args,
-    });
-    if ($result) {
-	if ($result->is_error) {
-	    Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
-					       code => $result->content->{error}->{code},
-					       method_name => 'GenomeAnnotationToFASTA',
-					       data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
-					      );
-	} else {
-	    return wantarray ? @{$result->result} : $result->result->[0];
-	}
-    } else {
-        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method GenomeAnnotationToFASTA",
-					    status_line => $self->{client}->status_line,
-					    method_name => 'GenomeAnnotationToFASTA',
 				       );
     }
 }
@@ -1315,7 +1193,7 @@ seq has a value which is a string
 
 
 
-=head2 GenomeAnnotationToFASTA_Params
+=head2 GenomeToFASTA_Params
 
 =over 4
 
@@ -1323,7 +1201,7 @@ seq has a value which is a string
 
 =item Description
 
-GenomeAnnotationToFASTA() Params
+GenomeToFASTA() Params
 
 
 =item Definition
@@ -1370,7 +1248,7 @@ linewrap has a value which is an int
 
 
 
-=head2 GenomeAnnotationToFASTA_Output
+=head2 GenomeToFASTA_Output
 
 =over 4
 
@@ -1378,7 +1256,7 @@ linewrap has a value which is an int
 
 =item Description
 
-GenomeAnnotationToFASTA() Output
+GenomeToFASTA() Output
 
 
 =item Definition
