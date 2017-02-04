@@ -451,7 +451,7 @@ class KBaseDataObjectToFileUtils:
 
                     # nuc recs
                     else:
-                        if feature_type eq 'CDS' and ('protein_translation' not in feature or feature['protein_translation'] == None or feature_protein['protein_translation'] == ''):
+                        if feature_type eq 'CDS' and ('protein_translation' not in feature or feature['protein_translation'] == None or feature['protein_translation'] == ''):
                             continue
                         elif 'dna_sequence' not in feature or feature['dna_sequence'] == None or feature['dna_sequence'] == '':
                             self.log(invalid_msgs, "bad feature "+feature['id']+": No dna_sequence field.")
@@ -669,7 +669,7 @@ class KBaseDataObjectToFileUtils:
 
                     # nuc recs
                     else:
-                        if feature_type eq 'CDS' and ('protein_translation' not in feature or feature['protein_translation'] == None or feature_protein['protein_translation'] == ''):
+                        if feature_type eq 'CDS' and ('protein_translation' not in feature or feature['protein_translation'] == None or feature['protein_translation'] == ''):
                             continue
                         elif 'dna_sequence' not in feature or feature['dna_sequence'] == None or feature['dna_sequence'] == '':
                             self.log(invalid_msgs, "bad feature "+feature['id']+": No dna_sequence field.")
@@ -874,7 +874,7 @@ class KBaseDataObjectToFileUtils:
 
                     # nuc recs
                     else:
-                        if feature_type eq 'CDS' and ('protein_translation' not in feature or feature['protein_translation'] == None or feature_protein['protein_translation'] == ''):
+                        if feature_type eq 'CDS' and ('protein_translation' not in feature or feature['protein_translation'] == None or feature['protein_translation'] == ''):
                             continue
                         elif 'dna_sequence' not in feature or feature['dna_sequence'] == None or feature['dna_sequence'] == '':
                             self.log(invalid_msgs, "bad feature "+feature['id']+": No dna_sequence field.")
