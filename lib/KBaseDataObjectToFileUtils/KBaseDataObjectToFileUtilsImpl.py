@@ -632,6 +632,7 @@ class KBaseDataObjectToFileUtils:
             #records = []
                         
             for feature in genome_object['features']:
+                fid = feature['id']
 
                 #if feature_type == 'ALL' or feature_type == feature['type']:
                 if True:  # don't want to deal with changing indentation
@@ -645,8 +646,8 @@ class KBaseDataObjectToFileUtils:
                             continue
                         else:
                             feature_sequence_found = True
-                            rec_id = record_header_sub(record_id_pattern, feature['id'], genome_object['id'])
-                            rec_desc = record_header_sub(record_desc_pattern, feature['id'], genome_object['id'])
+                            rec_id = record_header_sub(record_id_pattern, fid, genome_id, genome_ref)
+                            rec_desc = record_header_sub(record_desc_pattern, fid, genome_id, genome_ref)
                             seq = feature['protein_translation']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
@@ -675,8 +676,8 @@ class KBaseDataObjectToFileUtils:
                             self.log(invalid_msgs, "bad feature "+feature['id']+": No dna_sequence field.")
                         else:
                             feature_sequence_found = True
-                            rec_id = record_header_sub(record_id_pattern, feature['id'], genome_object['id'])
-                            rec_desc = record_header_sub(record_desc_pattern, feature['id'], genome_object['id'])
+                            rec_id = record_header_sub(record_id_pattern, fid, genome_id, genome_ref)
+                            rec_desc = record_header_sub(record_desc_pattern, fid, genome_id, genome_ref)
                             seq = feature['dna_sequence']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
@@ -835,9 +836,10 @@ class KBaseDataObjectToFileUtils:
                 #records = []
                 
                 for feature in genome_object['features']:
+                    fid = feature['id']
                 
                     try:
-                        in_set = featureSetLookup[genome_ref][feature['id']]
+                        in_set = featureSetLookup[genome_ref][fid]
                     except:
                         continue
 
@@ -850,8 +852,8 @@ class KBaseDataObjectToFileUtils:
                             continue
                         else:
                             feature_sequence_found = True
-                            rec_id = record_header_sub(record_id_pattern, feature['id'], genome_object['id'])
-                            rec_desc = record_header_sub(record_desc_pattern, feature['id'], genome_object['id'])
+                            rec_id = record_header_sub(record_id_pattern, fid, genome_ref, genome_ref)
+                            rec_desc = record_header_sub(record_desc_pattern, fid, genome_ref, genome_ref)
                             seq = feature['protein_translation']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
@@ -880,8 +882,8 @@ class KBaseDataObjectToFileUtils:
                             self.log(invalid_msgs, "bad feature "+feature['id']+": No dna_sequence field.")
                         else:
                             feature_sequence_found = True
-                            rec_id = record_header_sub(record_id_pattern, feature['id'], genome_object['id'])
-                            rec_desc = record_header_sub(record_desc_pattern, feature['id'], genome_object['id'])
+                            rec_id = record_header_sub(record_id_pattern, fid, genome_ref, genome_ref)
+                            rec_desc = record_header_sub(record_desc_pattern, fid, genome_ref, genome_ref)
                             seq = feature['dna_sequence']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
