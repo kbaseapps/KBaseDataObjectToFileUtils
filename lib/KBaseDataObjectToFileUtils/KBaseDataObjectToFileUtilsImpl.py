@@ -380,6 +380,8 @@ class KBaseDataObjectToFileUtils:
 
         # init and simplify
         feature_ids = []
+        feature_id_to_function = dict()
+        genome_ref_to_sci_name = dict()
         feature_sequence_found = False
         residue_type = residue_type[0:1].upper()
         feature_type = feature_type.upper()
@@ -404,6 +406,10 @@ class KBaseDataObjectToFileUtils:
         except Exception as e:
             raise ValueError('Unable to fetch input_one_name object from workspace: ' + str(e))
         #to get the full stack trace: traceback.format_exc()
+
+        # set sci name
+        genome_ref_to_sci_name[genome_ref] = genome_object['scientific_name']
+        feature_id_to_function[genome_ref] = dict()
             
 
         # FIX: should I write recs as we go to reduce memory footprint, or is a single buffer write much faster?  Check later.
@@ -414,7 +420,10 @@ class KBaseDataObjectToFileUtils:
         with open(fasta_file_path, 'w', 0) as fasta_file_handle:
                         
             for feature in genome_object['features']:
-
+                
+                # set function
+                feature_id_to_function[genome_ref][feature['id']] = feature['function']
+                
                 #if feature_type == 'ALL' or feature_type == feature['type']:
                 if True:  # don't want to deal with changing indentation
 
@@ -491,6 +500,8 @@ class KBaseDataObjectToFileUtils:
         returnVal = dict()
         returnVal['fasta_file_path'] = fasta_file_path
         returnVal['feature_ids'] = feature_ids
+        returnVal['feature_id_to_function'] = feature_id_to_function
+        returnVal['genome_ref_to_sci_name'] = genome_id_to_sci_nme
         #END GenomeToFASTA
 
         # At some point might do deeper type checking...
@@ -561,6 +572,8 @@ class KBaseDataObjectToFileUtils:
         # init and simplify
         fasta_file_path_list = []
         feature_ids_by_genome_id = dict()
+        feature_id_to_function = dict()
+        genome_ref_to_sci_name = dict()
         residue_type = residue_type[0:1].upper()
         feature_type = feature_type.upper()
         case = case[0:1].upper()
@@ -625,6 +638,10 @@ class KBaseDataObjectToFileUtils:
             except Exception as e:
                 raise ValueError('Unable to fetch input_one_name object from workspace: ' + str(e))
                 #to get the full stack trace: traceback.format_exc()
+
+            # set sci name
+            genome_ref_to_sci_name[genome_ref] = genome_object['scientific_name']
+            feature_id_to_function[genome_ref] = dict()
             
 
             # FIX: should I write recs as we go to reduce memory footprint, or is a single buffer write much faster?  Check later.
@@ -633,6 +650,9 @@ class KBaseDataObjectToFileUtils:
                         
             for feature in genome_object['features']:
                 fid = feature['id']
+
+                # set function
+                feature_id_to_function[genome_ref][fid] = feature['function']
 
                 #if feature_type == 'ALL' or feature_type == feature['type']:
                 if True:  # don't want to deal with changing indentation
@@ -713,6 +733,8 @@ class KBaseDataObjectToFileUtils:
         returnVal = dict()
         returnVal['fasta_file_path_list'] = fasta_file_path_list
         returnVal['feature_ids_by_genome_id'] = feature_ids_by_genome_id
+        returnVal['feature_id_to_function'] = feature_id_to_function
+        returnVal['genome_ref_to_sci_name'] = genome_id_to_sci_nme
         #END GenomeSetToFASTA
 
         # At some point might do deeper type checking...
@@ -777,6 +799,8 @@ class KBaseDataObjectToFileUtils:
 
         # init and simplify
         feature_ids_by_genome_ref = dict()
+        feature_id_to_function = dict()
+        genome_ref_to_sci_name = dict()
         residue_type = residue_type[0:1].upper()
         feature_type = feature_type.upper()
         case = case[0:1].upper()
@@ -830,6 +854,9 @@ class KBaseDataObjectToFileUtils:
                     raise ValueError('Unable to fetch input_one_name object from workspace: ' + str(e))
                     #to get the full stack trace: traceback.format_exc()
             
+                # set sci name
+                genome_ref_to_sci_name[genome_ref] = genome_object['scientific_name']
+                feature_id_to_function[genome_ref] = dict()
 
                 # FIX: should I write recs as we go to reduce memory footprint, or is a single buffer write much faster?  Check later.
                 #
@@ -842,6 +869,8 @@ class KBaseDataObjectToFileUtils:
                         in_set = featureSetLookup[genome_ref][fid]
                     except:
                         continue
+
+                    feature_id_to_function[genome_ref][fid] = feature['function']
 
                     # protein recs
                     if residue_type == 'P':
@@ -922,6 +951,8 @@ class KBaseDataObjectToFileUtils:
         returnVal = dict()
         returnVal['fasta_file_path'] = fasta_file_path
         returnVal['feature_ids_by_genome_ref'] = feature_ids_by_genome_ref
+        returnVal['feature_id_to_function'] = feature_id_to_function
+        returnVal['genome_ref_to_sci_name'] = genome_id_to_sci_nme
         #END FeatureSetToFASTA
 
         # At some point might do deeper type checking...
