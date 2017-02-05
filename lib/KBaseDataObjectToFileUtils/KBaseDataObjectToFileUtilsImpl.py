@@ -659,7 +659,7 @@ class KBaseDataObjectToFileUtils:
                     feature_id_to_function[genome_ref][fid] = feature['function']
                 else:
                     feature_id_to_function[genome_ref][fid] = 'N/A'
-                self.log (console, "FID:'"+str(fid)+"' FXN: '"+str(feature_id_to_function[genome_ref][fid])  # DEBUG
+                self.log (console, "FID:'"+str(fid)+"' FXN: '"+str(feature_id_to_function[genome_ref][fid]))  # DEBUG
 
                 #if feature_type == 'ALL' or feature_type == feature['type']:
                 if True:  # don't want to deal with changing indentation
