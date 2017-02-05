@@ -504,7 +504,7 @@ class KBaseDataObjectToFileUtils:
         returnVal['fasta_file_path'] = fasta_file_path
         returnVal['feature_ids'] = feature_ids
         returnVal['feature_id_to_function'] = feature_id_to_function
-        returnVal['genome_ref_to_sci_name'] = genome_ref_to_sci_nme
+        returnVal['genome_ref_to_sci_name'] = genome_ref_to_sci_name
         #END GenomeToFASTA
 
         # At some point might do deeper type checking...
@@ -740,7 +740,7 @@ class KBaseDataObjectToFileUtils:
         returnVal['fasta_file_path_list'] = fasta_file_path_list
         returnVal['feature_ids_by_genome_id'] = feature_ids_by_genome_id
         returnVal['feature_id_to_function'] = feature_id_to_function
-        returnVal['genome_ref_to_sci_name'] = genome_ref_to_sci_nme
+        returnVal['genome_ref_to_sci_name'] = genome_ref_to_sci_name
         #END GenomeSetToFASTA
 
         # At some point might do deeper type checking...
@@ -962,7 +962,7 @@ class KBaseDataObjectToFileUtils:
         returnVal['fasta_file_path'] = fasta_file_path
         returnVal['feature_ids_by_genome_ref'] = feature_ids_by_genome_ref
         returnVal['feature_id_to_function'] = feature_id_to_function
-        returnVal['genome_ref_to_sci_name'] = genome_ref_to_sci_nme
+        returnVal['genome_ref_to_sci_name'] = genome_ref_to_sci_name
         #END FeatureSetToFASTA
 
         # At some point might do deeper type checking...
