@@ -422,7 +422,10 @@ class KBaseDataObjectToFileUtils:
             for feature in genome_object['features']:
                 
                 # set function
-                feature_id_to_function[genome_ref][feature['id']] = feature['function']
+                if 'function' in feature:
+                    feature_id_to_function[genome_ref][feature['id']] = feature['function']
+                else:
+                    feature_id_to_function[genome_ref][feature['id']] = 'N/A'
                 
                 #if feature_type == 'ALL' or feature_type == feature['type']:
                 if True:  # don't want to deal with changing indentation
@@ -652,7 +655,10 @@ class KBaseDataObjectToFileUtils:
                 fid = feature['id']
 
                 # set function
-                feature_id_to_function[genome_ref][fid] = feature['function']
+                if 'function' in feature:
+                    feature_id_to_function[genome_ref][fid] = feature['function']
+                else:
+                    feature_id_to_function[genome_ref][fid] = 'N/A'
 
                 #if feature_type == 'ALL' or feature_type == feature['type']:
                 if True:  # don't want to deal with changing indentation
@@ -870,7 +876,11 @@ class KBaseDataObjectToFileUtils:
                     except:
                         continue
 
-                    feature_id_to_function[genome_ref][fid] = feature['function']
+                    # set function
+                    if 'function' in feature:
+                        feature_id_to_function[genome_ref][fid] = feature['function']
+                    else:
+                        feature_id_to_function[genome_ref][fid] = 'N/A'
 
                     # protein recs
                     if residue_type == 'P':
