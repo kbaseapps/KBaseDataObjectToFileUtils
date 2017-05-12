@@ -20,7 +20,7 @@ from KBaseDataObjectToFileUtils.authclient import KBaseAuth as _KBaseAuth
 
 DEPLOY = 'KB_DEPLOYMENT_CONFIG'
 SERVICE = 'KB_SERVICE_NAME'
-AUTH = 'auth-server-url'
+AUTH = 'auth-service-url'
 
 # Note that the error fields do not match the 2.0 JSONRPC spec
 
@@ -109,7 +109,11 @@ class JSONRPCServiceCustom(JSONRPCService):
             # Exception was raised inside the method.
             newerr = JSONServerError()
             newerr.trace = traceback.format_exc()
-            newerr.data = e.message
+            if isinstance(e.message, basestring):
+                newerr.data = e.message
+            else:
+                # Some exceptions embed other exceptions as the message
+                newerr.data = repr(e.message)
             raise newerr
         return result
 
@@ -332,23 +336,23 @@ class Application(object):
         self.rpc_service.add(impl_KBaseDataObjectToFileUtils.TranslateNucToProtSeq,
                              name='KBaseDataObjectToFileUtils.TranslateNucToProtSeq',
                              types=[dict])
-        self.method_authentication['KBaseDataObjectToFileUtils.TranslateNucToProtSeq'] = 'required' # noqa
+        self.method_authentication['KBaseDataObjectToFileUtils.TranslateNucToProtSeq'] = 'required'  # noqa
         self.rpc_service.add(impl_KBaseDataObjectToFileUtils.ParseFastaStr,
                              name='KBaseDataObjectToFileUtils.ParseFastaStr',
                              types=[dict])
-        self.method_authentication['KBaseDataObjectToFileUtils.ParseFastaStr'] = 'required' # noqa
+        self.method_authentication['KBaseDataObjectToFileUtils.ParseFastaStr'] = 'required'  # noqa
         self.rpc_service.add(impl_KBaseDataObjectToFileUtils.GenomeToFASTA,
                              name='KBaseDataObjectToFileUtils.GenomeToFASTA',
                              types=[dict])
-        self.method_authentication['KBaseDataObjectToFileUtils.GenomeToFASTA'] = 'required' # noqa
+        self.method_authentication['KBaseDataObjectToFileUtils.GenomeToFASTA'] = 'required'  # noqa
         self.rpc_service.add(impl_KBaseDataObjectToFileUtils.GenomeSetToFASTA,
                              name='KBaseDataObjectToFileUtils.GenomeSetToFASTA',
                              types=[dict])
-        self.method_authentication['KBaseDataObjectToFileUtils.GenomeSetToFASTA'] = 'required' # noqa
+        self.method_authentication['KBaseDataObjectToFileUtils.GenomeSetToFASTA'] = 'required'  # noqa
         self.rpc_service.add(impl_KBaseDataObjectToFileUtils.FeatureSetToFASTA,
                              name='KBaseDataObjectToFileUtils.FeatureSetToFASTA',
                              types=[dict])
-        self.method_authentication['KBaseDataObjectToFileUtils.FeatureSetToFASTA'] = 'required' # noqa
+        self.method_authentication['KBaseDataObjectToFileUtils.FeatureSetToFASTA'] = 'required'  # noqa
         self.rpc_service.add(impl_KBaseDataObjectToFileUtils.status,
                              name='KBaseDataObjectToFileUtils.status',
                              types=[dict])
