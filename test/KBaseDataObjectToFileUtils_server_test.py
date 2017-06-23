@@ -171,7 +171,6 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
                                         'genome_3': { 'ref': genome_ref_3 }
                                     }
                         }
-        #genomeSet_info = self.getWsClient().save_objects({'workspace': self.getWsName(), 'objects': [genomeSet_obj]})[0]
         provenance = [{}]
         genomeSet_info = self.getWsClient().save_objects({
             'workspace': self.getWsName(), 
@@ -219,29 +218,25 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
         reference_prok_genomes_WS = 'ReferenceDataManager'  # PROD and CI
         genome_ref_1 = reference_prok_genomes_WS+'/GCF_001566335.1/1'  # E. coli K-12 MG1655
-        genome_ref_2 = reference_prok_genomes_WS+'/GCF_001566335.1/1'  # E. coli K-12 MG1655
-        genome_ref_3 = reference_prok_genomes_WS+'/GCF_001566335.1/1'  # E. coli K-12 MG1655
-#        genome_ref_2 = reference_prok_genomes_WS+'/GCF_000021385.1/1'  # D. vulgaris str. 'Miyazaki F'
-#        genome_ref_3 = reference_prok_genomes_WS+'/GCF_900129775.1/1'  # Halobaculum gomorrense (16 contigs)
+        genome_ref_2 = reference_prok_genomes_WS+'/GCF_000021385.1/1'  # D. vulgaris str. 'Miyazaki F'
+        genome_ref_3 = reference_prok_genomes_WS+'/GCF_900129775.1/1'  # Halobaculum gomorrense (16 contigs)
         genome_id_feature_id_delim = '.f:'
         feature_id_1 = 'AWN69_RS07145'
-        feature_id_2 = 'AWN69_RS10070'
-        feature_id_3 = 'AWN69_RS13375'
-#        feature_id_2 = 'DVMF_RS00005'
-#        feature_id_3 = 'BUE16_RS15805'
+        feature_id_2 = 'DVMF_RS00005'
+        feature_id_3 = 'BUE16_RS15805'
 
         featureSet_obj = { 'description': 'test genomeSet',
-                           'elements_ordering': [feature_id_1,
-                                                 feature_id_2,
-                                                 feature_id_3
-                                                 ],
+                           'elements_ordering': [
+                               feature_id_1,
+                               feature_id_2,
+                               feature_id_3
+                           ],
                            'elements': { 
                                feature_id_1: [genome_ref_1],
                                feature_id_2: [genome_ref_2],
                                feature_id_3: [genome_ref_3]
                            }
                         }
-        #genomeSet_info = self.getWsClient().save_objects({'workspace': self.getWsName(), 'objects': [genomeSet_obj]})[0]
         provenance = [{}]
         featureSet_info = self.getWsClient().save_objects({
             'workspace': self.getWsName(), 
@@ -268,10 +263,8 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
                 'dir':                 output_dir,
                 'console':             [],
                 'invalid_msgs':        [],
-                #'residue_type':        'nucleotide',
-                #'feature_type':        'ALL',
-                'residue_type':        'protein',
-                'feature_type':        'CDS',
+                'residue_type':        'nucleotide',
+                'feature_type':        'ALL',
                 'record_id_pattern':   '%%genome_ref%%'+'.f:'+'%%feature_id%%',
                 'record_desc_pattern': '[%%genome_ref%%]',
                 'case':                'upper',
