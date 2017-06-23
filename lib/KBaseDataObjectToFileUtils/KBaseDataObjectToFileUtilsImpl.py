@@ -105,7 +105,7 @@ class KBaseDataObjectToFileUtils:
         if 'genetic_code' not in params or params['genetic_code'] == None or params['genetic_code'] == '':
             params['genetic_code'] = '11'
 
-        if params['genetic_cde'] != '11':
+        if params['genetic_code'] != '11':
             raise ValueError('Method TranslateNucToProtSeq() only knows genetic code 11')
         
         nuc_seq = nuc_seq.upper()
