@@ -102,7 +102,7 @@ class KBaseDataObjectToFileUtils:
         #BEGIN TranslateNucToProtSeq
         if 'nuc_seq' not in params or params['nuc_seq'] == None or params['nuc_seq'] == '':
             raise ValueError('Method TranslateNucToProtSeq() requires nuc_seq parameter')
-        if 'genetic_code' not in params or params['genetic_code'] == None or params['genentic_code'] == '':
+        if 'genetic_code' not in params or params['genetic_code'] == None or params['genetic_code'] == '':
             params['genetic_code'] = '11'
 
         if params['genetic_cde'] != '11':
@@ -131,6 +131,8 @@ class KBaseDataObjectToFileUtils:
             'TGC':'C', 'TGT':'C', 'TGA':'_', 'TGG':'W'
             }
         prot_seq = ''.join([genetic_code[table].get(nuc_seq[3*i:3*i+3],'X') for i in range(len(nuc_seq)//3)])
+        if prot_seq.endswith('_'):
+            prot_seq = prot_seq.rstrip('_')
 
         returnVal = dict()
         returnVal['prot_seq'] = prot_seq
