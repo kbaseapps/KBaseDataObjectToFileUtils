@@ -102,17 +102,18 @@ class KBaseDataObjectToFileUtils:
         #BEGIN TranslateNucToProtSeq
         if 'nuc_seq' not in params or params['nuc_seq'] == None or params['nuc_seq'] == '':
             raise ValueError('Method TranslateNucToProtSeq() requires nuc_seq parameter')
-        if 'genetic_code' not in params or params['genetic_code'] == None or params['genentic_code'] == '':
+        if 'genetic_code' not in params or params['genetic_code'] == None or params['genetic_code'] == '':
             params['genetic_code'] = '11'
 
-        if params['genetic_cde'] != '11':
+        if params['genetic_code'] != '11':
             raise ValueError('Method TranslateNucToProtSeq() only knows genetic code 11')
         
-        nuc_seq = nuc_seq.upper()
+        nuc_seq = params['nuc_seq'].upper()
         prot_seq = ''
 
-        genetic_code = dict()
-        genetic_code['11'] = {
+        genetic_code = params['genetic_code']
+        genetic_code_table = dict()
+        genetic_code_table['11'] = {
             'ATA':'I', 'ATC':'I', 'ATT':'I', 'ATG':'M',
             'ACA':'T', 'ACC':'T', 'ACG':'T', 'ACT':'T',
             'AAC':'N', 'AAT':'N', 'AAA':'K', 'AAG':'K',
@@ -130,7 +131,12 @@ class KBaseDataObjectToFileUtils:
             'TAC':'Y', 'TAT':'Y', 'TAA':'_', 'TAG':'_',
             'TGC':'C', 'TGT':'C', 'TGA':'_', 'TGG':'W'
             }
-        prot_seq = ''.join([genetic_code[table].get(nuc_seq[3*i:3*i+3],'X') for i in range(len(nuc_seq)//3)])
+        if genetic_code not in genetic_code_table:
+            raise ValueError ("genetic code '"+str(genetic_code)+"' not configured in genetic_code_table")
+
+        prot_seq = ''.join([genetic_code_table[genetic_code].get(nuc_seq[3*i:3*i+3],'X') for i in range(len(nuc_seq)//3)])
+        if prot_seq.endswith('_'):
+            prot_seq = prot_seq.rstrip('_')
 
         returnVal = dict()
         returnVal['prot_seq'] = prot_seq
