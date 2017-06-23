@@ -108,7 +108,7 @@ class KBaseDataObjectToFileUtils:
         if params['genetic_code'] != '11':
             raise ValueError('Method TranslateNucToProtSeq() only knows genetic code 11')
         
-        nuc_seq = nuc_seq.upper()
+        nuc_seq = params['nuc_seq'].upper()
         prot_seq = ''
 
         genetic_code = dict()
