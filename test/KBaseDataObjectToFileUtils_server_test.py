@@ -226,7 +226,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
         feature_id_3 = 'BUE16_RS15805'
 
         featureSet_obj = { 'description': 'test genomeSet',
-                           'elements_ordering': [
+                           'element_ordering': [
                                feature_id_1,
                                feature_id_2,
                                feature_id_3
