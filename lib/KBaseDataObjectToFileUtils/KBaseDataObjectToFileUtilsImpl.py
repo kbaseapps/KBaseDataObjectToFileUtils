@@ -11,7 +11,7 @@ import traceback
 import uuid
 from datetime import datetime
 from pprint import pprint, pformat
-import numpy as np
+#import numpy as np
 import gzip
 
 from Bio import SeqIO
@@ -19,7 +19,8 @@ from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import generic_protein
 
-from biokbase.workspace.client import Workspace as workspaceService
+#from biokbase.workspace.client import Workspace as workspaceService
+from Workspace.WorkspaceClient import Workspace as workspaceService
 from requests_toolbelt import MultipartEncoder
 from biokbase.AbstractHandle.Client import AbstractHandle as HandleService
 #from doekbase.data_api.annotation.genome_annotation.api import GenomeAnnotationAPI as GenomeAnnotationAPI
@@ -408,7 +409,8 @@ class KBaseDataObjectToFileUtils:
         # get genome object
         try:
             ws = workspaceService(self.workspaceURL, token=ctx['token'])
-            genome_object = ws.get_objects([{'ref':genome_ref}])[0]['data']
+            #genome_object = ws.get_objects([{'ref':genome_ref}])[0]['data']
+            genome_object = ws.get_objects2({'objects':[{'ref':genome_ref}]})['data'][0]['data']
         except Exception as e:
             raise ValueError('Unable to fetch input_one_name object from workspace: ' + str(e))
         #to get the full stack trace: traceback.format_exc()
@@ -601,8 +603,8 @@ class KBaseDataObjectToFileUtils:
         # get genomeSet object
         try:
             ws = workspaceService(self.workspaceURL, token=ctx['token'])
-            #genomeSet_object = ws.get_objects2({'objects':[{'ref':genomeSet_ref}]})['data'][0]['data']
-            genomeSet_object = ws.get_objects([{'ref':genomeSet_ref}])[0]['data']
+            #genomeSet_object = ws.get_objects([{'ref':genomeSet_ref}])[0]['data']
+            genomeSet_object = ws.get_objects2({'objects':[{'ref':genomeSet_ref}]})['data'][0]['data']
         except Exception as e:
             raise ValueError('Unable to fetch input_one_name object from workspace: ' + str(e))
             #to get the full stack trace: traceback.format_exc()
@@ -643,7 +645,8 @@ class KBaseDataObjectToFileUtils:
             # get genome object
             try:
                 ws = workspaceService(self.workspaceURL, token=ctx['token'])
-                genome_object = ws.get_objects([{'ref':genome_ref}])[0]['data']
+                #genome_object = ws.get_objects([{'ref':genome_ref}])[0]['data']
+                genome_object = ws.get_objects2({'objects':[{'ref':genome_ref}]})['data'][0]['data']
             except Exception as e:
                 raise ValueError('Unable to fetch input_one_name object from workspace: ' + str(e))
                 #to get the full stack trace: traceback.format_exc()
@@ -836,8 +839,8 @@ class KBaseDataObjectToFileUtils:
         # get featureSet object
         try:
             ws = workspaceService(self.workspaceURL, token=ctx['token'])
-            #featureSet_object = ws.get_objects2({'objects':[{'ref':featureSet_ref}]})['data'][0]['data']
-            featureSet_object = ws.get_objects([{'ref':featureSet_ref}])[0]['data']
+            #featureSet_object = ws.get_objects([{'ref':featureSet_ref}])[0]['data']
+            featureSet_object = ws.get_objects2({'objects':[{'ref':featureSet_ref}]})['data'][0]['data']
         except Exception as e:
             raise ValueError('Unable to fetch featureSet object from workspace: ' + str(e))
             #to get the full stack trace: traceback.format_exc()
@@ -847,7 +850,7 @@ class KBaseDataObjectToFileUtils:
         featureSetLookup = {}
         for fId in featureSet_features.keys():
             for genome_ref in featureSet_features[fId]:
-                genome_ref = featureSet_features[fId][0]
+                #genome_ref = featureSet_features[fId][0]  # get more than first one
                 if genome_ref not in genome2features.keys():
                     genome2features[genome_ref] = []
                     featureSetLookup[genome_ref] = dict()
@@ -863,7 +866,8 @@ class KBaseDataObjectToFileUtils:
                 # get genome object
                 try:
                     ws = workspaceService(self.workspaceURL, token=ctx['token'])
-                    genome_object = ws.get_objects([{'ref':genome_ref}])[0]['data']
+                    #genome_object = ws.get_objects([{'ref':genome_ref}])[0]['data']
+                    genome_object = ws.get_objects2({'objects':[{'ref':genome_ref}]})['data'][0]['data']
                 except Exception as e:
                     raise ValueError('Unable to fetch input_one_name object from workspace: ' + str(e))
                     #to get the full stack trace: traceback.format_exc()
