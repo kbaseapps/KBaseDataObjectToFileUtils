@@ -20,7 +20,7 @@ from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import generic_protein
 
 #from biokbase.workspace.client import Workspace as workspaceService
-from Workspace.WorkspaceClient import Workspace as workspaceService
+from installed_clients.WorkspaceClient import Workspace as workspaceService
 from requests_toolbelt import MultipartEncoder
 from biokbase.AbstractHandle.Client import AbstractHandle as HandleService
 #from doekbase.data_api.annotation.genome_annotation.api import GenomeAnnotationAPI as GenomeAnnotationAPI
@@ -50,9 +50,9 @@ class KBaseDataObjectToFileUtils:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "0.0.4"
-    GIT_URL = "https://github.com/kbaseapps/KBaseDataObjectToFileUtils.git"
-    GIT_COMMIT_HASH = "dfedc8e2857baf3249383f470289c81d3316ddb3"
+    VERSION = "0.0.7"
+    GIT_URL = "https://github.com/dcchivian/KBaseDataObjectToFileUtils"
+    GIT_COMMIT_HASH = "d300896441f587911f6494a865046fbd5ebee8f1"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None

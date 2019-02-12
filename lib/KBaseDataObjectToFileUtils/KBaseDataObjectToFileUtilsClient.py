@@ -12,7 +12,7 @@ from __future__ import print_function
 try:
     # baseclient and this client are in a package
     from .baseclient import BaseClient as _BaseClient  # @UnusedImport
-except:
+except ImportError:
     # no they aren't
     from baseclient import BaseClient as _BaseClient  # @Reimport
 
@@ -23,7 +23,7 @@ class KBaseDataObjectToFileUtils(object):
             self, url=None, timeout=30 * 60, user_id=None,
             password=None, token=None, ignore_authrc=False,
             trust_all_ssl_certificates=False,
-            auth_svc='https://kbase.us/services/authorization/Sessions/Login'):
+            auth_svc='https://ci.kbase.us/services/auth/api/legacy/KBase/Sessions/Login'):
         if url is None:
             raise ValueError('A url is required')
         self._service_ver = None
@@ -44,9 +44,8 @@ class KBaseDataObjectToFileUtils(object):
            (TranslateNucToProtSeq() Output) -> structure: parameter
            "prot_seq" of String
         """
-        return self._client.call_method(
-            'KBaseDataObjectToFileUtils.TranslateNucToProtSeq',
-            [params], self._service_ver, context)
+        return self._client.call_method('KBaseDataObjectToFileUtils.TranslateNucToProtSeq',
+                                        [params], self._service_ver, context)
 
     def ParseFastaStr(self, params, context=None):
         """
@@ -59,9 +58,8 @@ class KBaseDataObjectToFileUtils(object):
            Output) -> structure: parameter "id" of String, parameter "desc"
            of String, parameter "seq" of String
         """
-        return self._client.call_method(
-            'KBaseDataObjectToFileUtils.ParseFastaStr',
-            [params], self._service_ver, context)
+        return self._client.call_method('KBaseDataObjectToFileUtils.ParseFastaStr',
+                                        [params], self._service_ver, context)
 
     def GenomeToFASTA(self, params, context=None):
         """
@@ -79,9 +77,8 @@ class KBaseDataObjectToFileUtils(object):
            Output) -> structure: parameter "fasta_file_path" of type
            "path_type", parameter "feature_ids" of list of type "feature_id"
         """
-        return self._client.call_method(
-            'KBaseDataObjectToFileUtils.GenomeToFASTA',
-            [params], self._service_ver, context)
+        return self._client.call_method('KBaseDataObjectToFileUtils.GenomeToFASTA',
+                                        [params], self._service_ver, context)
 
     def GenomeSetToFASTA(self, params, context=None):
         """
@@ -101,9 +98,8 @@ class KBaseDataObjectToFileUtils(object):
            "feature_ids_by_genome_id" of mapping from type "genome_id" to
            list of type "feature_id"
         """
-        return self._client.call_method(
-            'KBaseDataObjectToFileUtils.GenomeSetToFASTA',
-            [params], self._service_ver, context)
+        return self._client.call_method('KBaseDataObjectToFileUtils.GenomeSetToFASTA',
+                                        [params], self._service_ver, context)
 
     def FeatureSetToFASTA(self, params, context=None):
         """
@@ -123,9 +119,8 @@ class KBaseDataObjectToFileUtils(object):
            "feature_ids_by_genome_ref" of mapping from type "data_obj_ref" to
            list of type "feature_id"
         """
-        return self._client.call_method(
-            'KBaseDataObjectToFileUtils.FeatureSetToFASTA',
-            [params], self._service_ver, context)
+        return self._client.call_method('KBaseDataObjectToFileUtils.FeatureSetToFASTA',
+                                        [params], self._service_ver, context)
 
     def status(self, context=None):
         return self._client.call_method('KBaseDataObjectToFileUtils.status',
