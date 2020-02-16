@@ -135,6 +135,30 @@ module KBaseDataObjectToFileUtils {
     } FeatureSetToFASTA_Output;
 
 
+    /* AnnotatedMetagenomeAssemblyToFASTA() Params
+    */
+    typedef structure {
+	data_obj_ref   genome_ref;
+	path_type      file;
+	path_type      dir;
+	list<log_msg>  console;
+	list<log_msg>  invalid_msgs;
+	string         residue_type;
+	string         feature_type;
+	pattern_type   record_id_pattern;
+	pattern_type   record_desc_pattern;
+	string         case;
+	int            linewrap;
+    } AnnotatedMetagenomeAssemblyToFASTA_Params;
+
+    /* AnnotatedMetagenomeAssemblyToFASTA() Output
+    */
+    typedef structure {
+	path_type         fasta_file_path;
+	list<feature_id>  feature_ids;
+    } AnnotatedMetagenomeAssemblyToFASTA_Output;
+
+
     /*  Methods for converting KBase Data Objects to common bioinformatics format files
     **
     */
@@ -147,4 +171,7 @@ module KBaseDataObjectToFileUtils {
     funcdef GenomeSetToFASTA (GenomeSetToFASTA_Params params)  returns (GenomeSetToFASTA_Output) authentication required;
 
     funcdef FeatureSetToFASTA (FeatureSetToFASTA_Params params)  returns (FeatureSetToFASTA_Output) authentication required;
+
+    funcdef AnnotatedMetagenomeAssemblyToFASTA (AnnotatedMetagenomeAssemblyToFASTA_Params params)  returns (AnnotatedMetagenomeAssemblyToFASTA_Output) authentication required;
+
 };

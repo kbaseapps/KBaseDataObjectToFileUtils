@@ -15,9 +15,10 @@ except:
 from pprint import pprint
 
 from installed_clients.WorkspaceClient import Workspace as workspaceService
+from installed_clients.GenomeFileUtilClient import Workspace as GenomeFileUtil
 from KBaseDataObjectToFileUtils.KBaseDataObjectToFileUtilsImpl import KBaseDataObjectToFileUtils
 from KBaseDataObjectToFileUtils.KBaseDataObjectToFileUtilsServer import MethodContext
-from KBaseDataObjectToFileUtils.authclient import KBaseAuth as _KBaseAuth
+from installed_clients.authclient import KBaseAuth as _KBaseAuth
 
 
 class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
@@ -281,3 +282,33 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
         self.assertNotEqual(len(ret['genome_ref_to_sci_name'].keys()), 0)
         pass
         
+
+    #### AnnotatedMetagenomeAssemblyToFASTA_01()
+    ##
+    def test_KBaseDataObjectToFileUtils_AnnotatedMetagenomeAssemblyToFASTA_01(self):
+
+        reference_prok_genomes_WS = 'ReferenceDataManager'  # PROD and CI
+        genome_ref_1 = reference_prok_genomes_WS+'/GCF_001566335.1/1'  # E. coli K-12 MG1655
+
+        output_dir = os.path.join(self.scratch,'fasta_out.'+str(uuid.uuid4()))
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+
+        parameters = {
+                'genome_ref':          genome_ref_1,
+                'file':                'test_genome.fasta',
+                'dir':                 output_dir,
+                'console':             [],
+                'invalid_msgs':        [],
+                'residue_type':        'protein',
+                'feature_type':        'CDS',
+                'record_id_pattern':   '%%feature_id%%',
+                'record_desc_pattern': '[%%genome_id%%]',
+                'case':                'upper',
+                'linewrap':            50
+                }
+        ret = self.getImpl().GenomeToFASTA(self.getContext(), parameters)[0]
+        self.assertIsNotNone(ret['fasta_file_path'])
+        self.assertIsNotNone(ret['feature_ids'])
+        self.assertNotEqual(len(ret['feature_ids']), 0)
+        pass

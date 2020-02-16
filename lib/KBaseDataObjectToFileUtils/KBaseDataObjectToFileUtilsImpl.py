@@ -52,7 +52,7 @@ class KBaseDataObjectToFileUtils:
     ######################################### noqa
     VERSION = "0.0.7"
     GIT_URL = "https://github.com/dcchivian/KBaseDataObjectToFileUtils"
-    GIT_COMMIT_HASH = "d300896441f587911f6494a865046fbd5ebee8f1"
+    GIT_COMMIT_HASH = "8799924040fe97c583e9b1a7351ff9af1b8eac0b"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -980,6 +980,37 @@ class KBaseDataObjectToFileUtils:
         # At some point might do deeper type checking...
         if not isinstance(returnVal, dict):
             raise ValueError('Method FeatureSetToFASTA return value ' +
+                             'returnVal is not type dict as required.')
+        # return the results
+        return [returnVal]
+
+    def AnnotatedMetagenomeAssemblyToFASTA(self, ctx, params):
+        """
+        :param params: instance of type
+           "AnnotatedMetagenomeAssemblyToFASTA_Params"
+           (AnnotatedMetagenomeAssemblyToFASTA() Params) -> structure:
+           parameter "genome_ref" of type "data_obj_ref", parameter "file" of
+           type "path_type", parameter "dir" of type "path_type", parameter
+           "console" of list of type "log_msg", parameter "invalid_msgs" of
+           list of type "log_msg", parameter "residue_type" of String,
+           parameter "feature_type" of String, parameter "record_id_pattern"
+           of type "pattern_type", parameter "record_desc_pattern" of type
+           "pattern_type", parameter "case" of String, parameter "linewrap"
+           of Long
+        :returns: instance of type
+           "AnnotatedMetagenomeAssemblyToFASTA_Output"
+           (AnnotatedMetagenomeAssemblyToFASTA() Output) -> structure:
+           parameter "fasta_file_path" of type "path_type", parameter
+           "feature_ids" of list of type "feature_id"
+        """
+        # ctx is the context object
+        # return variables are: returnVal
+        #BEGIN AnnotatedMetagenomeAssemblyToFASTA
+        #END AnnotatedMetagenomeAssemblyToFASTA
+
+        # At some point might do deeper type checking...
+        if not isinstance(returnVal, dict):
+            raise ValueError('Method AnnotatedMetagenomeAssemblyToFASTA return value ' +
                              'returnVal is not type dict as required.')
         # return the results
         return [returnVal]
