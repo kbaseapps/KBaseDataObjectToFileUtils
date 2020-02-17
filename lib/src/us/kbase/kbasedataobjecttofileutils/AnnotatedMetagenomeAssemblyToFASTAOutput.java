@@ -13,9 +13,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
 /**
- * <p>Original spec-file type: GenomeToFASTA_Output</p>
+ * <p>Original spec-file type: AnnotatedMetagenomeAssemblyToFASTA_Output</p>
  * <pre>
- * GenomeToFASTA() Output
+ * AnnotatedMetagenomeAssemblyToFASTA() Output
  * </pre>
  * 
  */
@@ -25,9 +25,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "fasta_file_path",
     "feature_ids",
     "feature_id_to_function",
-    "genome_ref_to_sci_name"
+    "ama_ref_to_obj_name"
 })
-public class GenomeToFASTAOutput {
+public class AnnotatedMetagenomeAssemblyToFASTAOutput {
 
     @JsonProperty("fasta_file_path")
     private java.lang.String fastaFilePath;
@@ -35,8 +35,8 @@ public class GenomeToFASTAOutput {
     private List<String> featureIds;
     @JsonProperty("feature_id_to_function")
     private Map<String, String> featureIdToFunction;
-    @JsonProperty("genome_ref_to_sci_name")
-    private Map<String, String> genomeRefToSciName;
+    @JsonProperty("ama_ref_to_obj_name")
+    private Map<String, String> amaRefToObjName;
     private Map<java.lang.String, Object> additionalProperties = new HashMap<java.lang.String, Object>();
 
     @JsonProperty("fasta_file_path")
@@ -49,7 +49,7 @@ public class GenomeToFASTAOutput {
         this.fastaFilePath = fastaFilePath;
     }
 
-    public GenomeToFASTAOutput withFastaFilePath(java.lang.String fastaFilePath) {
+    public AnnotatedMetagenomeAssemblyToFASTAOutput withFastaFilePath(java.lang.String fastaFilePath) {
         this.fastaFilePath = fastaFilePath;
         return this;
     }
@@ -64,7 +64,7 @@ public class GenomeToFASTAOutput {
         this.featureIds = featureIds;
     }
 
-    public GenomeToFASTAOutput withFeatureIds(List<String> featureIds) {
+    public AnnotatedMetagenomeAssemblyToFASTAOutput withFeatureIds(List<String> featureIds) {
         this.featureIds = featureIds;
         return this;
     }
@@ -79,23 +79,23 @@ public class GenomeToFASTAOutput {
         this.featureIdToFunction = featureIdToFunction;
     }
 
-    public GenomeToFASTAOutput withFeatureIdToFunction(Map<String, String> featureIdToFunction) {
+    public AnnotatedMetagenomeAssemblyToFASTAOutput withFeatureIdToFunction(Map<String, String> featureIdToFunction) {
         this.featureIdToFunction = featureIdToFunction;
         return this;
     }
 
-    @JsonProperty("genome_ref_to_sci_name")
-    public Map<String, String> getGenomeRefToSciName() {
-        return genomeRefToSciName;
+    @JsonProperty("ama_ref_to_obj_name")
+    public Map<String, String> getAmaRefToObjName() {
+        return amaRefToObjName;
     }
 
-    @JsonProperty("genome_ref_to_sci_name")
-    public void setGenomeRefToSciName(Map<String, String> genomeRefToSciName) {
-        this.genomeRefToSciName = genomeRefToSciName;
+    @JsonProperty("ama_ref_to_obj_name")
+    public void setAmaRefToObjName(Map<String, String> amaRefToObjName) {
+        this.amaRefToObjName = amaRefToObjName;
     }
 
-    public GenomeToFASTAOutput withGenomeRefToSciName(Map<String, String> genomeRefToSciName) {
-        this.genomeRefToSciName = genomeRefToSciName;
+    public AnnotatedMetagenomeAssemblyToFASTAOutput withAmaRefToObjName(Map<String, String> amaRefToObjName) {
+        this.amaRefToObjName = amaRefToObjName;
         return this;
     }
 
@@ -111,7 +111,7 @@ public class GenomeToFASTAOutput {
 
     @Override
     public java.lang.String toString() {
-        return ((((((((((("GenomeToFASTAOutput"+" [fastaFilePath=")+ fastaFilePath)+", featureIds=")+ featureIds)+", featureIdToFunction=")+ featureIdToFunction)+", genomeRefToSciName=")+ genomeRefToSciName)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((("AnnotatedMetagenomeAssemblyToFASTAOutput"+" [fastaFilePath=")+ fastaFilePath)+", featureIds=")+ featureIds)+", featureIdToFunction=")+ featureIdToFunction)+", amaRefToObjName=")+ amaRefToObjName)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }

@@ -358,6 +358,10 @@ class Application(object):
                              name='KBaseDataObjectToFileUtils.FeatureSetToFASTA',
                              types=[dict])
         self.method_authentication['KBaseDataObjectToFileUtils.FeatureSetToFASTA'] = 'required'  # noqa
+        self.rpc_service.add(impl_KBaseDataObjectToFileUtils.AnnotatedMetagenomeAssemblyToFASTA,
+                             name='KBaseDataObjectToFileUtils.AnnotatedMetagenomeAssemblyToFASTA',
+                             types=[dict])
+        self.method_authentication['KBaseDataObjectToFileUtils.AnnotatedMetagenomeAssemblyToFASTA'] = 'required'  # noqa
         self.rpc_service.add(impl_KBaseDataObjectToFileUtils.status,
                              name='KBaseDataObjectToFileUtils.status',
                              types=[dict])

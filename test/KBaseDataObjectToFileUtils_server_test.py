@@ -5,6 +5,7 @@ import json
 import time
 import requests
 import uuid
+import shutil
 
 from os import environ
 try:
@@ -15,9 +16,10 @@ except:
 from pprint import pprint
 
 from installed_clients.WorkspaceClient import Workspace as workspaceService
+from installed_clients.GenomeFileUtilClient import GenomeFileUtil
 from KBaseDataObjectToFileUtils.KBaseDataObjectToFileUtilsImpl import KBaseDataObjectToFileUtils
 from KBaseDataObjectToFileUtils.KBaseDataObjectToFileUtilsServer import MethodContext
-from KBaseDataObjectToFileUtils.authclient import KBaseAuth as _KBaseAuth
+from installed_clients.authclient import KBaseAuth as _KBaseAuth
 
 
 class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
@@ -80,6 +82,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
     #### TranslateNucToProtSeq_01()
     ##
+    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_TranslateNucToProtSeq_01()')
     def test_KBaseDataObjectToFileUtils_TranslateNucToProtSeq_01(self):
         # Prepare test objects in workspace if needed using 
         # self.getWsClient().save_objects({'workspace': self.getWsName(), 'objects': []})
@@ -104,6 +107,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
     #### ParseFastaStr_01()
     ##
+    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_ParseFastaStr_01()')
     def test_KBaseDataObjectToFileUtils_ParseFastaStr_01(self):
         
         # E. coli K-12 MG1655 (start modified from GTG to ATG)
@@ -128,6 +132,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
     #### GenomeToFASTA_01()
     ##
+    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_GenomeToFASTA_01()')
     def test_KBaseDataObjectToFileUtils_GenomeToFASTA_01(self):
 
         reference_prok_genomes_WS = 'ReferenceDataManager'  # PROD and CI
@@ -159,6 +164,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
     #### GenomeSetToFASTA_01()
     ##
+    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_GenomeSetToFASTA_01()')
     def test_KBaseDataObjectToFileUtils_GenomeSetToFASTA_01(self):
 
         reference_prok_genomes_WS = 'ReferenceDataManager'  # PROD and CI
@@ -216,6 +222,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
     #### FeatureSetToFASTA_01()
     ##
+    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_FeatureSetToFASTA_01()')
     def test_KBaseDataObjectToFileUtils_FeatureSetToFASTA_01(self):
 
         reference_prok_genomes_WS = 'ReferenceDataManager'  # PROD and CI
@@ -281,3 +288,67 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
         self.assertNotEqual(len(ret['genome_ref_to_sci_name'].keys()), 0)
         pass
         
+
+    #### AnnotatedMetagenomeAssemblyToFASTA_01()
+    ##
+    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_AnnotatedMetagenomeAssemblyToFASTA_01()')
+    def test_KBaseDataObjectToFileUtils_AnnotatedMetagenomeAssemblyToFASTA_01(self):
+        # upload test data
+        ama_name = "ama_test.AMA"
+        ama_feature_cnt = 888
+        ama_contigs_file_src = "data/AnnotatedMetagenomeAssembly/ama_contigs.fasta"
+        ama_genes_file_src   = "data/AnnotatedMetagenomeAssembly/ama_genes.gff"
+        shared_dir = "/kb/module/work/tmp"
+        ama_contigs_file_upload = os.path.join (shared_dir, os.path.basename(ama_contigs_file_src))
+        ama_genes_file_upload = os.path.join (shared_dir, os.path.basename(ama_genes_file_src))
+        shutil.copy (ama_contigs_file_src, ama_contigs_file_upload)
+        shutil.copy (ama_genes_file_src, ama_genes_file_upload)
+
+        ama_upload_params = {
+            "workspace_name": self.getWsName(),
+            "genome_name": ama_name,
+            "fasta_file": {"path": ama_contigs_file_upload},
+            "gff_file": {"path": ama_genes_file_upload},
+            "source": "GFF",
+            "scientific_name": "TEST AMA",
+            "generate_missing_genes": "True"
+        }
+        try:
+            SERVICE_VER = 'dev'
+            GFU = GenomeFileUtil(os.environ['SDK_CALLBACK_URL'],
+                                 token=self.getContext()['token'],
+                                 service_ver=SERVICE_VER
+                             )            
+
+            print ("UPLOADING AMA: "+ama_name+" to WORKSPACE "+self.getWsName()+" ...")
+            ama_upload_result = GFU.fasta_gff_to_metagenome (ama_upload_params)
+        except:
+            raise ValueError("unable to upload test AMA data object")        
+        pprint (ama_upload_result)
+        ama_ref = ama_upload_result['metagenome_ref']
+            
+
+        # get protein fastas
+        output_dir = os.path.join(self.scratch,'fasta_out.'+str(uuid.uuid4()))
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+
+        parameters = {
+                'ama_ref':             ama_ref,
+                'file':                'test_ama_proteins.fasta',
+                'dir':                 output_dir,
+                'console':             [],
+                'invalid_msgs':        [],
+                'residue_type':        'protein',
+                'feature_type':        'CDS',
+                'record_id_pattern':   '%%feature_id%%',
+                'record_desc_pattern': '[%%genome_id%%]',
+                'case':                'upper',
+                'linewrap':            50
+                }
+        ret = self.getImpl().AnnotatedMetagenomeAssemblyToFASTA(self.getContext(), parameters)[0]
+        self.assertIsNotNone(ret['fasta_file_path'])
+        self.assertIsNotNone(ret['feature_ids'])
+        self.assertNotEqual(len(ret['feature_ids']), 0)
+        self.assertEqual(len(ret['feature_ids']), ama_feature_cnt)
+        pass

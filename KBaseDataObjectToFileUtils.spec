@@ -80,8 +80,10 @@ module KBaseDataObjectToFileUtils {
     /* GenomeToFASTA() Output
     */
     typedef structure {
-	path_type         fasta_file_path;
-	list<feature_id>  feature_ids;
+	path_type                     fasta_file_path;
+	list<feature_id>              feature_ids;
+	mapping<feature_id,string>    feature_id_to_function;
+	mapping<data_obj_ref,string>  genome_ref_to_sci_name;
     } GenomeToFASTA_Output;
 
 
@@ -107,6 +109,8 @@ module KBaseDataObjectToFileUtils {
     typedef structure {
 	list<path_type>                       fasta_file_path_list;
 	mapping<genome_id, list<feature_id>>  feature_ids_by_genome_id;
+	mapping<feature_id,string>            feature_id_to_function;
+	mapping<data_obj_ref,string>          genome_ref_to_sci_name;
     } GenomeSetToFASTA_Output;
 
 
@@ -132,7 +136,35 @@ module KBaseDataObjectToFileUtils {
     typedef structure {
 	path_type                                fasta_file_path;
 	mapping<data_obj_ref, list<feature_id>>  feature_ids_by_genome_ref;
+	mapping<feature_id,string>               feature_id_to_function;
+	mapping<data_obj_ref,string>             genome_ref_to_sci_name;
     } FeatureSetToFASTA_Output;
+
+
+    /* AnnotatedMetagenomeAssemblyToFASTA() Params
+    */
+    typedef structure {
+	data_obj_ref   ama_ref;
+	path_type      file;
+	path_type      dir;
+	list<log_msg>  console;
+	list<log_msg>  invalid_msgs;
+	string         residue_type;
+	string         feature_type;
+	pattern_type   record_id_pattern;
+	pattern_type   record_desc_pattern;
+	string         case;
+	int            linewrap;
+    } AnnotatedMetagenomeAssemblyToFASTA_Params;
+
+    /* AnnotatedMetagenomeAssemblyToFASTA() Output
+    */
+    typedef structure {
+	path_type                     fasta_file_path;
+	list<feature_id>              feature_ids;
+	mapping<feature_id,string>    feature_id_to_function;
+	mapping<data_obj_ref,string>  ama_ref_to_obj_name;
+    } AnnotatedMetagenomeAssemblyToFASTA_Output;
 
 
     /*  Methods for converting KBase Data Objects to common bioinformatics format files
@@ -147,4 +179,7 @@ module KBaseDataObjectToFileUtils {
     funcdef GenomeSetToFASTA (GenomeSetToFASTA_Params params)  returns (GenomeSetToFASTA_Output) authentication required;
 
     funcdef FeatureSetToFASTA (FeatureSetToFASTA_Params params)  returns (FeatureSetToFASTA_Output) authentication required;
+
+    funcdef AnnotatedMetagenomeAssemblyToFASTA (AnnotatedMetagenomeAssemblyToFASTA_Params params)  returns (AnnotatedMetagenomeAssemblyToFASTA_Output) authentication required;
+
 };

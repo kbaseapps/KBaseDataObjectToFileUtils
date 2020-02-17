@@ -6,6 +6,7 @@ import shutil
 import hashlib
 import subprocess
 import requests
+import json
 import re
 import traceback
 import uuid
@@ -21,6 +22,8 @@ from Bio.Alphabet import generic_protein
 
 #from biokbase.workspace.client import Workspace as workspaceService
 from installed_clients.WorkspaceClient import Workspace as workspaceService
+from installed_clients.DataFileUtilClient import DataFileUtil
+
 from requests_toolbelt import MultipartEncoder
 from biokbase.AbstractHandle.Client import AbstractHandle as HandleService
 #from doekbase.data_api.annotation.genome_annotation.api import GenomeAnnotationAPI as GenomeAnnotationAPI
@@ -50,14 +53,15 @@ class KBaseDataObjectToFileUtils:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "0.0.7"
-    GIT_URL = "https://github.com/dcchivian/KBaseDataObjectToFileUtils"
-    GIT_COMMIT_HASH = "d300896441f587911f6494a865046fbd5ebee8f1"
+    VERSION = "0.0.8"
+    GIT_URL = "https://github.com/kbaseapps/KBaseDataObjectToFileUtils"
+    GIT_COMMIT_HASH = "64d053870272e93b13ee036883791b23ef1b48d5"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
     shockURL = None
     handleURL = None
+    callbackURL = None
 
     # target is a list for collecting log messages
     def log(self, target, message):
@@ -66,6 +70,99 @@ class KBaseDataObjectToFileUtils:
             target.append(message)
         print(message)
         sys.stdout.flush()
+
+    #def _get_ama_features_as_json (self, features_handle_ref, gff_handle_ref, protein_handle_ref):
+    def _get_ama_features_as_json (self, features_handle_ref):
+        this_id = str(uuid.uuid4())
+        this_scratch_dir = os.path.join (self.scratch, this_id)
+        json_features_file_path = os.path.join (this_scratch_dir, 'features.json')
+        #gff_file_path = os.path.join (this_scratch_dir, 'genes.gff')
+        #protein_file_path = os.path.join (this_scratch_dir, 'protein.fasta')
+
+        try:
+            dfu = DataFileUtil (self.callbackURL)
+        except Exception as e:
+            raise ValueError('Unable to connect to DFU: ' + str(e))
+
+        try:
+            dfu.shock_to_file({'handle_id': features_handle_ref,
+                               'file_path': json_features_file_path+'.gz',
+                               'unpack': 'uncompress'
+                           })
+        except Exception as e:
+            raise ValueError('Unable to fetch AnnotatedMetagenomeAssembly features from SHOCK: ' + str(e))
+        """
+        try:
+            dfu.shock_to_file({'handle_id': gff_handle_ref,
+                               'file_path': gff_file_path+'.gz',
+                               'unpack': 'uncompress'
+                           })
+        except Exception as e:
+            raise ValueError('Unable to fetch AnnotatedMetagenomeAssembly gffs from SHOCK: ' + str(e))
+
+        try:
+            dfu.shock_to_file({'handle_id': protein_handle_ref,
+                               'file_path': protein_file_path+'.gz',
+                               'unpack': 'uncompress'
+                           })
+        except Exception as e:
+            raise ValueError('Unable to fetch AnnotatedMetagenomeAssembly protein FASTA from SHOCK: ' + str(e))
+        """
+
+        # DEBUG
+        """
+        print ("SCRATCH CONTENTS")
+        sys.stdout.flush()
+        for this_file in os.listdir (this_scratch_dir):
+            print ("\t"+this_file)
+            sys.stdout.flush()
+
+        buf = []
+        #with open(json_features_file_path, 'r') as f:
+        with open(protein_file_path, 'r') as f:
+            for line in f.readlines():
+                buf.append (line)
+            #features_json = json.load(f)
+
+        print ("FEATURES_JSON:\n"+"\n".join(buf))
+        sys.stdout.flush()
+        """
+        
+        with open(json_features_file_path, 'r') as f:
+            features_json = json.load(f)
+
+
+        os.remove(json_features_file_path+'.gz')
+        os.remove(json_features_file_path)
+        #os.remove(gff_file_path+'.gz')
+        #os.remove(gff_file_path)
+        #os.remove(protein_file_path+'.gz')
+        #os.remove(protein_file_path)
+
+        return features_json
+
+
+    def _get_features_from_AnnotatedMetagenomeAssembly(self, ctx, ama_ref):
+
+        # get ama object
+        try:
+            ws = workspaceService(self.workspaceURL, token=ctx['token'])
+            ama_object = ws.get_objects2({'objects':[{'ref':ama_ref}]})['data'][0]
+            ama_object_data = ama_object['data']
+            ama_object_info = ama_object['info']
+        except Exception as e:
+            raise ValueError('Unable to fetch AnnotatedMetagenomeAssembly object from workspace: ' + str(e))
+        #to get the full stack trace: traceback.format_exc()
+
+        # get features from json
+        features_handle_ref = ama_object_data['features_handle_ref']
+        #gff_handle_ref = ama_object_data['gff_handle_ref']
+        #protein_handle_ref = ama_object_data['protein_handle_ref']
+        #features_json = self._get_ama_features_as_json (features_handle_ref, gff_handle_ref, protein_handle_ref)
+        features_json = self._get_ama_features_as_json (features_handle_ref)
+
+        return features_json
+
 
     #END_CLASS_HEADER
 
@@ -76,13 +173,12 @@ class KBaseDataObjectToFileUtils:
         self.workspaceURL = config['workspace-url']
         self.shockURL = config['shock-url']
         self.handleURL = config['handle-service-url']
+        self.callbackURL = os.environ['SDK_CALLBACK_URL']
         self.scratch = os.path.abspath(config['scratch'])
-        # HACK!! temporary hack for issue where megahit fails on mac because of silent named pipe error
-        #self.host_scratch = self.scratch
-        self.scratch = os.path.join('/kb','module','local_scratch')
-        # end hack
+        #self.scratch = os.path.join('/kb','module','local_scratch')
         if not os.path.exists(self.scratch):
             os.makedirs(self.scratch)
+
         #END_CONSTRUCTOR
         pass
 
@@ -348,7 +444,10 @@ class KBaseDataObjectToFileUtils:
            of Long
         :returns: instance of type "GenomeToFASTA_Output" (GenomeToFASTA()
            Output) -> structure: parameter "fasta_file_path" of type
-           "path_type", parameter "feature_ids" of list of type "feature_id"
+           "path_type", parameter "feature_ids" of list of type "feature_id",
+           parameter "feature_id_to_function" of mapping from type
+           "feature_id" to String, parameter "genome_ref_to_sci_name" of
+           mapping from type "data_obj_ref" to String
         """
         # ctx is the context object
         # return variables are: returnVal
@@ -538,7 +637,10 @@ class KBaseDataObjectToFileUtils:
            (GenomeSetToFASTA() Output) -> structure: parameter
            "fasta_file_path_list" of list of type "path_type", parameter
            "feature_ids_by_genome_id" of mapping from type "genome_id" to
-           list of type "feature_id"
+           list of type "feature_id", parameter "feature_id_to_function" of
+           mapping from type "feature_id" to String, parameter
+           "genome_ref_to_sci_name" of mapping from type "data_obj_ref" to
+           String
         """
         # ctx is the context object
         # return variables are: returnVal
@@ -777,7 +879,10 @@ class KBaseDataObjectToFileUtils:
            (FeatureSetToFASTA() Output) -> structure: parameter
            "fasta_file_path" of type "path_type", parameter
            "feature_ids_by_genome_ref" of mapping from type "data_obj_ref" to
-           list of type "feature_id"
+           list of type "feature_id", parameter "feature_id_to_function" of
+           mapping from type "feature_id" to String, parameter
+           "genome_ref_to_sci_name" of mapping from type "data_obj_ref" to
+           String
         """
         # ctx is the context object
         # return variables are: returnVal
@@ -980,6 +1085,221 @@ class KBaseDataObjectToFileUtils:
         # At some point might do deeper type checking...
         if not isinstance(returnVal, dict):
             raise ValueError('Method FeatureSetToFASTA return value ' +
+                             'returnVal is not type dict as required.')
+        # return the results
+        return [returnVal]
+
+    def AnnotatedMetagenomeAssemblyToFASTA(self, ctx, params):
+        """
+        :param params: instance of type
+           "AnnotatedMetagenomeAssemblyToFASTA_Params"
+           (AnnotatedMetagenomeAssemblyToFASTA() Params) -> structure:
+           parameter "ama_ref" of type "data_obj_ref", parameter "file" of
+           type "path_type", parameter "dir" of type "path_type", parameter
+           "console" of list of type "log_msg", parameter "invalid_msgs" of
+           list of type "log_msg", parameter "residue_type" of String,
+           parameter "feature_type" of String, parameter "record_id_pattern"
+           of type "pattern_type", parameter "record_desc_pattern" of type
+           "pattern_type", parameter "case" of String, parameter "linewrap"
+           of Long
+        :returns: instance of type
+           "AnnotatedMetagenomeAssemblyToFASTA_Output"
+           (AnnotatedMetagenomeAssemblyToFASTA() Output) -> structure:
+           parameter "fasta_file_path" of type "path_type", parameter
+           "feature_ids" of list of type "feature_id", parameter
+           "feature_id_to_function" of mapping from type "feature_id" to
+           String, parameter "ama_ref_to_obj_name" of mapping from type
+           "data_obj_ref" to String
+        """
+        # ctx is the context object
+        # return variables are: returnVal
+        #BEGIN AnnotatedMetagenomeAssemblyToFASTA
+
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11) 
+
+        # init and clean up params
+        ama_ref = params['ama_ref']
+        file = params['file']
+        dir = params['dir']
+        console = params['console']
+        invalid_msgs = params['invalid_msgs']
+        residue_type = params['residue_type']
+        feature_type = params['feature_type']
+        record_id_pattern = params['record_id_pattern']
+        record_desc_pattern = params['record_desc_pattern']
+        case = params['case']
+        linewrap = params['linewrap']
+
+        # Defaults
+        if console == None:
+            console = []
+        if invalid_msgs == None:
+            invalid_msgs = []
+        if residue_type == None:
+            residue_type = 'nuc'
+        if feature_type == None:
+            feature_type = 'ALL';
+        if record_id_pattern == None:
+            record_id_pattern = '%%feature_id%%'
+        if record_desc_pattern == None:
+            record_desc_pattern = '[%%genome_id%%]'
+        if case == None:
+            case = 'UPPER'
+        if linewrap == None:
+            linewrap = 0
+
+        # init and simplify
+        feature_ids = []
+        feature_id_to_function = dict()
+        ama_ref_to_obj_name = dict()
+        feature_sequence_found = False
+        residue_type = residue_type[0:1].upper()
+        feature_type = feature_type.upper()
+        case = case[0:1].upper()
+        
+        def record_header_sub(str, feature_id, genome_id):
+            str = str.replace('%%feature_id%%', feature_id)
+            str = str.replace('%%genome_id%%', genome_id)
+            return str
+
+        if file == None:
+            file = 'runfile.fasta'
+        if dir == None:
+            dir = self.scratch
+        fasta_file_path = os.path.join(dir, file)
+        self.log(console, 'KB SDK data2file AnnotatedMetagenomeAssemby2FASTA(): writing fasta file: '+fasta_file_path)
+
+        # get genome object
+        try:
+            ws = workspaceService(self.workspaceURL, token=ctx['token'])
+            #ama_object = ws.get_objects2({'objects':[{'ref':ama_ref}]})['data'][0]['data']
+            #ama_object_data = ama_object['data']
+            #ama_object_info = ama_object['info']
+            
+            ama_object_info = ws.get_object_info3 ({'objects':[{'ref':ama_ref}]})['infos'][0]
+            ama_object_name = ama_object_info[NAME_I]
+        except Exception as e:
+            raise ValueError('Unable to fetch input_one_name object from workspace: ' + str(e))
+        #to get the full stack trace: traceback.format_exc()
+
+        # set obj name
+        ama_ref_to_obj_name[ama_ref] = ama_object_name
+        feature_id_to_function[ama_ref] = dict()
+
+
+        # Get feature recs from AMA (this is very different than for Genome)
+        #
+        ama_features = self._get_features_from_AnnotatedMetagenomeAssembly (ctx, ama_ref)
+
+        # FIX: should I write recs as we go to reduce memory footprint, or is a single buffer write much faster?  Check later.
+        #
+        #records = []
+        self.log(console,"FASTA_FILE_PATH'"+fasta_file_path+"'\n")  # DEBUG
+
+        with open(fasta_file_path, 'w', 0) as fasta_file_handle:
+                        
+            for feature in ama_features:
+                # set function
+                if 'function' in feature:
+                    feature_id_to_function[ama_ref][feature['id']] = feature['function']
+                else:
+                    feature_id_to_function[ama_ref][feature['id']] = 'N/A'
+                
+                #if feature_type == 'ALL' or feature_type == feature['type']:
+                if True:  # don't want to deal with changing indentation
+
+                    # protein recs
+                    if residue_type == 'P':
+                        if feature['type'] != 'CDS':
+                            continue
+                        #if 'protein_translation' not in feature or feature['protein_translation'] == None or feature['protein_translation'] == '':
+                        #    #self.log(invalid_msgs, "bad CDS feature "+feature['id']+": No protein_translation field.")
+                        #    continue
+                        else:
+                            feature_sequence_found = True
+                            rec_id = record_header_sub(record_id_pattern, feature['id'], ama_object_name)
+                            rec_desc = record_header_sub(record_desc_pattern, feature['id'], ama_object_name)
+
+                            if feature.get('protein_translation'):
+                                seq = feature['protein_translation']
+                            elif feature.get('dna_sequence'):
+                                seq = self.TranslateNucToProtSeq(ctx,
+                                                                 {'nuc_seq': feature['dna_sequence'],
+                                                                  'genetic_code': '11'}
+                                                                 )[0]['prot_seq']
+                            else:
+                                raise ValueError ("no sequence information for gene "+feature['id'])
+                            seq = seq.upper() if case == 'U' else seq.lower()
+
+                            rec_rows = []
+                            rec_rows.append('>'+rec_id+' '+rec_desc)
+                            if linewrap == None or linewrap == 0:
+                                rec_rows.append(seq)
+                            else:
+                                seq_len = len(seq)
+                                base_rows_cnt = seq_len//linewrap
+                                for i in range(base_rows_cnt):
+                                    rec_rows.append(seq[i*linewrap:(i+1)*linewrap])
+                                rec_rows.append(seq[base_rows_cnt*linewrap:])
+                            rec = "\n".join(rec_rows)+"\n"
+
+                            #record = SeqRecord(Seq(seq), id=rec_id, description=rec_desc)
+                            #records.append(record)
+                            feature_ids.append(feature['id'])
+                            fasta_file_handle.write(rec)
+
+                    # nuc recs
+                    else:
+                        if feature_type == 'CDS' and ('protein_translation' not in feature or feature['protein_translation'] == None or feature['protein_translation'] == ''):
+                            continue
+                        elif 'dna_sequence' not in feature or feature['dna_sequence'] == None or feature['dna_sequence'] == '':
+                            self.log(invalid_msgs, "bad feature "+feature['id']+": No dna_sequence field.")
+                        else:
+                            feature_sequence_found = True
+                            rec_id = record_header_sub(record_id_pattern, feature['id'], ama_object_name)
+                            rec_desc = record_header_sub(record_desc_pattern, feature['id'], ama_object_name)
+                            if feature.get('dna_sequence'):
+                                seq = feature['dna_sequence']
+                            else:
+                                raise ValueError ("no sequence information for gene "+feature['id'])
+                            seq = seq.upper() if case == 'U' else seq.lower()
+
+                            rec_rows = []
+                            rec_rows.append('>'+rec_id+' '+rec_desc)
+                            if linewrap == None or linewrap == 0:
+                                rec_rows.append(seq)
+                            else:
+                                seq_len = len(seq)
+                                base_rows_cnt = seq_len//linewrap
+                                for i in range(base_rows_cnt):
+                                    rec_rows.append(seq[i*linewrap:(i+1)*linewrap])
+                                rec_rows.append(seq[base_rows_cnt*linewrap:])
+                            rec = "\n".join(rec_rows)+"\n"
+
+                            #record = SeqRecord(Seq(seq), id=rec_id, description=rec_desc)
+                            #records.append(record)
+                            feature_ids.append(feature['id'])
+                            fasta_file_handle.write(rec)
+
+        # report if no features found
+        if not feature_sequence_found:
+            self.log(invalid_msgs, "No sequence records found in AnnotatedMetagenomeAssembly "+ama_object_name+" of residue_type: "+residue_type+", feature_type: "+feature_type)
+        #else:
+        #    SeqIO.write(records, fasta_file_path, "fasta")
+
+
+        # build returnVal
+        #
+        returnVal = dict()
+        returnVal['fasta_file_path'] = fasta_file_path
+        returnVal['feature_ids'] = feature_ids
+        returnVal['feature_id_to_function'] = feature_id_to_function
+        returnVal['ama_ref_to_obj_name'] = ama_ref_to_obj_name;
+        #END AnnotatedMetagenomeAssemblyToFASTA
+
+        # At some point might do deeper type checking...
+        if not isinstance(returnVal, dict):
+            raise ValueError('Method AnnotatedMetagenomeAssemblyToFASTA return value ' +
                              'returnVal is not type dict as required.')
         # return the results
         return [returnVal]
