@@ -23,7 +23,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Generated("com.googlecode.jsonschema2pojo")
 @JsonPropertyOrder({
     "fasta_file_path",
-    "feature_ids"
+    "feature_ids",
+    "feature_id_to_function",
+    "ama_ref_to_obj_name"
 })
 public class AnnotatedMetagenomeAssemblyToFASTAOutput {
 
@@ -31,6 +33,10 @@ public class AnnotatedMetagenomeAssemblyToFASTAOutput {
     private java.lang.String fastaFilePath;
     @JsonProperty("feature_ids")
     private List<String> featureIds;
+    @JsonProperty("feature_id_to_function")
+    private Map<String, String> featureIdToFunction;
+    @JsonProperty("ama_ref_to_obj_name")
+    private Map<String, String> amaRefToObjName;
     private Map<java.lang.String, Object> additionalProperties = new HashMap<java.lang.String, Object>();
 
     @JsonProperty("fasta_file_path")
@@ -63,6 +69,36 @@ public class AnnotatedMetagenomeAssemblyToFASTAOutput {
         return this;
     }
 
+    @JsonProperty("feature_id_to_function")
+    public Map<String, String> getFeatureIdToFunction() {
+        return featureIdToFunction;
+    }
+
+    @JsonProperty("feature_id_to_function")
+    public void setFeatureIdToFunction(Map<String, String> featureIdToFunction) {
+        this.featureIdToFunction = featureIdToFunction;
+    }
+
+    public AnnotatedMetagenomeAssemblyToFASTAOutput withFeatureIdToFunction(Map<String, String> featureIdToFunction) {
+        this.featureIdToFunction = featureIdToFunction;
+        return this;
+    }
+
+    @JsonProperty("ama_ref_to_obj_name")
+    public Map<String, String> getAmaRefToObjName() {
+        return amaRefToObjName;
+    }
+
+    @JsonProperty("ama_ref_to_obj_name")
+    public void setAmaRefToObjName(Map<String, String> amaRefToObjName) {
+        this.amaRefToObjName = amaRefToObjName;
+    }
+
+    public AnnotatedMetagenomeAssemblyToFASTAOutput withAmaRefToObjName(Map<String, String> amaRefToObjName) {
+        this.amaRefToObjName = amaRefToObjName;
+        return this;
+    }
+
     @JsonAnyGetter
     public Map<java.lang.String, Object> getAdditionalProperties() {
         return this.additionalProperties;
@@ -75,7 +111,7 @@ public class AnnotatedMetagenomeAssemblyToFASTAOutput {
 
     @Override
     public java.lang.String toString() {
-        return ((((((("AnnotatedMetagenomeAssemblyToFASTAOutput"+" [fastaFilePath=")+ fastaFilePath)+", featureIds=")+ featureIds)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((("AnnotatedMetagenomeAssemblyToFASTAOutput"+" [fastaFilePath=")+ fastaFilePath)+", featureIds=")+ featureIds)+", featureIdToFunction=")+ featureIdToFunction)+", amaRefToObjName=")+ amaRefToObjName)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }

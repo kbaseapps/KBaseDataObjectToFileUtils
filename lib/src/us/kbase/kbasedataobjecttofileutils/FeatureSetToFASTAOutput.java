@@ -23,7 +23,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Generated("com.googlecode.jsonschema2pojo")
 @JsonPropertyOrder({
     "fasta_file_path",
-    "feature_ids_by_genome_ref"
+    "feature_ids_by_genome_ref",
+    "feature_id_to_function",
+    "genome_ref_to_sci_name"
 })
 public class FeatureSetToFASTAOutput {
 
@@ -31,6 +33,10 @@ public class FeatureSetToFASTAOutput {
     private java.lang.String fastaFilePath;
     @JsonProperty("feature_ids_by_genome_ref")
     private Map<String, List<String>> featureIdsByGenomeRef;
+    @JsonProperty("feature_id_to_function")
+    private Map<String, String> featureIdToFunction;
+    @JsonProperty("genome_ref_to_sci_name")
+    private Map<String, String> genomeRefToSciName;
     private Map<java.lang.String, Object> additionalProperties = new HashMap<java.lang.String, Object>();
 
     @JsonProperty("fasta_file_path")
@@ -63,6 +69,36 @@ public class FeatureSetToFASTAOutput {
         return this;
     }
 
+    @JsonProperty("feature_id_to_function")
+    public Map<String, String> getFeatureIdToFunction() {
+        return featureIdToFunction;
+    }
+
+    @JsonProperty("feature_id_to_function")
+    public void setFeatureIdToFunction(Map<String, String> featureIdToFunction) {
+        this.featureIdToFunction = featureIdToFunction;
+    }
+
+    public FeatureSetToFASTAOutput withFeatureIdToFunction(Map<String, String> featureIdToFunction) {
+        this.featureIdToFunction = featureIdToFunction;
+        return this;
+    }
+
+    @JsonProperty("genome_ref_to_sci_name")
+    public Map<String, String> getGenomeRefToSciName() {
+        return genomeRefToSciName;
+    }
+
+    @JsonProperty("genome_ref_to_sci_name")
+    public void setGenomeRefToSciName(Map<String, String> genomeRefToSciName) {
+        this.genomeRefToSciName = genomeRefToSciName;
+    }
+
+    public FeatureSetToFASTAOutput withGenomeRefToSciName(Map<String, String> genomeRefToSciName) {
+        this.genomeRefToSciName = genomeRefToSciName;
+        return this;
+    }
+
     @JsonAnyGetter
     public Map<java.lang.String, Object> getAdditionalProperties() {
         return this.additionalProperties;
@@ -75,7 +111,7 @@ public class FeatureSetToFASTAOutput {
 
     @Override
     public java.lang.String toString() {
-        return ((((((("FeatureSetToFASTAOutput"+" [fastaFilePath=")+ fastaFilePath)+", featureIdsByGenomeRef=")+ featureIdsByGenomeRef)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((("FeatureSetToFASTAOutput"+" [fastaFilePath=")+ fastaFilePath)+", featureIdsByGenomeRef=")+ featureIdsByGenomeRef)+", featureIdToFunction=")+ featureIdToFunction)+", genomeRefToSciName=")+ genomeRefToSciName)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }

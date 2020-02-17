@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("com.googlecode.jsonschema2pojo")
 @JsonPropertyOrder({
-    "genome_ref",
+    "ama_ref",
     "file",
     "dir",
     "console",
@@ -36,8 +36,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 })
 public class AnnotatedMetagenomeAssemblyToFASTAParams {
 
-    @JsonProperty("genome_ref")
-    private java.lang.String genomeRef;
+    @JsonProperty("ama_ref")
+    private java.lang.String amaRef;
     @JsonProperty("file")
     private java.lang.String file;
     @JsonProperty("dir")
@@ -60,18 +60,18 @@ public class AnnotatedMetagenomeAssemblyToFASTAParams {
     private Long linewrap;
     private Map<java.lang.String, Object> additionalProperties = new HashMap<java.lang.String, Object>();
 
-    @JsonProperty("genome_ref")
-    public java.lang.String getGenomeRef() {
-        return genomeRef;
+    @JsonProperty("ama_ref")
+    public java.lang.String getAmaRef() {
+        return amaRef;
     }
 
-    @JsonProperty("genome_ref")
-    public void setGenomeRef(java.lang.String genomeRef) {
-        this.genomeRef = genomeRef;
+    @JsonProperty("ama_ref")
+    public void setAmaRef(java.lang.String amaRef) {
+        this.amaRef = amaRef;
     }
 
-    public AnnotatedMetagenomeAssemblyToFASTAParams withGenomeRef(java.lang.String genomeRef) {
-        this.genomeRef = genomeRef;
+    public AnnotatedMetagenomeAssemblyToFASTAParams withAmaRef(java.lang.String amaRef) {
+        this.amaRef = amaRef;
         return this;
     }
 
@@ -237,7 +237,7 @@ public class AnnotatedMetagenomeAssemblyToFASTAParams {
 
     @Override
     public java.lang.String toString() {
-        return ((((((((((((((((((((((((("AnnotatedMetagenomeAssemblyToFASTAParams"+" [genomeRef=")+ genomeRef)+", file=")+ file)+", dir=")+ dir)+", console=")+ console)+", invalidMsgs=")+ invalidMsgs)+", residueType=")+ residueType)+", featureType=")+ featureType)+", recordIdPattern=")+ recordIdPattern)+", recordDescPattern=")+ recordDescPattern)+", _case=")+ _case)+", linewrap=")+ linewrap)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((((((((((((((((("AnnotatedMetagenomeAssemblyToFASTAParams"+" [amaRef=")+ amaRef)+", file=")+ file)+", dir=")+ dir)+", console=")+ console)+", invalidMsgs=")+ invalidMsgs)+", residueType=")+ residueType)+", featureType=")+ featureType)+", recordIdPattern=")+ recordIdPattern)+", recordDescPattern=")+ recordDescPattern)+", _case=")+ _case)+", linewrap=")+ linewrap)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }

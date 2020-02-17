@@ -80,8 +80,10 @@ module KBaseDataObjectToFileUtils {
     /* GenomeToFASTA() Output
     */
     typedef structure {
-	path_type         fasta_file_path;
-	list<feature_id>  feature_ids;
+	path_type                     fasta_file_path;
+	list<feature_id>              feature_ids;
+	mapping<feature_id,string>    feature_id_to_function;
+	mapping<data_obj_ref,string>  genome_ref_to_sci_name;
     } GenomeToFASTA_Output;
 
 
@@ -107,6 +109,8 @@ module KBaseDataObjectToFileUtils {
     typedef structure {
 	list<path_type>                       fasta_file_path_list;
 	mapping<genome_id, list<feature_id>>  feature_ids_by_genome_id;
+	mapping<feature_id,string>            feature_id_to_function;
+	mapping<data_obj_ref,string>          genome_ref_to_sci_name;
     } GenomeSetToFASTA_Output;
 
 
@@ -132,13 +136,15 @@ module KBaseDataObjectToFileUtils {
     typedef structure {
 	path_type                                fasta_file_path;
 	mapping<data_obj_ref, list<feature_id>>  feature_ids_by_genome_ref;
+	mapping<feature_id,string>               feature_id_to_function;
+	mapping<data_obj_ref,string>             genome_ref_to_sci_name;
     } FeatureSetToFASTA_Output;
 
 
     /* AnnotatedMetagenomeAssemblyToFASTA() Params
     */
     typedef structure {
-	data_obj_ref   genome_ref;
+	data_obj_ref   ama_ref;
 	path_type      file;
 	path_type      dir;
 	list<log_msg>  console;
@@ -154,8 +160,10 @@ module KBaseDataObjectToFileUtils {
     /* AnnotatedMetagenomeAssemblyToFASTA() Output
     */
     typedef structure {
-	path_type         fasta_file_path;
-	list<feature_id>  feature_ids;
+	path_type                     fasta_file_path;
+	list<feature_id>              feature_ids;
+	mapping<feature_id,string>    feature_id_to_function;
+	mapping<data_obj_ref,string>  ama_ref_to_obj_name;
     } AnnotatedMetagenomeAssemblyToFASTA_Output;
 
 
