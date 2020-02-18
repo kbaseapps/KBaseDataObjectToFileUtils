@@ -1294,7 +1294,7 @@ class KBaseDataObjectToFileUtils:
         returnVal['fasta_file_path'] = fasta_file_path
         returnVal['feature_ids'] = feature_ids
         returnVal['feature_id_to_function'] = feature_id_to_function
-        returnVal['ama_ref_to_obj_name'] = ama_ref_to_obj_name;
+        returnVal['ama_ref_to_obj_name'] = ama_ref_to_obj_name
         #END AnnotatedMetagenomeAssemblyToFASTA
 
         # At some point might do deeper type checking...
