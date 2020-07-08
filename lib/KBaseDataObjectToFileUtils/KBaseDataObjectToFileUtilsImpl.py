@@ -53,9 +53,9 @@ class KBaseDataObjectToFileUtils:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "0.0.8"
-    GIT_URL = "https://github.com/kbaseapps/KBaseDataObjectToFileUtils"
-    GIT_COMMIT_HASH = "64d053870272e93b13ee036883791b23ef1b48d5"
+    VERSION = "0.0.9"
+    GIT_URL = "https://github.com/dcchivian/KBaseDataObjectToFileUtils"
+    GIT_COMMIT_HASH = "19668843d9db2fcb4d028082746f8149c2904950"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -447,11 +447,15 @@ class KBaseDataObjectToFileUtils:
            "path_type", parameter "feature_ids" of list of type "feature_id",
            parameter "feature_id_to_function" of mapping from type
            "feature_id" to String, parameter "genome_ref_to_sci_name" of
-           mapping from type "data_obj_ref" to String
+           mapping from type "data_obj_ref" to String, parameter
+           "genome_ref_to_obj_name" of mapping from type "data_obj_ref" to
+           String
         """
         # ctx is the context object
         # return variables are: returnVal
         #BEGIN GenomeToFASTA
+
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11) 
 
         # init and clean up params
         genome_ref = params['genome_ref']
@@ -484,10 +488,12 @@ class KBaseDataObjectToFileUtils:
         if linewrap == None:
             linewrap = 0
 
+            
         # init and simplify
         feature_ids = []
         feature_id_to_function = dict()
         genome_ref_to_sci_name = dict()
+        genome_ref_to_obj_name = dict()
         feature_sequence_found = False
         residue_type = residue_type[0:1].upper()
         feature_type = feature_type.upper()
@@ -509,7 +515,10 @@ class KBaseDataObjectToFileUtils:
         try:
             ws = workspaceService(self.workspaceURL, token=ctx['token'])
             #genome_object = ws.get_objects([{'ref':genome_ref}])[0]['data']
-            genome_object = ws.get_objects2({'objects':[{'ref':genome_ref}]})['data'][0]['data']
+            genome_obj_base = ws.get_objects2({'objects':[{'ref':genome_ref}]})['data'][0]
+            genome_object = genome_obj_base['data']
+            genome_info = genome_obj_base['info']
+            genome_ref_to_obj_name[genome_ref] = genome_info[NAME_I]
         except Exception as e:
             raise ValueError('Unable to fetch input_one_name object from workspace: ' + str(e))
         #to get the full stack trace: traceback.format_exc()
@@ -612,6 +621,7 @@ class KBaseDataObjectToFileUtils:
         returnVal['feature_ids'] = feature_ids
         returnVal['feature_id_to_function'] = feature_id_to_function
         returnVal['genome_ref_to_sci_name'] = genome_ref_to_sci_name
+        returnVal['genome_ref_to_obj_name'] = genome_ref_to_obj_name
         #END GenomeToFASTA
 
         # At some point might do deeper type checking...
@@ -640,11 +650,14 @@ class KBaseDataObjectToFileUtils:
            list of type "feature_id", parameter "feature_id_to_function" of
            mapping from type "feature_id" to String, parameter
            "genome_ref_to_sci_name" of mapping from type "data_obj_ref" to
-           String
+           String, parameter "genome_ref_to_obj_name" of mapping from type
+           "data_obj_ref" to String
         """
         # ctx is the context object
         # return variables are: returnVal
         #BEGIN GenomeSetToFASTA
+
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11) 
 
         # init and clean up params
         genomeSet_ref = params['genomeSet_ref']
@@ -687,6 +700,7 @@ class KBaseDataObjectToFileUtils:
         feature_ids_by_genome_id = dict()
         feature_id_to_function = dict()
         genome_ref_to_sci_name = dict()
+        genome_ref_to_obj_name = dict()
         residue_type = residue_type[0:1].upper()
         feature_type = feature_type.upper()
         case = case[0:1].upper()
@@ -748,7 +762,10 @@ class KBaseDataObjectToFileUtils:
             try:
                 ws = workspaceService(self.workspaceURL, token=ctx['token'])
                 #genome_object = ws.get_objects([{'ref':genome_ref}])[0]['data']
-                genome_object = ws.get_objects2({'objects':[{'ref':genome_ref}]})['data'][0]['data']
+                genome_obj_base = ws.get_objects2({'objects':[{'ref':genome_ref}]})['data'][0]
+                genome_object = genome_obj_base['data']
+                genome_info = genome_obj_base['info']
+                genome_ref_to_obj_name[genome_ref] = genome_info[NAME_I]
             except Exception as e:
                 raise ValueError('Unable to fetch input_one_name object from workspace: ' + str(e))
                 #to get the full stack trace: traceback.format_exc()
@@ -854,6 +871,7 @@ class KBaseDataObjectToFileUtils:
         returnVal['feature_ids_by_genome_id'] = feature_ids_by_genome_id
         returnVal['feature_id_to_function'] = feature_id_to_function
         returnVal['genome_ref_to_sci_name'] = genome_ref_to_sci_name
+        returnVal['genome_ref_to_obj_name'] = genome_ref_to_obj_name
         #END GenomeSetToFASTA
 
         # At some point might do deeper type checking...
@@ -882,11 +900,14 @@ class KBaseDataObjectToFileUtils:
            list of type "feature_id", parameter "feature_id_to_function" of
            mapping from type "feature_id" to String, parameter
            "genome_ref_to_sci_name" of mapping from type "data_obj_ref" to
-           String
+           String, parameter "genome_ref_to_obj_name" of mapping from type
+           "data_obj_ref" to String
         """
         # ctx is the context object
         # return variables are: returnVal
         #BEGIN FeatureSetToFASTA
+
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11) 
 
         # init and clean up params
         featureSet_ref = params['featureSet_ref']
@@ -923,6 +944,7 @@ class KBaseDataObjectToFileUtils:
         feature_ids_by_genome_ref = dict()
         feature_id_to_function = dict()
         genome_ref_to_sci_name = dict()
+        genome_ref_to_obj_name = dict()
         residue_type = residue_type[0:1].upper()
         feature_type = feature_type.upper()
         case = case[0:1].upper()
@@ -972,7 +994,10 @@ class KBaseDataObjectToFileUtils:
                 try:
                     ws = workspaceService(self.workspaceURL, token=ctx['token'])
                     #genome_object = ws.get_objects([{'ref':genome_ref}])[0]['data']
-                    genome_object = ws.get_objects2({'objects':[{'ref':genome_ref}]})['data'][0]['data']
+                    genome_obj_base = ws.get_objects2({'objects':[{'ref':genome_ref}]})['data'][0]
+                    genome_object = genome_obj_base['data']
+                    genome_info = genome_obj_base['info']
+                    genome_ref_to_obj_name[genome_ref] = genome_info[NAME_I]
                 except Exception as e:
                     raise ValueError('Unable to fetch input_one_name object from workspace: ' + str(e))
                     #to get the full stack trace: traceback.format_exc()
@@ -1080,6 +1105,7 @@ class KBaseDataObjectToFileUtils:
         returnVal['feature_ids_by_genome_ref'] = feature_ids_by_genome_ref
         returnVal['feature_id_to_function'] = feature_id_to_function
         returnVal['genome_ref_to_sci_name'] = genome_ref_to_sci_name
+        returnVal['genome_ref_to_obj_name'] = genome_ref_to_obj_name
         #END FeatureSetToFASTA
 
         # At some point might do deeper type checking...

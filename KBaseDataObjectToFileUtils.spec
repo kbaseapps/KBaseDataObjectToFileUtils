@@ -84,6 +84,7 @@ module KBaseDataObjectToFileUtils {
 	list<feature_id>              feature_ids;
 	mapping<feature_id,string>    feature_id_to_function;
 	mapping<data_obj_ref,string>  genome_ref_to_sci_name;
+	mapping<data_obj_ref,string>  genome_ref_to_obj_name;
     } GenomeToFASTA_Output;
 
 
@@ -111,6 +112,7 @@ module KBaseDataObjectToFileUtils {
 	mapping<genome_id, list<feature_id>>  feature_ids_by_genome_id;
 	mapping<feature_id,string>            feature_id_to_function;
 	mapping<data_obj_ref,string>          genome_ref_to_sci_name;
+	mapping<data_obj_ref,string>          genome_ref_to_obj_name;
     } GenomeSetToFASTA_Output;
 
 
@@ -138,6 +140,7 @@ module KBaseDataObjectToFileUtils {
 	mapping<data_obj_ref, list<feature_id>>  feature_ids_by_genome_ref;
 	mapping<feature_id,string>               feature_id_to_function;
 	mapping<data_obj_ref,string>             genome_ref_to_sci_name;
+	mapping<data_obj_ref,string>             genome_ref_to_obj_name;
     } FeatureSetToFASTA_Output;
 
 

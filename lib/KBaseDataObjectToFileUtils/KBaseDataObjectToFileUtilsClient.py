@@ -78,7 +78,9 @@ class KBaseDataObjectToFileUtils(object):
            "path_type", parameter "feature_ids" of list of type "feature_id",
            parameter "feature_id_to_function" of mapping from type
            "feature_id" to String, parameter "genome_ref_to_sci_name" of
-           mapping from type "data_obj_ref" to String
+           mapping from type "data_obj_ref" to String, parameter
+           "genome_ref_to_obj_name" of mapping from type "data_obj_ref" to
+           String
         """
         return self._client.call_method('KBaseDataObjectToFileUtils.GenomeToFASTA',
                                         [params], self._service_ver, context)
@@ -102,7 +104,8 @@ class KBaseDataObjectToFileUtils(object):
            list of type "feature_id", parameter "feature_id_to_function" of
            mapping from type "feature_id" to String, parameter
            "genome_ref_to_sci_name" of mapping from type "data_obj_ref" to
-           String
+           String, parameter "genome_ref_to_obj_name" of mapping from type
+           "data_obj_ref" to String
         """
         return self._client.call_method('KBaseDataObjectToFileUtils.GenomeSetToFASTA',
                                         [params], self._service_ver, context)
@@ -126,7 +129,8 @@ class KBaseDataObjectToFileUtils(object):
            list of type "feature_id", parameter "feature_id_to_function" of
            mapping from type "feature_id" to String, parameter
            "genome_ref_to_sci_name" of mapping from type "data_obj_ref" to
-           String
+           String, parameter "genome_ref_to_obj_name" of mapping from type
+           "data_obj_ref" to String
         """
         return self._client.call_method('KBaseDataObjectToFileUtils.FeatureSetToFASTA',
                                         [params], self._service_ver, context)
