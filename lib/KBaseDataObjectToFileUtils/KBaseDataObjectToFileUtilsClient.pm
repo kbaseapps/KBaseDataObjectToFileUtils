@@ -342,6 +342,7 @@ GenomeToFASTA_Output is a reference to a hash where the following keys are defin
 	feature_ids has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
 	feature_id_to_function has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.feature_id and the value is a string
 	genome_ref_to_sci_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
+	genome_ref_to_obj_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
 feature_id is a string
 
 </pre>
@@ -373,6 +374,7 @@ GenomeToFASTA_Output is a reference to a hash where the following keys are defin
 	feature_ids has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
 	feature_id_to_function has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.feature_id and the value is a string
 	genome_ref_to_sci_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
+	genome_ref_to_obj_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
 feature_id is a string
 
 
@@ -470,6 +472,7 @@ GenomeSetToFASTA_Output is a reference to a hash where the following keys are de
 	feature_ids_by_genome_id has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.genome_id and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
 	feature_id_to_function has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.feature_id and the value is a string
 	genome_ref_to_sci_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
+	genome_ref_to_obj_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
 genome_id is a string
 feature_id is a string
 
@@ -504,6 +507,7 @@ GenomeSetToFASTA_Output is a reference to a hash where the following keys are de
 	feature_ids_by_genome_id has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.genome_id and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
 	feature_id_to_function has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.feature_id and the value is a string
 	genome_ref_to_sci_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
+	genome_ref_to_obj_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
 genome_id is a string
 feature_id is a string
 
@@ -600,6 +604,7 @@ FeatureSetToFASTA_Output is a reference to a hash where the following keys are d
 	feature_ids_by_genome_ref has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
 	feature_id_to_function has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.feature_id and the value is a string
 	genome_ref_to_sci_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
+	genome_ref_to_obj_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
 feature_id is a string
 
 </pre>
@@ -631,6 +636,7 @@ FeatureSetToFASTA_Output is a reference to a hash where the following keys are d
 	feature_ids_by_genome_ref has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
 	feature_id_to_function has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.feature_id and the value is a string
 	genome_ref_to_sci_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
+	genome_ref_to_obj_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
 feature_id is a string
 
 
@@ -1406,6 +1412,7 @@ fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
 feature_ids has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
 feature_id_to_function has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.feature_id and the value is a string
 genome_ref_to_sci_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
+genome_ref_to_obj_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
 
 </pre>
 
@@ -1418,6 +1425,7 @@ fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
 feature_ids has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
 feature_id_to_function has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.feature_id and the value is a string
 genome_ref_to_sci_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
+genome_ref_to_obj_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
 
 
 =end text
@@ -1504,6 +1512,7 @@ fasta_file_path_list has a value which is a reference to a list where each eleme
 feature_ids_by_genome_id has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.genome_id and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
 feature_id_to_function has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.feature_id and the value is a string
 genome_ref_to_sci_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
+genome_ref_to_obj_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
 
 </pre>
 
@@ -1516,6 +1525,7 @@ fasta_file_path_list has a value which is a reference to a list where each eleme
 feature_ids_by_genome_id has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.genome_id and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
 feature_id_to_function has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.feature_id and the value is a string
 genome_ref_to_sci_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
+genome_ref_to_obj_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
 
 
 =end text
@@ -1600,6 +1610,7 @@ fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
 feature_ids_by_genome_ref has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
 feature_id_to_function has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.feature_id and the value is a string
 genome_ref_to_sci_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
+genome_ref_to_obj_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
 
 </pre>
 
@@ -1612,6 +1623,7 @@ fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
 feature_ids_by_genome_ref has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
 feature_id_to_function has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.feature_id and the value is a string
 genome_ref_to_sci_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
+genome_ref_to_obj_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
 
 
 =end text

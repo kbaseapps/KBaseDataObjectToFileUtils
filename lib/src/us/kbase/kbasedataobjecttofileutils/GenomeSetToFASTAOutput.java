@@ -25,7 +25,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "fasta_file_path_list",
     "feature_ids_by_genome_id",
     "feature_id_to_function",
-    "genome_ref_to_sci_name"
+    "genome_ref_to_sci_name",
+    "genome_ref_to_obj_name"
 })
 public class GenomeSetToFASTAOutput {
 
@@ -37,6 +38,8 @@ public class GenomeSetToFASTAOutput {
     private Map<String, String> featureIdToFunction;
     @JsonProperty("genome_ref_to_sci_name")
     private Map<String, String> genomeRefToSciName;
+    @JsonProperty("genome_ref_to_obj_name")
+    private Map<String, String> genomeRefToObjName;
     private Map<java.lang.String, Object> additionalProperties = new HashMap<java.lang.String, Object>();
 
     @JsonProperty("fasta_file_path_list")
@@ -99,6 +102,21 @@ public class GenomeSetToFASTAOutput {
         return this;
     }
 
+    @JsonProperty("genome_ref_to_obj_name")
+    public Map<String, String> getGenomeRefToObjName() {
+        return genomeRefToObjName;
+    }
+
+    @JsonProperty("genome_ref_to_obj_name")
+    public void setGenomeRefToObjName(Map<String, String> genomeRefToObjName) {
+        this.genomeRefToObjName = genomeRefToObjName;
+    }
+
+    public GenomeSetToFASTAOutput withGenomeRefToObjName(Map<String, String> genomeRefToObjName) {
+        this.genomeRefToObjName = genomeRefToObjName;
+        return this;
+    }
+
     @JsonAnyGetter
     public Map<java.lang.String, Object> getAdditionalProperties() {
         return this.additionalProperties;
@@ -111,7 +129,7 @@ public class GenomeSetToFASTAOutput {
 
     @Override
     public java.lang.String toString() {
-        return ((((((((((("GenomeSetToFASTAOutput"+" [fastaFilePathList=")+ fastaFilePathList)+", featureIdsByGenomeId=")+ featureIdsByGenomeId)+", featureIdToFunction=")+ featureIdToFunction)+", genomeRefToSciName=")+ genomeRefToSciName)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((((("GenomeSetToFASTAOutput"+" [fastaFilePathList=")+ fastaFilePathList)+", featureIdsByGenomeId=")+ featureIdsByGenomeId)+", featureIdToFunction=")+ featureIdToFunction)+", genomeRefToSciName=")+ genomeRefToSciName)+", genomeRefToObjName=")+ genomeRefToObjName)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }
