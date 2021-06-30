@@ -1002,19 +1002,28 @@ class KBaseDataObjectToFileUtils:
                     genome_object = genome_obj_base['data']
                     genome_info = genome_obj_base['info']
                     genome_ref_to_obj_name[genome_ref] = genome_info[NAME_I]
+
+                    obj_type = genome_info[TYPE_I].split('-')[0]
                 except Exception as e:
                     raise ValueError('Unable to fetch input_one_name object from workspace: ' + str(e))
                     #to get the full stack trace: traceback.format_exc()
             
-                # set sci name
-                genome_ref_to_sci_name[genome_ref] = genome_object['scientific_name']
+                # different behavior for genome and ama
+                these_features = None
+                if obj_type == 'KBaseGenomes.Genome':
+                    genome_ref_to_sci_name[genome_ref] = genome_object['scientific_name']
+                    these_features = genome_object['features']
+                else:
+                    genome_ref_to_sci_name[genome_ref] = genome_info[NAME_I]
+                    these_features = self._get_features_from_AnnotatedMetagenomeAssembly (ctx, genome_ref)
+                    
                 feature_id_to_function[genome_ref] = dict()
 
                 # FIX: should I write recs as we go to reduce memory footprint, or is a single buffer write much faster?  Check later.
                 #
                 #records = []
                 
-                for feature in genome_object['features']:
+                for feature in these_features:
                     fid = feature['id']
                 
                     try:
