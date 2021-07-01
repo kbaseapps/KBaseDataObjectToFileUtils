@@ -53,9 +53,9 @@ class KBaseDataObjectToFileUtils:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "0.0.9"
-    GIT_URL = "https://github.com/dcchivian/KBaseDataObjectToFileUtils"
-    GIT_COMMIT_HASH = "19668843d9db2fcb4d028082746f8149c2904950"
+    VERSION = "1.0.0"
+    GIT_URL = "https://github.com/kbaseapps/KBaseDataObjectToFileUtils"
+    GIT_COMMIT_HASH = "6b9bceb393d39bbb14e507df6a5749dc64d8b793"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -538,8 +538,10 @@ class KBaseDataObjectToFileUtils:
             for feature in genome_object['features']:
                 
                 # set function
-                if 'function' in feature:
+                if 'function' in feature:  # Feature <= 2.3 (Genome <= 8.2)
                     feature_id_to_function[genome_ref][feature['id']] = feature['function']
+                elif 'functions' in feature:  # Feature >= 3.0 (Genome >= 9.0)
+                    feature_id_to_function[genome_ref][feature['id']] = "; ".join(feature['functions'])
                 else:
                     feature_id_to_function[genome_ref][feature['id']] = 'N/A'
                 
@@ -783,8 +785,10 @@ class KBaseDataObjectToFileUtils:
                 fid = feature['id']
 
                 # set function
-                if 'function' in feature:
+                if 'function' in feature:  # Feature <= 2.3 (Genome <= 8.2)
                     feature_id_to_function[genome_ref][fid] = feature['function']
+                elif 'functions' in feature:  # Feature >= 3.0 (Genome >= 9.0)
+                    feature_id_to_function[genome_ref][fid] = "; ".join(feature['functions'])
                 else:
                     feature_id_to_function[genome_ref][fid] = 'N/A'
 
@@ -998,19 +1002,28 @@ class KBaseDataObjectToFileUtils:
                     genome_object = genome_obj_base['data']
                     genome_info = genome_obj_base['info']
                     genome_ref_to_obj_name[genome_ref] = genome_info[NAME_I]
+
+                    obj_type = genome_info[TYPE_I].split('-')[0]
                 except Exception as e:
                     raise ValueError('Unable to fetch input_one_name object from workspace: ' + str(e))
                     #to get the full stack trace: traceback.format_exc()
             
-                # set sci name
-                genome_ref_to_sci_name[genome_ref] = genome_object['scientific_name']
+                # different behavior for genome and ama
+                these_features = None
+                if obj_type == 'KBaseGenomes.Genome':
+                    genome_ref_to_sci_name[genome_ref] = genome_object['scientific_name']
+                    these_features = genome_object['features']
+                else:
+                    genome_ref_to_sci_name[genome_ref] = genome_info[NAME_I]
+                    these_features = self._get_features_from_AnnotatedMetagenomeAssembly (ctx, genome_ref)
+                    
                 feature_id_to_function[genome_ref] = dict()
 
                 # FIX: should I write recs as we go to reduce memory footprint, or is a single buffer write much faster?  Check later.
                 #
                 #records = []
                 
-                for feature in genome_object['features']:
+                for feature in these_features:
                     fid = feature['id']
                 
                     try:
@@ -1019,8 +1032,10 @@ class KBaseDataObjectToFileUtils:
                         continue
 
                     # set function
-                    if 'function' in feature:
+                    if 'function' in feature:  # Feature <= 2.3 (Genome <= 8.2)
                         feature_id_to_function[genome_ref][fid] = feature['function']
+                    elif 'functions' in feature:  # Feature >= 3.0 (Genome >= 9.0)
+                        feature_id_to_function[genome_ref][fid] = "; ".join(feature['functions'])
                     else:
                         feature_id_to_function[genome_ref][fid] = 'N/A'
 
@@ -1226,8 +1241,10 @@ class KBaseDataObjectToFileUtils:
                         
             for feature in ama_features:
                 # set function
-                if 'function' in feature:
+                if 'function' in feature:  # Feature <= 2.3
                     feature_id_to_function[ama_ref][feature['id']] = feature['function']
+                elif 'functions' in feature:  # Feature >= 3.0
+                    feature_id_to_function[ama_ref][feature['id']] = "; ".join(feature['functions'])
                 else:
                     feature_id_to_function[ama_ref][feature['id']] = 'N/A'
                 
