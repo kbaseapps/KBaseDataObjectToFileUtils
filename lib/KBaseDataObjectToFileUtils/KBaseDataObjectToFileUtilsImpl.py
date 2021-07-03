@@ -53,9 +53,9 @@ class KBaseDataObjectToFileUtils:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "1.0.0"
+    VERSION = "1.0.1"
     GIT_URL = "https://github.com/kbaseapps/KBaseDataObjectToFileUtils"
-    GIT_COMMIT_HASH = "6b9bceb393d39bbb14e507df6a5749dc64d8b793"
+    GIT_COMMIT_HASH = "a3e12945cb406fb65852084a0bb8a57580e379ac"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -530,11 +530,12 @@ class KBaseDataObjectToFileUtils:
 
         # set features list ('features' only contains CDS features')
         target_features = []
-        if feature_type == 'CDS' or residue_type == 'P':
+        if feature_type == 'CDS' or residue_type == 'P' or 'non_coding_features' not in genome_object:
             target_features = genome_object['features']
         else:
             target_features = genome_object['features'] + genome_object['non_coding_features']
 
+            
         # FIX: should I write recs as we go to reduce memory footprint, or is a single buffer write much faster?  Check later.
         #
         #records = []
@@ -785,7 +786,7 @@ class KBaseDataObjectToFileUtils:
 
             # set features list ('features' only contains CDS features')
             target_features = []
-            if feature_type == 'CDS' or residue_type == 'P':
+            if feature_type == 'CDS' or residue_type == 'P' or 'non_coding_features' not in genome_object:
                 target_features = genome_object['features']
             else:
                 target_features = genome_object['features'] + genome_object['non_coding_features']
@@ -1029,7 +1030,7 @@ class KBaseDataObjectToFileUtils:
                 if obj_type == 'KBaseGenomes.Genome':
                     genome_ref_to_sci_name[genome_ref] = genome_object['scientific_name']
                     # set features list ('features' only contains CDS features')
-                    if feature_type == 'CDS' or residue_type == 'P':
+                    if feature_type == 'CDS' or residue_type == 'P' or 'non_coding_features' not in genome_object:
                         these_features = genome_object['features']
                     else:
                         these_features = genome_object['features'] + genome_object['non_coding_features']
