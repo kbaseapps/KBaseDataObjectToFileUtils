@@ -256,6 +256,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
     ##
     # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_GenomeToFASTA_01()')
     def test_KBaseDataObjectToFileUtils_GenomeToFASTA_01(self):
+        test_name = 'GenomeToFASTA_01'
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
         """
         reference_prok_genomes_WS = 'ReferenceDataManager'  # PROD and CI
@@ -272,7 +273,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
         parameters = {
                 'genome_ref':          genome_ref_0,
-                'file':                'test_genome.fasta',
+                'file':                test_name+'-test_genome.fasta',
                 'dir':                 output_dir,
                 'console':             [],
                 'invalid_msgs':        [],
@@ -290,10 +291,50 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
         pass
         
 
+    #### GenomeToFASTA_02()
+    ##
+    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_GenomeToFASTA_02()')
+    def test_KBaseDataObjectToFileUtils_GenomeToFASTA_02(self):
+        test_name = 'GenomeToFASTA_02'
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
+        """
+        reference_prok_genomes_WS = 'ReferenceDataManager'  # PROD and CI
+        genome_ref_1 = reference_prok_genomes_WS+'/GCF_001566335.1/1'  # E. coli K-12 MG1655
+        """
+        genomeInfo_0 = self.getGenomeInfo('GCF_001566335.1_ASM156633v1_genomic', 0)  # E. coli K-12 MG1655
+        genome_ref_0 = '/'.join([str(genomeInfo_0[WSID_I]),
+                                 str(genomeInfo_0[OBJID_I]),
+                                 str(genomeInfo_0[VERSION_I])])        
+
+        output_dir = os.path.join(self.scratch,'fasta_out.'+str(uuid.uuid4()))
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+
+        parameters = {
+                'genome_ref':          genome_ref_0,
+                'file':                test_name+'-test_genome.fasta',
+                'dir':                 output_dir,
+                'console':             [],
+                'invalid_msgs':        [],
+                'residue_type':        'nuc',
+                'feature_type':        'ALL',
+                'record_id_pattern':   '%%feature_id%%',
+                'record_desc_pattern': '[%%genome_id%%]',
+                'case':                'upper',
+                'linewrap':            50
+                }
+        ret = self.getImpl().GenomeToFASTA(self.getContext(), parameters)[0]
+        self.assertIsNotNone(ret['fasta_file_path'])
+        self.assertIsNotNone(ret['feature_ids'])
+        self.assertNotEqual(len(ret['feature_ids']), 0)
+        pass
+        
+
     #### GenomeSetToFASTA_01()
     ##
     # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_GenomeSetToFASTA_01()')
     def test_KBaseDataObjectToFileUtils_GenomeSetToFASTA_01(self):
+        test_name = 'GenomeSetToFASTA_01'
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
 
         """
@@ -345,7 +386,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
         parameters = {
                 'genomeSet_ref':       genomeSet_ref,
-                'file':                'test_genomeSet.fasta',
+                'file':                test_name+'-test_genomeSet.fasta',
                 'dir':                 output_dir,
                 'console':             [],
                 'invalid_msgs':        [],
@@ -364,10 +405,86 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
         pass
         
 
+    #### GenomeSetToFASTA_02()
+    ##
+    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_GenomeSetToFASTA_02()')
+    def test_KBaseDataObjectToFileUtils_GenomeSetToFASTA_02(self):
+        test_name = 'GenomeSetToFASTA_02'
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
+
+        """
+        reference_prok_genomes_WS = 'ReferenceDataManager'  # PROD and CI
+        genome_ref_1 = reference_prok_genomes_WS+'/GCF_001566335.1/1'  # E. coli K-12 MG1655
+        genome_ref_2 = reference_prok_genomes_WS+'/GCF_000021385.1/1'  # D. vulgaris str. 'Miyazaki F'
+        genome_ref_3 = reference_prok_genomes_WS+'/GCF_900129775.1/1'  # Halobaculum gomorrense (16 contigs)
+        """
+        
+        genomeInfo_0 = self.getGenomeInfo('GCF_001566335.1_ASM156633v1_genomic', 0)  # E. coli K-12 MG1655
+        genomeInfo_1 = self.getGenomeInfo('GCF_000021385.1_ASM2138v1_genomic', 1)    # D. vulgaris str. 'Miyazaki F
+        genomeInfo_2 = self.getGenomeInfo('GCF_001721825.1_ASM172182v1_genomic', 2)  # Pseudomonas aeruginosa
+        genome_ref_0 = '/'.join([str(genomeInfo_0[WSID_I]),
+                                 str(genomeInfo_0[OBJID_I]),
+                                 str(genomeInfo_0[VERSION_I])])
+        genome_ref_1 = '/'.join([str(genomeInfo_1[WSID_I]),
+                                 str(genomeInfo_1[OBJID_I]),
+                                 str(genomeInfo_1[VERSION_I])])
+        genome_ref_2 = '/'.join([str(genomeInfo_2[WSID_I]),
+                                 str(genomeInfo_2[OBJID_I]),
+                                 str(genomeInfo_2[VERSION_I])])        
+        
+        genome_id_feature_id_delim = '.f:'
+
+        genomeSet_obj = { 'description': 'test genomeSet',
+                          'elements': { 'genome_0': { 'ref': genome_ref_0 },
+                                        'genome_1': { 'ref': genome_ref_1 },
+                                        'genome_2': { 'ref': genome_ref_2 }
+                                    }
+                        }
+        provenance = [{}]
+        genomeSet_info = self.getWsClient().save_objects({
+            'workspace': self.getWsName(), 
+            'objects': [
+                {
+                    'type': 'KBaseSearch.GenomeSet',
+                    'data': genomeSet_obj,
+                    'name': 'test_genomeSet',
+                    'meta': {},
+                    'provenance': provenance
+                }
+            ]})[0]
+
+        genomeSet_ref = str(genomeSet_info[WSID_I])+'/'+str(genomeSet_info[OBJID_I])+'/'+str(genomeSet_info[VERSION_I])
+
+        output_dir = os.path.join(self.scratch,'fasta_out.'+str(uuid.uuid4()))
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+
+        parameters = {
+                'genomeSet_ref':       genomeSet_ref,
+                'file':                test_name+'-test_genomeSet.fasta',
+                'dir':                 output_dir,
+                'console':             [],
+                'invalid_msgs':        [],
+                'residue_type':        'nuc',
+                'feature_type':        'ALL',
+                'record_id_pattern':   '%%genome_ref%%'+genome_id_feature_id_delim+'%%feature_id%%',
+                'record_desc_pattern': '[%%genome_ref%%]',
+                'case':                'upper',
+                'linewrap':            50,
+                'merge_fasta_files':   'TRUE'
+                }
+        ret = self.getImpl().GenomeSetToFASTA(self.getContext(), parameters)[0]
+        self.assertIsNotNone(ret['fasta_file_path_list'][0])
+        self.assertIsNotNone(ret['feature_ids_by_genome_id'])
+        self.assertNotEqual(len(ret['feature_ids_by_genome_id'].keys()), 0)
+        pass
+        
+
     #### FeatureSetToFASTA_01()
     ##
     # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_FeatureSetToFASTA_01()')
     def test_KBaseDataObjectToFileUtils_FeatureSetToFASTA_01(self):
+        test_name = 'FeatureSetToFASTA_01'
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
 
         """
@@ -396,9 +513,9 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
                               str(amaInfo_0[VERSION_I])])
 
         genome_id_feature_id_delim = '.f:'
-        feature_id_1 = 'AWN69_RS07145'
-        feature_id_2 = 'DVMF_RS00005'
-        feature_id_3 = 'A6701_RS00005'
+        feature_id_1 = 'AWN69_RS07145' # DnaA
+        feature_id_2 = 'DVMF_RS00005'  # DnaA
+        feature_id_3 = 'A6701_RS00005' # DnaA
         ama_feature_id_1 = '4_27'
         
         featureSet_obj = { 'description': 'test genomeSet',
@@ -435,12 +552,106 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
             os.makedirs(output_dir)
 
         parameters = {
-                'featureSet_ref':       featureSet_ref,
-                'file':                'test_featureSet.fasta',
+                'featureSet_ref':      featureSet_ref,
+                'file':                test_name+'-test_featureSet.fasta',
                 'dir':                 output_dir,
                 'console':             [],
                 'invalid_msgs':        [],
-                'residue_type':        'nucleotide',
+                'residue_type':        'protein',
+                'feature_type':        'CDS',
+                'record_id_pattern':   '%%genome_ref%%'+'.f:'+'%%feature_id%%',
+                'record_desc_pattern': '[%%genome_ref%%]',
+                'case':                'upper',
+                'linewrap':            50,
+                'merge_fasta_files':   'TRUE'
+                }
+        ret = self.getImpl().FeatureSetToFASTA(self.getContext(), parameters)[0]
+        self.assertIsNotNone(ret['fasta_file_path'][0])
+        self.assertIsNotNone(ret['feature_ids_by_genome_ref'])
+        self.assertNotEqual(len(ret['feature_ids_by_genome_ref'].keys()), 0)
+        self.assertIsNotNone(ret['genome_ref_to_sci_name'])
+        self.assertNotEqual(len(ret['genome_ref_to_sci_name'].keys()), 0)
+        pass
+        
+
+    #### FeatureSetToFASTA_02()
+    ##
+    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_FeatureSetToFASTA_02()')
+    def test_KBaseDataObjectToFileUtils_FeatureSetToFASTA_02(self):
+        test_name = 'FeatureSetToFASTA_02'
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
+
+        """
+        reference_prok_genomes_WS = 'ReferenceDataManager'  # PROD and CI
+        genome_ref_1 = reference_prok_genomes_WS+'/GCF_001566335.1/1'  # E. coli K-12 MG1655
+        genome_ref_2 = reference_prok_genomes_WS+'/GCF_000021385.1/1'  # D. vulgaris str. 'Miyazaki F'
+        genome_ref_3 = reference_prok_genomes_WS+'/GCF_900129775.1/1'  # Halobaculum gomorrense (16 contigs)
+        """
+        genomeInfo_0 = self.getGenomeInfo('GCF_001566335.1_ASM156633v1_genomic', 0)  # E. coli K-12 MG1655
+        genomeInfo_1 = self.getGenomeInfo('GCF_000021385.1_ASM2138v1_genomic', 1)    # D. vulgaris str. 'Miyazaki F
+        genomeInfo_2 = self.getGenomeInfo('GCF_001721825.1_ASM172182v1_genomic', 2)  # Pseudomonas aeruginosa
+        genome_ref_0 = '/'.join([str(genomeInfo_0[WSID_I]),
+                                 str(genomeInfo_0[OBJID_I]),
+                                 str(genomeInfo_0[VERSION_I])])
+        genome_ref_1 = '/'.join([str(genomeInfo_1[WSID_I]),
+                                 str(genomeInfo_1[OBJID_I]),
+                                 str(genomeInfo_1[VERSION_I])])
+        genome_ref_2 = '/'.join([str(genomeInfo_2[WSID_I]),
+                                 str(genomeInfo_2[OBJID_I]),
+                                 str(genomeInfo_2[VERSION_I])])        
+        
+
+        amaInfo_0 = self.getAMAInfo("test_ama", 0)
+        ama_ref_0 = '/'.join([str(amaInfo_0[WSID_I]),
+                              str(amaInfo_0[OBJID_I]),
+                              str(amaInfo_0[VERSION_I])])
+
+        genome_id_feature_id_delim = '.f:'
+        feature_id_1 = 'AWN69_RS07145' # DnaA
+        feature_id_2 = 'DVMF_RS00005'  # DnaA
+        feature_id_3 = 'A6701_RS00005' # DnaA
+        ama_feature_id_1 = '4_27'
+        
+        featureSet_obj = { 'description': 'test genomeSet',
+                           'element_ordering': [
+                               feature_id_1,
+                               feature_id_2,
+                               feature_id_3,
+                               ama_feature_id_1
+                           ],
+                           'elements': { 
+                               feature_id_1: [genome_ref_0],
+                               feature_id_2: [genome_ref_1],
+                               feature_id_3: [genome_ref_2],
+                               ama_feature_id_1: [ama_ref_0]
+                           }
+                        }
+        provenance = [{}]
+        featureSet_info = self.getWsClient().save_objects({
+            'workspace': self.getWsName(), 
+            'objects': [
+                {
+                    'type': 'KBaseCollections.FeatureSet',
+                    'data': featureSet_obj,
+                    'name': 'test_featureSet',
+                    'meta': {},
+                    'provenance': provenance
+                }
+            ]})[0]
+
+        featureSet_ref = str(featureSet_info[WSID_I])+'/'+str(featureSet_info[OBJID_I])+'/'+str(featureSet_info[VERSION_I])
+
+        output_dir = os.path.join(self.scratch,'fasta_out.'+str(uuid.uuid4()))
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+
+        parameters = {
+                'featureSet_ref':      featureSet_ref,
+                'file':                test_name+'-test_featureSet.fasta',
+                'dir':                 output_dir,
+                'console':             [],
+                'invalid_msgs':        [],
+                'residue_type':        'nuc',
                 'feature_type':        'ALL',
                 'record_id_pattern':   '%%genome_ref%%'+'.f:'+'%%feature_id%%',
                 'record_desc_pattern': '[%%genome_ref%%]',
@@ -461,6 +672,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
     ##
     # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_AnnotatedMetagenomeAssemblyToFASTA_01()')
     def test_KBaseDataObjectToFileUtils_AnnotatedMetagenomeAssemblyToFASTA_01(self):
+        test_name = 'AnnotatedMetagenomeAssemblyToFASTA_01'
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
 
         # upload test data
@@ -478,12 +690,53 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
         parameters = {
                 'ama_ref':             ama_ref_0,
-                'file':                'test_ama_proteins.fasta',
+                'file':                test_name+'-test_ama.fasta',
                 'dir':                 output_dir,
                 'console':             [],
                 'invalid_msgs':        [],
                 'residue_type':        'protein',
                 'feature_type':        'CDS',
+                'record_id_pattern':   '%%feature_id%%',
+                'record_desc_pattern': '[%%genome_id%%]',
+                'case':                'upper',
+                'linewrap':            50
+                }
+        ret = self.getImpl().AnnotatedMetagenomeAssemblyToFASTA(self.getContext(), parameters)[0]
+        self.assertIsNotNone(ret['fasta_file_path'])
+        self.assertIsNotNone(ret['feature_ids'])
+        self.assertNotEqual(len(ret['feature_ids']), 0)
+        self.assertEqual(len(ret['feature_ids']), ama_feature_cnt)
+        pass
+
+
+    #### AnnotatedMetagenomeAssemblyToFASTA_02()
+    ##
+    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_AnnotatedMetagenomeAssemblyToFASTA_02()')
+    def test_KBaseDataObjectToFileUtils_AnnotatedMetagenomeAssemblyToFASTA_02(self):
+        test_name = 'AnnotatedMetagenomeAssemblyToFASTA_02'
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
+
+        # upload test data
+        ama_feature_cnt = 888
+
+        amaInfo_0 = self.getAMAInfo("test_ama", 0)
+        ama_ref_0 = '/'.join([str(amaInfo_0[WSID_I]),
+                              str(amaInfo_0[OBJID_I]),
+                              str(amaInfo_0[VERSION_I])])
+        
+        # get protein fastas
+        output_dir = os.path.join(self.scratch,'fasta_out.'+str(uuid.uuid4()))
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+
+        parameters = {
+                'ama_ref':             ama_ref_0,
+                'file':                test_name+'-test_ama.fasta',
+                'dir':                 output_dir,
+                'console':             [],
+                'invalid_msgs':        [],
+                'residue_type':        'nuc',
+                'feature_type':        'ALL',
                 'record_id_pattern':   '%%feature_id%%',
                 'record_desc_pattern': '[%%genome_id%%]',
                 'case':                'upper',

@@ -526,7 +526,14 @@ class KBaseDataObjectToFileUtils:
         # set sci name
         genome_ref_to_sci_name[genome_ref] = genome_object['scientific_name']
         feature_id_to_function[genome_ref] = dict()
-            
+
+
+        # set features list ('features' only contains CDS features')
+        target_features = []
+        if feature_type == 'CDS' or residue_type == 'P':
+            target_features = genome_object['features']
+        else:
+            target_features = genome_object['features'] + genome_object['non_coding_features']
 
         # FIX: should I write recs as we go to reduce memory footprint, or is a single buffer write much faster?  Check later.
         #
@@ -535,7 +542,7 @@ class KBaseDataObjectToFileUtils:
 
         with open(fasta_file_path, 'w', 0) as fasta_file_handle:
                         
-            for feature in genome_object['features']:
+            for feature in target_features:
                 
                 # set function
                 if 'function' in feature:  # Feature <= 2.3 (Genome <= 8.2)
@@ -615,7 +622,7 @@ class KBaseDataObjectToFileUtils:
         #else:
         #    SeqIO.write(records, fasta_file_path, "fasta")
 
-
+        
         # build returnVal
         #
         returnVal = dict()
@@ -775,13 +782,20 @@ class KBaseDataObjectToFileUtils:
             # set sci name
             genome_ref_to_sci_name[genome_ref] = genome_object['scientific_name']
             feature_id_to_function[genome_ref] = dict()
-            
+
+            # set features list ('features' only contains CDS features')
+            target_features = []
+            if feature_type == 'CDS' or residue_type == 'P':
+                target_features = genome_object['features']
+            else:
+                target_features = genome_object['features'] + genome_object['non_coding_features']
+
 
             # FIX: should I write recs as we go to reduce memory footprint, or is a single buffer write much faster?  Check later.
             #
             #records = []
                         
-            for feature in genome_object['features']:
+            for feature in target_features:
                 fid = feature['id']
 
                 # set function
@@ -858,6 +872,7 @@ class KBaseDataObjectToFileUtils:
                             feature_ids_by_genome_id[genome_id].append(feature['id'])
                             fasta_file_handle.write(rec)
 
+
             if genome_i == (len(genome_ids)-1) or not merge_fasta_files:
                 self.log(console,"CLOSING FILE: '"+fasta_file_path+"'")  # DEBUG
                 fasta_file_handle.close()
@@ -867,6 +882,7 @@ class KBaseDataObjectToFileUtils:
             # report if no features found
             if not feature_sequence_found:
                 self.log(invalid_msgs, "No sequence records found in Genome "+genome_id+" of residue_type: "+residue_type+", feature_type: "+feature_type)
+
 
         # build returnVal
         #
@@ -1009,20 +1025,24 @@ class KBaseDataObjectToFileUtils:
                     #to get the full stack trace: traceback.format_exc()
             
                 # different behavior for genome and ama
-                these_features = None
+                these_features = []
                 if obj_type == 'KBaseGenomes.Genome':
                     genome_ref_to_sci_name[genome_ref] = genome_object['scientific_name']
-                    these_features = genome_object['features']
+                    # set features list ('features' only contains CDS features')
+                    if feature_type == 'CDS' or residue_type == 'P':
+                        these_features = genome_object['features']
+                    else:
+                        these_features = genome_object['features'] + genome_object['non_coding_features']
                 else:
                     genome_ref_to_sci_name[genome_ref] = genome_info[NAME_I]
                     these_features = self._get_features_from_AnnotatedMetagenomeAssembly (ctx, genome_ref)
                     
                 feature_id_to_function[genome_ref] = dict()
 
+                    
                 # FIX: should I write recs as we go to reduce memory footprint, or is a single buffer write much faster?  Check later.
                 #
                 #records = []
-                
                 for feature in these_features:
                     fid = feature['id']
                 
@@ -1076,6 +1096,8 @@ class KBaseDataObjectToFileUtils:
                             continue
                         elif 'dna_sequence' not in feature or feature['dna_sequence'] == None or feature['dna_sequence'] == '':
                             self.log(invalid_msgs, "bad feature "+feature['id']+": No dna_sequence field.")
+                        elif 'parent_gene' in feature:
+                            continue
                         else:
                             feature_sequence_found = True
                             rec_id = record_header_sub(record_id_pattern, fid, genome_ref, genome_ref)
@@ -1232,6 +1254,7 @@ class KBaseDataObjectToFileUtils:
         #
         ama_features = self._get_features_from_AnnotatedMetagenomeAssembly (ctx, ama_ref)
 
+
         # FIX: should I write recs as we go to reduce memory footprint, or is a single buffer write much faster?  Check later.
         #
         #records = []
@@ -1297,6 +1320,8 @@ class KBaseDataObjectToFileUtils:
                             continue
                         elif 'dna_sequence' not in feature or feature['dna_sequence'] == None or feature['dna_sequence'] == '':
                             self.log(invalid_msgs, "bad feature "+feature['id']+": No dna_sequence field.")
+                        elif 'parent_gene' in feature:
+                            continue
                         else:
                             feature_sequence_found = True
                             rec_id = record_header_sub(record_id_pattern, feature['id'], ama_object_name)
