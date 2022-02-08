@@ -116,6 +116,34 @@ module KBaseDataObjectToFileUtils {
     } GenomeSetToFASTA_Output;
 
 
+    /* SpeciesTreeToFASTA() Params
+    */
+    typedef structure {
+	data_obj_ref   tree_ref;
+	path_type      file;
+	path_type      dir;
+	list<log_msg>  console;
+	list<log_msg>  invalid_msgs;
+	string         residue_type;
+	string         feature_type;
+	pattern_type   record_id_pattern;
+	pattern_type   record_desc_pattern;
+	string         case;
+	int            linewrap;
+	true_false     merge_fasta_files;
+    } SpeciesTreeToFASTA_Params;
+
+    /* SpeciesTreeToFASTA() Output
+    */
+    typedef structure {
+	list<path_type>                       fasta_file_path_list;
+	mapping<genome_id, list<feature_id>>  feature_ids_by_genome_id;
+	mapping<feature_id,string>            feature_id_to_function;
+	mapping<data_obj_ref,string>          genome_ref_to_sci_name;
+	mapping<data_obj_ref,string>          genome_ref_to_obj_name;
+    } SpeciesTreeToFASTA_Output;
+
+
     /* FeatureSetToFASTA() Params
     */
     typedef structure {
@@ -180,6 +208,8 @@ module KBaseDataObjectToFileUtils {
     funcdef GenomeToFASTA (GenomeToFASTA_Params params)  returns (GenomeToFASTA_Output) authentication required;
 
     funcdef GenomeSetToFASTA (GenomeSetToFASTA_Params params)  returns (GenomeSetToFASTA_Output) authentication required;
+
+    funcdef SpeciesTreeToFASTA (SpeciesTreeToFASTA_Params params)  returns (SpeciesTreeToFASTA_Output) authentication required;
 
     funcdef FeatureSetToFASTA (FeatureSetToFASTA_Params params)  returns (FeatureSetToFASTA_Output) authentication required;
 

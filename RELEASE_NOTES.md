@@ -1,3 +1,7 @@
+### Version 1.1.0
+__Changes__
+- added SpeciesTreeToFASTA() method
+
 ### Version 1.0.1
 __Changes__
 - include 'non_coding_features' for nucleotide/non-CDS queries from Genomes >= 9.0

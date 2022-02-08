@@ -570,6 +570,140 @@ feature_id is a string
  
 
 
+=head2 SpeciesTreeToFASTA
+
+  $return = $obj->SpeciesTreeToFASTA($params)
+
+=over 4
+
+=item Parameter and return types
+
+=begin html
+
+<pre>
+$params is a KBaseDataObjectToFileUtils.SpeciesTreeToFASTA_Params
+$return is a KBaseDataObjectToFileUtils.SpeciesTreeToFASTA_Output
+SpeciesTreeToFASTA_Params is a reference to a hash where the following keys are defined:
+	tree_ref has a value which is a KBaseDataObjectToFileUtils.data_obj_ref
+	file has a value which is a KBaseDataObjectToFileUtils.path_type
+	dir has a value which is a KBaseDataObjectToFileUtils.path_type
+	console has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+	invalid_msgs has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+	residue_type has a value which is a string
+	feature_type has a value which is a string
+	record_id_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+	record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+	case has a value which is a string
+	linewrap has a value which is an int
+	merge_fasta_files has a value which is a KBaseDataObjectToFileUtils.true_false
+data_obj_ref is a string
+path_type is a string
+log_msg is a string
+pattern_type is a string
+true_false is a string
+SpeciesTreeToFASTA_Output is a reference to a hash where the following keys are defined:
+	fasta_file_path_list has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.path_type
+	feature_ids_by_genome_id has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.genome_id and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
+	feature_id_to_function has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.feature_id and the value is a string
+	genome_ref_to_sci_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
+	genome_ref_to_obj_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
+genome_id is a string
+feature_id is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+$params is a KBaseDataObjectToFileUtils.SpeciesTreeToFASTA_Params
+$return is a KBaseDataObjectToFileUtils.SpeciesTreeToFASTA_Output
+SpeciesTreeToFASTA_Params is a reference to a hash where the following keys are defined:
+	tree_ref has a value which is a KBaseDataObjectToFileUtils.data_obj_ref
+	file has a value which is a KBaseDataObjectToFileUtils.path_type
+	dir has a value which is a KBaseDataObjectToFileUtils.path_type
+	console has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+	invalid_msgs has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+	residue_type has a value which is a string
+	feature_type has a value which is a string
+	record_id_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+	record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+	case has a value which is a string
+	linewrap has a value which is an int
+	merge_fasta_files has a value which is a KBaseDataObjectToFileUtils.true_false
+data_obj_ref is a string
+path_type is a string
+log_msg is a string
+pattern_type is a string
+true_false is a string
+SpeciesTreeToFASTA_Output is a reference to a hash where the following keys are defined:
+	fasta_file_path_list has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.path_type
+	feature_ids_by_genome_id has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.genome_id and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
+	feature_id_to_function has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.feature_id and the value is a string
+	genome_ref_to_sci_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
+	genome_ref_to_obj_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
+genome_id is a string
+feature_id is a string
+
+
+=end text
+
+=item Description
+
+
+
+=back
+
+=cut
+
+ sub SpeciesTreeToFASTA
+{
+    my($self, @args) = @_;
+
+# Authentication: required
+
+    if ((my $n = @args) != 1)
+    {
+	Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
+							       "Invalid argument count for function SpeciesTreeToFASTA (received $n, expecting 1)");
+    }
+    {
+	my($params) = @args;
+
+	my @_bad_arguments;
+        (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument 1 \"params\" (value was \"$params\")");
+        if (@_bad_arguments) {
+	    my $msg = "Invalid arguments passed to SpeciesTreeToFASTA:\n" . join("", map { "\t$_\n" } @_bad_arguments);
+	    Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
+								   method_name => 'SpeciesTreeToFASTA');
+	}
+    }
+
+    my $url = $self->{url};
+    my $result = $self->{client}->call($url, $self->{headers}, {
+	    method => "KBaseDataObjectToFileUtils.SpeciesTreeToFASTA",
+	    params => \@args,
+    });
+    if ($result) {
+	if ($result->is_error) {
+	    Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
+					       code => $result->content->{error}->{code},
+					       method_name => 'SpeciesTreeToFASTA',
+					       data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
+					      );
+	} else {
+	    return wantarray ? @{$result->result} : $result->result->[0];
+	}
+    } else {
+        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method SpeciesTreeToFASTA",
+					    status_line => $self->{client}->status_line,
+					    method_name => 'SpeciesTreeToFASTA',
+				       );
+    }
+}
+ 
+
+
 =head2 FeatureSetToFASTA
 
   $return = $obj->FeatureSetToFASTA($params)
@@ -1500,6 +1634,106 @@ merge_fasta_files has a value which is a KBaseDataObjectToFileUtils.true_false
 =item Description
 
 GenomeSetToFASTA() Output
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+fasta_file_path_list has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.path_type
+feature_ids_by_genome_id has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.genome_id and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
+feature_id_to_function has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.feature_id and the value is a string
+genome_ref_to_sci_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
+genome_ref_to_obj_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+fasta_file_path_list has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.path_type
+feature_ids_by_genome_id has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.genome_id and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
+feature_id_to_function has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.feature_id and the value is a string
+genome_ref_to_sci_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
+genome_ref_to_obj_name has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a string
+
+
+=end text
+
+=back
+
+
+
+=head2 SpeciesTreeToFASTA_Params
+
+=over 4
+
+
+
+=item Description
+
+SpeciesTreeToFASTA() Params
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+tree_ref has a value which is a KBaseDataObjectToFileUtils.data_obj_ref
+file has a value which is a KBaseDataObjectToFileUtils.path_type
+dir has a value which is a KBaseDataObjectToFileUtils.path_type
+console has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+invalid_msgs has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+residue_type has a value which is a string
+feature_type has a value which is a string
+record_id_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+case has a value which is a string
+linewrap has a value which is an int
+merge_fasta_files has a value which is a KBaseDataObjectToFileUtils.true_false
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+tree_ref has a value which is a KBaseDataObjectToFileUtils.data_obj_ref
+file has a value which is a KBaseDataObjectToFileUtils.path_type
+dir has a value which is a KBaseDataObjectToFileUtils.path_type
+console has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+invalid_msgs has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.log_msg
+residue_type has a value which is a string
+feature_type has a value which is a string
+record_id_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_type
+case has a value which is a string
+linewrap has a value which is an int
+merge_fasta_files has a value which is a KBaseDataObjectToFileUtils.true_false
+
+
+=end text
+
+=back
+
+
+
+=head2 SpeciesTreeToFASTA_Output
+
+=over 4
+
+
+
+=item Description
+
+SpeciesTreeToFASTA() Output
 
 
 =item Definition

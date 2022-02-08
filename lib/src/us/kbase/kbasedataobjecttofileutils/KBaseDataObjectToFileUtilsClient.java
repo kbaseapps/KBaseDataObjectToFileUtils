@@ -236,6 +236,23 @@ public class KBaseDataObjectToFileUtilsClient {
     }
 
     /**
+     * <p>Original spec-file function name: SpeciesTreeToFASTA</p>
+     * <pre>
+     * </pre>
+     * @param   params   instance of type {@link us.kbase.kbasedataobjecttofileutils.SpeciesTreeToFASTAParams SpeciesTreeToFASTAParams} (original type "SpeciesTreeToFASTA_Params")
+     * @return   instance of type {@link us.kbase.kbasedataobjecttofileutils.SpeciesTreeToFASTAOutput SpeciesTreeToFASTAOutput} (original type "SpeciesTreeToFASTA_Output")
+     * @throws IOException if an IO exception occurs
+     * @throws JsonClientException if a JSON RPC exception occurs
+     */
+    public SpeciesTreeToFASTAOutput speciesTreeToFASTA(SpeciesTreeToFASTAParams params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
+        List<Object> args = new ArrayList<Object>();
+        args.add(params);
+        TypeReference<List<SpeciesTreeToFASTAOutput>> retType = new TypeReference<List<SpeciesTreeToFASTAOutput>>() {};
+        List<SpeciesTreeToFASTAOutput> res = caller.jsonrpcCall("KBaseDataObjectToFileUtils.SpeciesTreeToFASTA", args, retType, true, true, jsonRpcContext, this.serviceVersion);
+        return res.get(0);
+    }
+
+    /**
      * <p>Original spec-file function name: FeatureSetToFASTA</p>
      * <pre>
      * </pre>
