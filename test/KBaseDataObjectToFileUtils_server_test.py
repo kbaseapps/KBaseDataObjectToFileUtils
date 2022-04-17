@@ -272,7 +272,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
     #### TranslateNucToProtSeq_01()
     ##
-    @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_TranslateNucToProtSeq_01()')
+    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_TranslateNucToProtSeq_01()')
     def test_KBaseDataObjectToFileUtils_TranslateNucToProtSeq_01(self):
         # Prepare test objects in workspace if needed using 
         # self.getWsClient().save_objects({'workspace': self.getWsName(), 'objects': []})
@@ -297,7 +297,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
     #### ParseFastaStr_01()
     ##
-    @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_ParseFastaStr_01()')
+    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_ParseFastaStr_01()')
     def test_KBaseDataObjectToFileUtils_ParseFastaStr_01(self):
         
         # E. coli K-12 MG1655 (start modified from GTG to ATG)
@@ -322,7 +322,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
     #### GenomeToFASTA_01()
     ##
-    @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_GenomeToFASTA_01()')
+    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_GenomeToFASTA_01()')
     def test_KBaseDataObjectToFileUtils_GenomeToFASTA_01(self):
         test_name = 'GenomeToFASTA_01'
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
@@ -361,7 +361,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
     #### GenomeToFASTA_02()
     ##
-    @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_GenomeToFASTA_02()')
+    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_GenomeToFASTA_02()')
     def test_KBaseDataObjectToFileUtils_GenomeToFASTA_02(self):
         test_name = 'GenomeToFASTA_02'
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
@@ -400,7 +400,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
     #### GenomeSetToFASTA_01()
     ##
-    @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_GenomeSetToFASTA_01()')
+    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_GenomeSetToFASTA_01()')
     def test_KBaseDataObjectToFileUtils_GenomeSetToFASTA_01(self):
         test_name = 'GenomeSetToFASTA_01'
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
@@ -475,7 +475,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
     #### GenomeSetToFASTA_02()
     ##
-    @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_GenomeSetToFASTA_02()')
+    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_GenomeSetToFASTA_02()')
     def test_KBaseDataObjectToFileUtils_GenomeSetToFASTA_02(self):
         test_name = 'GenomeSetToFASTA_02'
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
@@ -619,7 +619,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
     #### FeatureSetToFASTA_01()
     ##
-    @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_FeatureSetToFASTA_01()')
+    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_FeatureSetToFASTA_01()')
     def test_KBaseDataObjectToFileUtils_FeatureSetToFASTA_01(self):
         test_name = 'FeatureSetToFASTA_01'
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
@@ -713,7 +713,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
     #### FeatureSetToFASTA_02()
     ##
-    @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_FeatureSetToFASTA_02()')
+    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_FeatureSetToFASTA_02()')
     def test_KBaseDataObjectToFileUtils_FeatureSetToFASTA_02(self):
         test_name = 'FeatureSetToFASTA_02'
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
@@ -807,7 +807,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
     #### AnnotatedMetagenomeAssemblyToFASTA_01()
     ##
-    @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_AnnotatedMetagenomeAssemblyToFASTA_01()')
+    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_AnnotatedMetagenomeAssemblyToFASTA_01()')
     def test_KBaseDataObjectToFileUtils_AnnotatedMetagenomeAssemblyToFASTA_01(self):
         test_name = 'AnnotatedMetagenomeAssemblyToFASTA_01'
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
@@ -848,7 +848,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
     #### AnnotatedMetagenomeAssemblyToFASTA_02()
     ##
-    @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_AnnotatedMetagenomeAssemblyToFASTA_02()')
+    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_AnnotatedMetagenomeAssemblyToFASTA_02()')
     def test_KBaseDataObjectToFileUtils_AnnotatedMetagenomeAssemblyToFASTA_02(self):
         test_name = 'AnnotatedMetagenomeAssemblyToFASTA_02'
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
