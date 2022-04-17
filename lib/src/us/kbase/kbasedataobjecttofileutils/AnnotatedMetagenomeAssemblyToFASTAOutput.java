@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "fasta_file_path",
     "feature_ids",
     "feature_id_to_function",
+    "short_id_to_rec_id",
     "ama_ref_to_obj_name"
 })
 public class AnnotatedMetagenomeAssemblyToFASTAOutput {
@@ -35,6 +36,8 @@ public class AnnotatedMetagenomeAssemblyToFASTAOutput {
     private List<String> featureIds;
     @JsonProperty("feature_id_to_function")
     private Map<String, String> featureIdToFunction;
+    @JsonProperty("short_id_to_rec_id")
+    private Map<String, String> shortIdToRecId;
     @JsonProperty("ama_ref_to_obj_name")
     private Map<String, String> amaRefToObjName;
     private Map<java.lang.String, Object> additionalProperties = new HashMap<java.lang.String, Object>();
@@ -84,6 +87,21 @@ public class AnnotatedMetagenomeAssemblyToFASTAOutput {
         return this;
     }
 
+    @JsonProperty("short_id_to_rec_id")
+    public Map<String, String> getShortIdToRecId() {
+        return shortIdToRecId;
+    }
+
+    @JsonProperty("short_id_to_rec_id")
+    public void setShortIdToRecId(Map<String, String> shortIdToRecId) {
+        this.shortIdToRecId = shortIdToRecId;
+    }
+
+    public AnnotatedMetagenomeAssemblyToFASTAOutput withShortIdToRecId(Map<String, String> shortIdToRecId) {
+        this.shortIdToRecId = shortIdToRecId;
+        return this;
+    }
+
     @JsonProperty("ama_ref_to_obj_name")
     public Map<String, String> getAmaRefToObjName() {
         return amaRefToObjName;
@@ -111,7 +129,7 @@ public class AnnotatedMetagenomeAssemblyToFASTAOutput {
 
     @Override
     public java.lang.String toString() {
-        return ((((((((((("AnnotatedMetagenomeAssemblyToFASTAOutput"+" [fastaFilePath=")+ fastaFilePath)+", featureIds=")+ featureIds)+", featureIdToFunction=")+ featureIdToFunction)+", amaRefToObjName=")+ amaRefToObjName)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((((("AnnotatedMetagenomeAssemblyToFASTAOutput"+" [fastaFilePath=")+ fastaFilePath)+", featureIds=")+ featureIds)+", featureIdToFunction=")+ featureIdToFunction)+", shortIdToRecId=")+ shortIdToRecId)+", amaRefToObjName=")+ amaRefToObjName)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }

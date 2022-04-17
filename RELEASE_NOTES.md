@@ -1,3 +1,7 @@
+### Version 1.1.1
+__Changes__
+- adjust fasta IDs to be under length threshold and return ID map
+
 ### Version 1.1.0
 __Changes__
 - added SpeciesTreeToFASTA() method

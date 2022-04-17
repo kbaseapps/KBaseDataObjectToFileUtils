@@ -32,7 +32,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "record_id_pattern",
     "record_desc_pattern",
     "case",
-    "linewrap"
+    "linewrap",
+    "id_len_limit"
 })
 public class FeatureSetToFASTAParams {
 
@@ -58,6 +59,8 @@ public class FeatureSetToFASTAParams {
     private java.lang.String _case;
     @JsonProperty("linewrap")
     private Long linewrap;
+    @JsonProperty("id_len_limit")
+    private Long idLenLimit;
     private Map<java.lang.String, Object> additionalProperties = new HashMap<java.lang.String, Object>();
 
     @JsonProperty("featureSet_ref")
@@ -225,6 +228,21 @@ public class FeatureSetToFASTAParams {
         return this;
     }
 
+    @JsonProperty("id_len_limit")
+    public Long getIdLenLimit() {
+        return idLenLimit;
+    }
+
+    @JsonProperty("id_len_limit")
+    public void setIdLenLimit(Long idLenLimit) {
+        this.idLenLimit = idLenLimit;
+    }
+
+    public FeatureSetToFASTAParams withIdLenLimit(Long idLenLimit) {
+        this.idLenLimit = idLenLimit;
+        return this;
+    }
+
     @JsonAnyGetter
     public Map<java.lang.String, Object> getAdditionalProperties() {
         return this.additionalProperties;
@@ -237,7 +255,7 @@ public class FeatureSetToFASTAParams {
 
     @Override
     public java.lang.String toString() {
-        return ((((((((((((((((((((((((("FeatureSetToFASTAParams"+" [featureSetRef=")+ featureSetRef)+", file=")+ file)+", dir=")+ dir)+", console=")+ console)+", invalidMsgs=")+ invalidMsgs)+", residueType=")+ residueType)+", featureType=")+ featureType)+", recordIdPattern=")+ recordIdPattern)+", recordDescPattern=")+ recordDescPattern)+", _case=")+ _case)+", linewrap=")+ linewrap)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((((((((((((((((((("FeatureSetToFASTAParams"+" [featureSetRef=")+ featureSetRef)+", file=")+ file)+", dir=")+ dir)+", console=")+ console)+", invalidMsgs=")+ invalidMsgs)+", residueType=")+ residueType)+", featureType=")+ featureType)+", recordIdPattern=")+ recordIdPattern)+", recordDescPattern=")+ recordDescPattern)+", _case=")+ _case)+", linewrap=")+ linewrap)+", idLenLimit=")+ idLenLimit)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }

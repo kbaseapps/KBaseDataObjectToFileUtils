@@ -350,12 +350,15 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
                 'record_id_pattern':   '%%feature_id%%',
                 'record_desc_pattern': '[%%genome_id%%]',
                 'case':                'upper',
-                'linewrap':            50
+                'linewrap':            50,
+                'id_len_limit':        5
                 }
         ret = self.getImpl().GenomeToFASTA(self.getContext(), parameters)[0]
         self.assertIsNotNone(ret['fasta_file_path'])
         self.assertIsNotNone(ret['feature_ids'])
         self.assertNotEqual(len(ret['feature_ids']), 0)
+        self.assertIsNotNone(ret['short_id_to_rec_id'])
+        self.assertNotEqual(len(ret['short_id_to_rec_id']), 0)
         pass
         
 
@@ -389,12 +392,15 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
                 'record_id_pattern':   '%%feature_id%%',
                 'record_desc_pattern': '[%%genome_id%%]',
                 'case':                'upper',
-                'linewrap':            50
+                'linewrap':            50,
+                'id_len_limit':        5
                 }
         ret = self.getImpl().GenomeToFASTA(self.getContext(), parameters)[0]
         self.assertIsNotNone(ret['fasta_file_path'])
         self.assertIsNotNone(ret['feature_ids'])
         self.assertNotEqual(len(ret['feature_ids']), 0)
+        self.assertIsNotNone(ret['short_id_to_rec_id'])
+        self.assertNotEqual(len(ret['short_id_to_rec_id']), 0)
         pass
         
 
@@ -464,12 +470,15 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
                 'record_desc_pattern': '[%%genome_ref%%]',
                 'case':                'upper',
                 'linewrap':            50,
+                'id_len_limit':        5,
                 'merge_fasta_files':   'TRUE'
                 }
         ret = self.getImpl().GenomeSetToFASTA(self.getContext(), parameters)[0]
         self.assertIsNotNone(ret['fasta_file_path_list'][0])
         self.assertIsNotNone(ret['feature_ids_by_genome_id'])
         self.assertNotEqual(len(ret['feature_ids_by_genome_id'].keys()), 0)
+        self.assertIsNotNone(ret['short_id_to_rec_id'])
+        self.assertNotEqual(len(ret['short_id_to_rec_id']), 0)
         pass
         
 
@@ -539,12 +548,15 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
                 'record_desc_pattern': '[%%genome_ref%%]',
                 'case':                'upper',
                 'linewrap':            50,
+                'id_len_limit':        5,
                 'merge_fasta_files':   'TRUE'
                 }
         ret = self.getImpl().GenomeSetToFASTA(self.getContext(), parameters)[0]
         self.assertIsNotNone(ret['fasta_file_path_list'][0])
         self.assertIsNotNone(ret['feature_ids_by_genome_id'])
         self.assertNotEqual(len(ret['feature_ids_by_genome_id'].keys()), 0)
+        self.assertIsNotNone(ret['short_id_to_rec_id'])
+        self.assertNotEqual(len(ret['short_id_to_rec_id']), 0)
         pass
         
 
@@ -608,12 +620,15 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
                 'record_desc_pattern': '[%%genome_ref%%]',
                 'case':                'upper',
                 'linewrap':            50,
+                'id_len_limit':        5,
                 'merge_fasta_files':   'TRUE'
                 }
         ret = self.getImpl().SpeciesTreeToFASTA(self.getContext(), parameters)[0]
         self.assertIsNotNone(ret['fasta_file_path_list'][0])
         self.assertIsNotNone(ret['feature_ids_by_genome_id'])
         self.assertNotEqual(len(ret['feature_ids_by_genome_id'].keys()), 0)
+        self.assertIsNotNone(ret['short_id_to_rec_id'])
+        self.assertNotEqual(len(ret['short_id_to_rec_id']), 0)
         pass
         
 
@@ -700,12 +715,15 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
                 'record_desc_pattern': '[%%genome_ref%%]',
                 'case':                'upper',
                 'linewrap':            50,
+                'id_len_limit':        5,
                 'merge_fasta_files':   'TRUE'
                 }
         ret = self.getImpl().FeatureSetToFASTA(self.getContext(), parameters)[0]
         self.assertIsNotNone(ret['fasta_file_path'][0])
         self.assertIsNotNone(ret['feature_ids_by_genome_ref'])
         self.assertNotEqual(len(ret['feature_ids_by_genome_ref'].keys()), 0)
+        self.assertIsNotNone(ret['short_id_to_rec_id'])
+        self.assertNotEqual(len(ret['short_id_to_rec_id']), 0)
         self.assertIsNotNone(ret['genome_ref_to_sci_name'])
         self.assertNotEqual(len(ret['genome_ref_to_sci_name'].keys()), 0)
         pass
@@ -794,12 +812,15 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
                 'record_desc_pattern': '[%%genome_ref%%]',
                 'case':                'upper',
                 'linewrap':            50,
+                'id_len_limit':        5,
                 'merge_fasta_files':   'TRUE'
                 }
         ret = self.getImpl().FeatureSetToFASTA(self.getContext(), parameters)[0]
         self.assertIsNotNone(ret['fasta_file_path'][0])
         self.assertIsNotNone(ret['feature_ids_by_genome_ref'])
         self.assertNotEqual(len(ret['feature_ids_by_genome_ref'].keys()), 0)
+        self.assertIsNotNone(ret['short_id_to_rec_id'])
+        self.assertNotEqual(len(ret['short_id_to_rec_id']), 0)
         self.assertIsNotNone(ret['genome_ref_to_sci_name'])
         self.assertNotEqual(len(ret['genome_ref_to_sci_name'].keys()), 0)
         pass
@@ -836,12 +857,15 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
                 'record_id_pattern':   '%%feature_id%%',
                 'record_desc_pattern': '[%%genome_id%%]',
                 'case':                'upper',
-                'linewrap':            50
+                'linewrap':            50,
+                'id_len_limit':        5
                 }
         ret = self.getImpl().AnnotatedMetagenomeAssemblyToFASTA(self.getContext(), parameters)[0]
         self.assertIsNotNone(ret['fasta_file_path'])
         self.assertIsNotNone(ret['feature_ids'])
         self.assertNotEqual(len(ret['feature_ids']), 0)
+        self.assertIsNotNone(ret['short_id_to_rec_id'])
+        self.assertNotEqual(len(ret['short_id_to_rec_id']), 0)
         self.assertEqual(len(ret['feature_ids']), ama_feature_cnt)
         pass
 
@@ -877,11 +901,14 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
                 'record_id_pattern':   '%%feature_id%%',
                 'record_desc_pattern': '[%%genome_id%%]',
                 'case':                'upper',
-                'linewrap':            50
+                'linewrap':            50,
+                'id_len_limit':        5
                 }
         ret = self.getImpl().AnnotatedMetagenomeAssemblyToFASTA(self.getContext(), parameters)[0]
         self.assertIsNotNone(ret['fasta_file_path'])
         self.assertIsNotNone(ret['feature_ids'])
         self.assertNotEqual(len(ret['feature_ids']), 0)
+        self.assertIsNotNone(ret['short_id_to_rec_id'])
+        self.assertNotEqual(len(ret['short_id_to_rec_id']), 0)
         self.assertEqual(len(ret['feature_ids']), ama_feature_cnt)
         pass

@@ -72,12 +72,13 @@ class KBaseDataObjectToFileUtils(object):
            "feature_type" of String, parameter "record_id_pattern" of type
            "pattern_type", parameter "record_desc_pattern" of type
            "pattern_type", parameter "case" of String, parameter "linewrap"
-           of Long
+           of Long, parameter "id_len_limit" of Long
         :returns: instance of type "GenomeToFASTA_Output" (GenomeToFASTA()
            Output) -> structure: parameter "fasta_file_path" of type
            "path_type", parameter "feature_ids" of list of type "feature_id",
            parameter "feature_id_to_function" of mapping from type
-           "feature_id" to String, parameter "genome_ref_to_sci_name" of
+           "feature_id" to String, parameter "short_id_to_rec_id" of mapping
+           from String to String, parameter "genome_ref_to_sci_name" of
            mapping from type "data_obj_ref" to String, parameter
            "genome_ref_to_obj_name" of mapping from type "data_obj_ref" to
            String
@@ -96,13 +97,15 @@ class KBaseDataObjectToFileUtils(object):
            parameter "feature_type" of String, parameter "record_id_pattern"
            of type "pattern_type", parameter "record_desc_pattern" of type
            "pattern_type", parameter "case" of String, parameter "linewrap"
-           of Long, parameter "merge_fasta_files" of type "true_false"
+           of Long, parameter "id_len_limit" of Long, parameter
+           "merge_fasta_files" of type "true_false"
         :returns: instance of type "GenomeSetToFASTA_Output"
            (GenomeSetToFASTA() Output) -> structure: parameter
            "fasta_file_path_list" of list of type "path_type", parameter
            "feature_ids_by_genome_id" of mapping from type "genome_id" to
            list of type "feature_id", parameter "feature_id_to_function" of
            mapping from type "feature_id" to String, parameter
+           "short_id_to_rec_id" of mapping from String to String, parameter
            "genome_ref_to_sci_name" of mapping from type "data_obj_ref" to
            String, parameter "genome_ref_to_obj_name" of mapping from type
            "data_obj_ref" to String
@@ -121,13 +124,15 @@ class KBaseDataObjectToFileUtils(object):
            "feature_type" of String, parameter "record_id_pattern" of type
            "pattern_type", parameter "record_desc_pattern" of type
            "pattern_type", parameter "case" of String, parameter "linewrap"
-           of Long, parameter "merge_fasta_files" of type "true_false"
+           of Long, parameter "id_len_limit" of Long, parameter
+           "merge_fasta_files" of type "true_false"
         :returns: instance of type "SpeciesTreeToFASTA_Output"
            (SpeciesTreeToFASTA() Output) -> structure: parameter
            "fasta_file_path_list" of list of type "path_type", parameter
            "feature_ids_by_genome_id" of mapping from type "genome_id" to
            list of type "feature_id", parameter "feature_id_to_function" of
            mapping from type "feature_id" to String, parameter
+           "short_id_to_rec_id" of mapping from String to String, parameter
            "genome_ref_to_sci_name" of mapping from type "data_obj_ref" to
            String, parameter "genome_ref_to_obj_name" of mapping from type
            "data_obj_ref" to String
@@ -146,13 +151,14 @@ class KBaseDataObjectToFileUtils(object):
            parameter "feature_type" of String, parameter "record_id_pattern"
            of type "pattern_type", parameter "record_desc_pattern" of type
            "pattern_type", parameter "case" of String, parameter "linewrap"
-           of Long
+           of Long, parameter "id_len_limit" of Long
         :returns: instance of type "FeatureSetToFASTA_Output"
            (FeatureSetToFASTA() Output) -> structure: parameter
            "fasta_file_path" of type "path_type", parameter
            "feature_ids_by_genome_ref" of mapping from type "data_obj_ref" to
            list of type "feature_id", parameter "feature_id_to_function" of
            mapping from type "feature_id" to String, parameter
+           "short_id_to_rec_id" of mapping from String to String, parameter
            "genome_ref_to_sci_name" of mapping from type "data_obj_ref" to
            String, parameter "genome_ref_to_obj_name" of mapping from type
            "data_obj_ref" to String
@@ -172,13 +178,14 @@ class KBaseDataObjectToFileUtils(object):
            parameter "feature_type" of String, parameter "record_id_pattern"
            of type "pattern_type", parameter "record_desc_pattern" of type
            "pattern_type", parameter "case" of String, parameter "linewrap"
-           of Long
+           of Long, parameter "id_len_limit" of Long
         :returns: instance of type
            "AnnotatedMetagenomeAssemblyToFASTA_Output"
            (AnnotatedMetagenomeAssemblyToFASTA() Output) -> structure:
            parameter "fasta_file_path" of type "path_type", parameter
            "feature_ids" of list of type "feature_id", parameter
            "feature_id_to_function" of mapping from type "feature_id" to
+           String, parameter "short_id_to_rec_id" of mapping from String to
            String, parameter "ama_ref_to_obj_name" of mapping from type
            "data_obj_ref" to String
         """

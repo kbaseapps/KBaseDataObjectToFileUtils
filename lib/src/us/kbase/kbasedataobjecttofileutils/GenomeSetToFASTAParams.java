@@ -33,6 +33,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "record_desc_pattern",
     "case",
     "linewrap",
+    "id_len_limit",
     "merge_fasta_files"
 })
 public class GenomeSetToFASTAParams {
@@ -59,6 +60,8 @@ public class GenomeSetToFASTAParams {
     private java.lang.String _case;
     @JsonProperty("linewrap")
     private Long linewrap;
+    @JsonProperty("id_len_limit")
+    private Long idLenLimit;
     @JsonProperty("merge_fasta_files")
     private java.lang.String mergeFastaFiles;
     private Map<java.lang.String, Object> additionalProperties = new HashMap<java.lang.String, Object>();
@@ -228,6 +231,21 @@ public class GenomeSetToFASTAParams {
         return this;
     }
 
+    @JsonProperty("id_len_limit")
+    public Long getIdLenLimit() {
+        return idLenLimit;
+    }
+
+    @JsonProperty("id_len_limit")
+    public void setIdLenLimit(Long idLenLimit) {
+        this.idLenLimit = idLenLimit;
+    }
+
+    public GenomeSetToFASTAParams withIdLenLimit(Long idLenLimit) {
+        this.idLenLimit = idLenLimit;
+        return this;
+    }
+
     @JsonProperty("merge_fasta_files")
     public java.lang.String getMergeFastaFiles() {
         return mergeFastaFiles;
@@ -255,7 +273,7 @@ public class GenomeSetToFASTAParams {
 
     @Override
     public java.lang.String toString() {
-        return ((((((((((((((((((((((((((("GenomeSetToFASTAParams"+" [genomeSetRef=")+ genomeSetRef)+", file=")+ file)+", dir=")+ dir)+", console=")+ console)+", invalidMsgs=")+ invalidMsgs)+", residueType=")+ residueType)+", featureType=")+ featureType)+", recordIdPattern=")+ recordIdPattern)+", recordDescPattern=")+ recordDescPattern)+", _case=")+ _case)+", linewrap=")+ linewrap)+", mergeFastaFiles=")+ mergeFastaFiles)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((((((((((((((((((((("GenomeSetToFASTAParams"+" [genomeSetRef=")+ genomeSetRef)+", file=")+ file)+", dir=")+ dir)+", console=")+ console)+", invalidMsgs=")+ invalidMsgs)+", residueType=")+ residueType)+", featureType=")+ featureType)+", recordIdPattern=")+ recordIdPattern)+", recordDescPattern=")+ recordDescPattern)+", _case=")+ _case)+", linewrap=")+ linewrap)+", idLenLimit=")+ idLenLimit)+", mergeFastaFiles=")+ mergeFastaFiles)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }

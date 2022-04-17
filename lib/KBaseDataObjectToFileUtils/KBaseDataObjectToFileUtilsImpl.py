@@ -53,9 +53,9 @@ class KBaseDataObjectToFileUtils:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "1.1.0"
+    VERSION = "1.1.1"
     GIT_URL = "https://github.com/kbaseapps/KBaseDataObjectToFileUtils"
-    GIT_COMMIT_HASH = "def8d74204a95d1fe9a6c974aa9c28bee4c6b231"
+    GIT_COMMIT_HASH = "8b9390102fab73e8f886173f14ea2068c378be32"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -441,12 +441,13 @@ class KBaseDataObjectToFileUtils:
            "feature_type" of String, parameter "record_id_pattern" of type
            "pattern_type", parameter "record_desc_pattern" of type
            "pattern_type", parameter "case" of String, parameter "linewrap"
-           of Long
+           of Long, parameter "id_len_limit" of Long
         :returns: instance of type "GenomeToFASTA_Output" (GenomeToFASTA()
            Output) -> structure: parameter "fasta_file_path" of type
            "path_type", parameter "feature_ids" of list of type "feature_id",
            parameter "feature_id_to_function" of mapping from type
-           "feature_id" to String, parameter "genome_ref_to_sci_name" of
+           "feature_id" to String, parameter "short_id_to_rec_id" of mapping
+           from String to String, parameter "genome_ref_to_sci_name" of
            mapping from type "data_obj_ref" to String, parameter
            "genome_ref_to_obj_name" of mapping from type "data_obj_ref" to
            String
@@ -469,7 +470,8 @@ class KBaseDataObjectToFileUtils:
         record_desc_pattern = params['record_desc_pattern']
         case = params['case']
         linewrap = params['linewrap']
-
+        id_len_limit = params['id_len_limit']
+        
         # Defaults
         if console == None:
             console = []
@@ -487,17 +489,20 @@ class KBaseDataObjectToFileUtils:
             case = 'UPPER'
         if linewrap == None:
             linewrap = 0
-
+        if id_len_limit == None:
+            id_len_limit = 0
             
         # init and simplify
         feature_ids = []
         feature_id_to_function = dict()
+        short_id_to_rec_id     = dict()
         genome_ref_to_sci_name = dict()
         genome_ref_to_obj_name = dict()
         feature_sequence_found = False
         residue_type = residue_type[0:1].upper()
         feature_type = feature_type.upper()
         case = case[0:1].upper()
+        short_index = 0
         
         def record_header_sub(str, feature_id, genome_id):
             str = str.replace('%%feature_id%%', feature_id)
@@ -566,12 +571,18 @@ class KBaseDataObjectToFileUtils:
                         else:
                             feature_sequence_found = True
                             rec_id = record_header_sub(record_id_pattern, feature['id'], genome_object['id'])
+                            short_id = rec_id
+                            if id_len_limit != None and id_len_limit > 0:
+                                if len(rec_id) >= id_len_limit:
+                                    short_index += 1
+                                    short_id = 'SID_'+str(short_index)
+                                    short_id_to_rec_id[short_id] = rec_id
                             rec_desc = record_header_sub(record_desc_pattern, feature['id'], genome_object['id'])
                             seq = feature['protein_translation']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
                             rec_rows = []
-                            rec_rows.append('>'+rec_id+' '+rec_desc)
+                            rec_rows.append('>'+short_id+' '+rec_desc)
                             if linewrap == None or linewrap == 0:
                                 rec_rows.append(seq)
                             else:
@@ -596,12 +607,18 @@ class KBaseDataObjectToFileUtils:
                         else:
                             feature_sequence_found = True
                             rec_id = record_header_sub(record_id_pattern, feature['id'], genome_object['id'])
+                            short_id = rec_id
+                            if id_len_limit != None and id_len_limit > 0:
+                                if len(rec_id) >= id_len_limit:
+                                    short_index += 1
+                                    short_id = 'SID_'+str(short_index)
+                                    short_id_to_rec_id[short_id] = rec_id
                             rec_desc = record_header_sub(record_desc_pattern, feature['id'], genome_object['id'])
                             seq = feature['dna_sequence']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
                             rec_rows = []
-                            rec_rows.append('>'+rec_id+' '+rec_desc)
+                            rec_rows.append('>'+short_id+' '+rec_desc)
                             if linewrap == None or linewrap == 0:
                                 rec_rows.append(seq)
                             else:
@@ -630,6 +647,7 @@ class KBaseDataObjectToFileUtils:
         returnVal['fasta_file_path'] = fasta_file_path
         returnVal['feature_ids'] = feature_ids
         returnVal['feature_id_to_function'] = feature_id_to_function
+        returnVal['short_id_to_rec_id']     = short_id_to_rec_id
         returnVal['genome_ref_to_sci_name'] = genome_ref_to_sci_name
         returnVal['genome_ref_to_obj_name'] = genome_ref_to_obj_name
         #END GenomeToFASTA
@@ -652,13 +670,15 @@ class KBaseDataObjectToFileUtils:
            parameter "feature_type" of String, parameter "record_id_pattern"
            of type "pattern_type", parameter "record_desc_pattern" of type
            "pattern_type", parameter "case" of String, parameter "linewrap"
-           of Long, parameter "merge_fasta_files" of type "true_false"
+           of Long, parameter "id_len_limit" of Long, parameter
+           "merge_fasta_files" of type "true_false"
         :returns: instance of type "GenomeSetToFASTA_Output"
            (GenomeSetToFASTA() Output) -> structure: parameter
            "fasta_file_path_list" of list of type "path_type", parameter
            "feature_ids_by_genome_id" of mapping from type "genome_id" to
            list of type "feature_id", parameter "feature_id_to_function" of
            mapping from type "feature_id" to String, parameter
+           "short_id_to_rec_id" of mapping from String to String, parameter
            "genome_ref_to_sci_name" of mapping from type "data_obj_ref" to
            String, parameter "genome_ref_to_obj_name" of mapping from type
            "data_obj_ref" to String
@@ -681,6 +701,7 @@ class KBaseDataObjectToFileUtils:
         record_desc_pattern = params['record_desc_pattern']
         case = params['case']
         linewrap = params['linewrap']
+        id_len_limit = params['id_len_limit']
         merge_fasta_files = params['merge_fasta_files']
 
         # Defaults
@@ -700,6 +721,8 @@ class KBaseDataObjectToFileUtils:
             case = 'UPPER'
         if linewrap == None:
             linewrap = 0
+        if id_len_limit == None:
+            id_len_limit = 0
         if merge_fasta_files == None or merge_fasta_files[0:1].upper() == 'T':
             merge_fasta_files = True
         else:
@@ -709,11 +732,13 @@ class KBaseDataObjectToFileUtils:
         fasta_file_path_list = []
         feature_ids_by_genome_id = dict()
         feature_id_to_function = dict()
+        short_id_to_rec_id     = dict()
         genome_ref_to_sci_name = dict()
         genome_ref_to_obj_name = dict()
         residue_type = residue_type[0:1].upper()
         feature_type = feature_type.upper()
         case = case[0:1].upper()
+        short_index = 0
         
         def record_header_sub(str, feature_id, genome_id, genome_ref):
             str = str.replace('%%feature_id%%', feature_id)
@@ -822,12 +847,18 @@ class KBaseDataObjectToFileUtils:
                         else:
                             feature_sequence_found = True
                             rec_id = record_header_sub(record_id_pattern, fid, genome_id, genome_ref)
+                            short_id = rec_id
+                            if id_len_limit != None and id_len_limit > 0:
+                                if len(rec_id) >= id_len_limit:
+                                    short_index += 1
+                                    short_id = 'SID_'+str(short_index)
+                                    short_id_to_rec_id[short_id] = rec_id
                             rec_desc = record_header_sub(record_desc_pattern, fid, genome_id, genome_ref)
                             seq = feature['protein_translation']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
                             rec_rows = []
-                            rec_rows.append('>'+rec_id+' '+rec_desc)
+                            rec_rows.append('>'+short_id+' '+rec_desc)
                             if linewrap == None or linewrap == 0:
                                 rec_rows.append(seq)
                             else:
@@ -852,12 +883,18 @@ class KBaseDataObjectToFileUtils:
                         else:
                             feature_sequence_found = True
                             rec_id = record_header_sub(record_id_pattern, fid, genome_id, genome_ref)
+                            short_id = rec_id
+                            if id_len_limit != None and id_len_limit > 0:
+                                if len(rec_id) >= id_len_limit:
+                                    short_index += 1
+                                    short_id = 'SID_'+str(short_index)
+                                    short_id_to_rec_id[short_id] = rec_id
                             rec_desc = record_header_sub(record_desc_pattern, fid, genome_id, genome_ref)
                             seq = feature['dna_sequence']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
                             rec_rows = []
-                            rec_rows.append('>'+rec_id+' '+rec_desc)
+                            rec_rows.append('>'+short_id+' '+rec_desc)
                             if linewrap == None or linewrap == 0:
                                 rec_rows.append(seq)
                             else:
@@ -891,6 +928,7 @@ class KBaseDataObjectToFileUtils:
         returnVal['fasta_file_path_list'] = fasta_file_path_list
         returnVal['feature_ids_by_genome_id'] = feature_ids_by_genome_id
         returnVal['feature_id_to_function'] = feature_id_to_function
+        returnVal['short_id_to_rec_id']     = short_id_to_rec_id
         returnVal['genome_ref_to_sci_name'] = genome_ref_to_sci_name
         returnVal['genome_ref_to_obj_name'] = genome_ref_to_obj_name
         #END GenomeSetToFASTA
@@ -913,13 +951,15 @@ class KBaseDataObjectToFileUtils:
            "feature_type" of String, parameter "record_id_pattern" of type
            "pattern_type", parameter "record_desc_pattern" of type
            "pattern_type", parameter "case" of String, parameter "linewrap"
-           of Long, parameter "merge_fasta_files" of type "true_false"
+           of Long, parameter "id_len_limit" of Long, parameter
+           "merge_fasta_files" of type "true_false"
         :returns: instance of type "SpeciesTreeToFASTA_Output"
            (SpeciesTreeToFASTA() Output) -> structure: parameter
            "fasta_file_path_list" of list of type "path_type", parameter
            "feature_ids_by_genome_id" of mapping from type "genome_id" to
            list of type "feature_id", parameter "feature_id_to_function" of
            mapping from type "feature_id" to String, parameter
+           "short_id_to_rec_id" of mapping from String to String, parameter
            "genome_ref_to_sci_name" of mapping from type "data_obj_ref" to
            String, parameter "genome_ref_to_obj_name" of mapping from type
            "data_obj_ref" to String
@@ -942,6 +982,7 @@ class KBaseDataObjectToFileUtils:
         record_desc_pattern = params['record_desc_pattern']
         case = params['case']
         linewrap = params['linewrap']
+        id_len_limit = params['id_len_limit']
         merge_fasta_files = params['merge_fasta_files']
 
         # Defaults
@@ -961,6 +1002,8 @@ class KBaseDataObjectToFileUtils:
             case = 'UPPER'
         if linewrap == None:
             linewrap = 0
+        if id_len_limit == None:
+            id_len_limit = 0
         if merge_fasta_files == None or merge_fasta_files[0:1].upper() == 'T':
             merge_fasta_files = True
         else:
@@ -970,11 +1013,13 @@ class KBaseDataObjectToFileUtils:
         fasta_file_path_list = []
         feature_ids_by_genome_id = dict()
         feature_id_to_function = dict()
+        short_id_to_rec_id     = dict()
         genome_ref_to_sci_name = dict()
         genome_ref_to_obj_name = dict()
         residue_type = residue_type[0:1].upper()
         feature_type = feature_type.upper()
         case = case[0:1].upper()
+        short_index = 0
         
         def record_header_sub(str, feature_id, genome_id, genome_ref):
             str = str.replace('%%feature_id%%', feature_id)
@@ -1086,12 +1131,18 @@ class KBaseDataObjectToFileUtils:
                         else:
                             feature_sequence_found = True
                             rec_id = record_header_sub(record_id_pattern, fid, genome_id, genome_ref)
+                            short_id = rec_id
+                            if id_len_limit != None and id_len_limit > 0:
+                                if len(rec_id) >= id_len_limit:
+                                    short_index += 1
+                                    short_id = 'SID_'+str(short_index)
+                                    short_id_to_rec_id[short_id] = rec_id
                             rec_desc = record_header_sub(record_desc_pattern, fid, genome_id, genome_ref)
                             seq = feature['protein_translation']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
                             rec_rows = []
-                            rec_rows.append('>'+rec_id+' '+rec_desc)
+                            rec_rows.append('>'+short_id+' '+rec_desc)
                             if linewrap == None or linewrap == 0:
                                 rec_rows.append(seq)
                             else:
@@ -1116,12 +1167,18 @@ class KBaseDataObjectToFileUtils:
                         else:
                             feature_sequence_found = True
                             rec_id = record_header_sub(record_id_pattern, fid, genome_id, genome_ref)
+                            short_id = rec_id
+                            if id_len_limit != None and id_len_limit > 0:
+                                if len(rec_id) >= id_len_limit:
+                                    short_index += 1
+                                    short_id = 'SID_'+str(short_index)
+                                    short_id_to_rec_id[short_id] = rec_id
                             rec_desc = record_header_sub(record_desc_pattern, fid, genome_id, genome_ref)
                             seq = feature['dna_sequence']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
                             rec_rows = []
-                            rec_rows.append('>'+rec_id+' '+rec_desc)
+                            rec_rows.append('>'+short_id+' '+rec_desc)
                             if linewrap == None or linewrap == 0:
                                 rec_rows.append(seq)
                             else:
@@ -1155,6 +1212,7 @@ class KBaseDataObjectToFileUtils:
         returnVal['fasta_file_path_list'] = fasta_file_path_list
         returnVal['feature_ids_by_genome_id'] = feature_ids_by_genome_id
         returnVal['feature_id_to_function'] = feature_id_to_function
+        returnVal['short_id_to_rec_id']     = short_id_to_rec_id
         returnVal['genome_ref_to_sci_name'] = genome_ref_to_sci_name
         returnVal['genome_ref_to_obj_name'] = genome_ref_to_obj_name
         #END SpeciesTreeToFASTA
@@ -1177,13 +1235,14 @@ class KBaseDataObjectToFileUtils:
            parameter "feature_type" of String, parameter "record_id_pattern"
            of type "pattern_type", parameter "record_desc_pattern" of type
            "pattern_type", parameter "case" of String, parameter "linewrap"
-           of Long
+           of Long, parameter "id_len_limit" of Long
         :returns: instance of type "FeatureSetToFASTA_Output"
            (FeatureSetToFASTA() Output) -> structure: parameter
            "fasta_file_path" of type "path_type", parameter
            "feature_ids_by_genome_ref" of mapping from type "data_obj_ref" to
            list of type "feature_id", parameter "feature_id_to_function" of
            mapping from type "feature_id" to String, parameter
+           "short_id_to_rec_id" of mapping from String to String, parameter
            "genome_ref_to_sci_name" of mapping from type "data_obj_ref" to
            String, parameter "genome_ref_to_obj_name" of mapping from type
            "data_obj_ref" to String
@@ -1206,6 +1265,7 @@ class KBaseDataObjectToFileUtils:
         record_desc_pattern = params['record_desc_pattern']
         case = params['case']
         linewrap = params['linewrap']
+        id_len_limit = params['id_len_limit']
 
         # Defaults
         if console == None:
@@ -1224,15 +1284,19 @@ class KBaseDataObjectToFileUtils:
             case = 'UPPER'
         if linewrap == None:
             linewrap = 0
+        if id_len_limit == None:
+            id_len_limit = 0
 
         # init and simplify
         feature_ids_by_genome_ref = dict()
         feature_id_to_function = dict()
+        short_id_to_rec_id     = dict()
         genome_ref_to_sci_name = dict()
         genome_ref_to_obj_name = dict()
         residue_type = residue_type[0:1].upper()
         feature_type = feature_type.upper()
         case = case[0:1].upper()
+        short_index = 0
         feature_sequence_found = False
         
         def record_header_sub(str, feature_id, genome_id, genome_ref):
@@ -1334,12 +1398,18 @@ class KBaseDataObjectToFileUtils:
                         else:
                             feature_sequence_found = True
                             rec_id = record_header_sub(record_id_pattern, fid, genome_ref, genome_ref)
+                            short_id = rec_id
+                            if id_len_limit != None and id_len_limit > 0:
+                                if len(rec_id) >= id_len_limit:
+                                    short_index += 1
+                                    short_id = 'SID_'+str(short_index)
+                                    short_id_to_rec_id[short_id] = rec_id
                             rec_desc = record_header_sub(record_desc_pattern, fid, genome_ref, genome_ref)
                             seq = feature['protein_translation']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
                             rec_rows = []
-                            rec_rows.append('>'+rec_id+' '+rec_desc)
+                            rec_rows.append('>'+short_id+' '+rec_desc)
                             if linewrap == None or linewrap == 0:
                                 rec_rows.append(seq)
                             else:
@@ -1366,12 +1436,18 @@ class KBaseDataObjectToFileUtils:
                         else:
                             feature_sequence_found = True
                             rec_id = record_header_sub(record_id_pattern, fid, genome_ref, genome_ref)
+                            short_id = rec_id
+                            if id_len_limit != None and id_len_limit > 0:
+                                if len(rec_id) >= id_len_limit:
+                                    short_index += 1
+                                    short_id = 'SID_'+str(short_index)
+                                    short_id_to_rec_id[short_id] = rec_id
                             rec_desc = record_header_sub(record_desc_pattern, fid, genome_ref, genome_ref)
                             seq = feature['dna_sequence']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
                             rec_rows = []
-                            rec_rows.append('>'+rec_id+' '+rec_desc)
+                            rec_rows.append('>'+short_id+' '+rec_desc)
                             if linewrap == None or linewrap == 0:
                                 rec_rows.append(seq)
                             else:
@@ -1406,6 +1482,7 @@ class KBaseDataObjectToFileUtils:
         returnVal['fasta_file_path'] = fasta_file_path
         returnVal['feature_ids_by_genome_ref'] = feature_ids_by_genome_ref
         returnVal['feature_id_to_function'] = feature_id_to_function
+        returnVal['short_id_to_rec_id']     = short_id_to_rec_id
         returnVal['genome_ref_to_sci_name'] = genome_ref_to_sci_name
         returnVal['genome_ref_to_obj_name'] = genome_ref_to_obj_name
         #END FeatureSetToFASTA
@@ -1429,13 +1506,14 @@ class KBaseDataObjectToFileUtils:
            parameter "feature_type" of String, parameter "record_id_pattern"
            of type "pattern_type", parameter "record_desc_pattern" of type
            "pattern_type", parameter "case" of String, parameter "linewrap"
-           of Long
+           of Long, parameter "id_len_limit" of Long
         :returns: instance of type
            "AnnotatedMetagenomeAssemblyToFASTA_Output"
            (AnnotatedMetagenomeAssemblyToFASTA() Output) -> structure:
            parameter "fasta_file_path" of type "path_type", parameter
            "feature_ids" of list of type "feature_id", parameter
            "feature_id_to_function" of mapping from type "feature_id" to
+           String, parameter "short_id_to_rec_id" of mapping from String to
            String, parameter "ama_ref_to_obj_name" of mapping from type
            "data_obj_ref" to String
         """
@@ -1457,6 +1535,7 @@ class KBaseDataObjectToFileUtils:
         record_desc_pattern = params['record_desc_pattern']
         case = params['case']
         linewrap = params['linewrap']
+        id_len_limit = params['id_len_limit']
 
         # Defaults
         if console == None:
@@ -1475,15 +1554,19 @@ class KBaseDataObjectToFileUtils:
             case = 'UPPER'
         if linewrap == None:
             linewrap = 0
+        if id_len_limit == None:
+            id_len_limit = 0
 
         # init and simplify
         feature_ids = []
         feature_id_to_function = dict()
+        short_id_to_rec_id     = dict()
         ama_ref_to_obj_name = dict()
         feature_sequence_found = False
         residue_type = residue_type[0:1].upper()
         feature_type = feature_type.upper()
         case = case[0:1].upper()
+        short_index = 0
         
         def record_header_sub(str, feature_id, genome_id):
             str = str.replace('%%feature_id%%', feature_id)
@@ -1549,6 +1632,12 @@ class KBaseDataObjectToFileUtils:
                         else:
                             feature_sequence_found = True
                             rec_id = record_header_sub(record_id_pattern, feature['id'], ama_object_name)
+                            short_id = rec_id
+                            if id_len_limit != None and id_len_limit > 0:
+                                if len(rec_id) >= id_len_limit:
+                                    short_index += 1
+                                    short_id = 'SID_'+str(short_index)
+                                    short_id_to_rec_id[short_id] = rec_id
                             rec_desc = record_header_sub(record_desc_pattern, feature['id'], ama_object_name)
 
                             if feature.get('protein_translation'):
@@ -1563,7 +1652,7 @@ class KBaseDataObjectToFileUtils:
                             seq = seq.upper() if case == 'U' else seq.lower()
 
                             rec_rows = []
-                            rec_rows.append('>'+rec_id+' '+rec_desc)
+                            rec_rows.append('>'+short_id+' '+rec_desc)
                             if linewrap == None or linewrap == 0:
                                 rec_rows.append(seq)
                             else:
@@ -1590,6 +1679,12 @@ class KBaseDataObjectToFileUtils:
                         else:
                             feature_sequence_found = True
                             rec_id = record_header_sub(record_id_pattern, feature['id'], ama_object_name)
+                            short_id = rec_id
+                            if id_len_limit != None and id_len_limit > 0:
+                                if len(rec_id) >= id_len_limit:
+                                    short_index += 1
+                                    short_id = 'SID_'+str(short_index)
+                                    short_id_to_rec_id[short_id] = rec_id
                             rec_desc = record_header_sub(record_desc_pattern, feature['id'], ama_object_name)
                             if feature.get('dna_sequence'):
                                 seq = feature['dna_sequence']
@@ -1598,7 +1693,7 @@ class KBaseDataObjectToFileUtils:
                             seq = seq.upper() if case == 'U' else seq.lower()
 
                             rec_rows = []
-                            rec_rows.append('>'+rec_id+' '+rec_desc)
+                            rec_rows.append('>'+short_id+' '+rec_desc)
                             if linewrap == None or linewrap == 0:
                                 rec_rows.append(seq)
                             else:
@@ -1627,6 +1722,7 @@ class KBaseDataObjectToFileUtils:
         returnVal['fasta_file_path'] = fasta_file_path
         returnVal['feature_ids'] = feature_ids
         returnVal['feature_id_to_function'] = feature_id_to_function
+        returnVal['short_id_to_rec_id']     = short_id_to_rec_id
         returnVal['ama_ref_to_obj_name'] = ama_ref_to_obj_name
         #END AnnotatedMetagenomeAssemblyToFASTA
 

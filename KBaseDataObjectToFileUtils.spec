@@ -75,6 +75,7 @@ module KBaseDataObjectToFileUtils {
 	pattern_type   record_desc_pattern;
 	string         case;
 	int            linewrap;
+	int            id_len_limit;
     } GenomeToFASTA_Params;
 
     /* GenomeToFASTA() Output
@@ -83,6 +84,7 @@ module KBaseDataObjectToFileUtils {
 	path_type                     fasta_file_path;
 	list<feature_id>              feature_ids;
 	mapping<feature_id,string>    feature_id_to_function;
+	mapping<string,string>        short_id_to_rec_id;
 	mapping<data_obj_ref,string>  genome_ref_to_sci_name;
 	mapping<data_obj_ref,string>  genome_ref_to_obj_name;
     } GenomeToFASTA_Output;
@@ -102,6 +104,7 @@ module KBaseDataObjectToFileUtils {
 	pattern_type   record_desc_pattern;
 	string         case;
 	int            linewrap;
+	int            id_len_limit;
 	true_false     merge_fasta_files;
     } GenomeSetToFASTA_Params;
 
@@ -111,6 +114,7 @@ module KBaseDataObjectToFileUtils {
 	list<path_type>                       fasta_file_path_list;
 	mapping<genome_id, list<feature_id>>  feature_ids_by_genome_id;
 	mapping<feature_id,string>            feature_id_to_function;
+	mapping<string,string>                short_id_to_rec_id;
 	mapping<data_obj_ref,string>          genome_ref_to_sci_name;
 	mapping<data_obj_ref,string>          genome_ref_to_obj_name;
     } GenomeSetToFASTA_Output;
@@ -130,6 +134,7 @@ module KBaseDataObjectToFileUtils {
 	pattern_type   record_desc_pattern;
 	string         case;
 	int            linewrap;
+	int            id_len_limit;
 	true_false     merge_fasta_files;
     } SpeciesTreeToFASTA_Params;
 
@@ -139,6 +144,7 @@ module KBaseDataObjectToFileUtils {
 	list<path_type>                       fasta_file_path_list;
 	mapping<genome_id, list<feature_id>>  feature_ids_by_genome_id;
 	mapping<feature_id,string>            feature_id_to_function;
+	mapping<string,string>                short_id_to_rec_id;
 	mapping<data_obj_ref,string>          genome_ref_to_sci_name;
 	mapping<data_obj_ref,string>          genome_ref_to_obj_name;
     } SpeciesTreeToFASTA_Output;
@@ -158,6 +164,7 @@ module KBaseDataObjectToFileUtils {
 	pattern_type   record_desc_pattern;
 	string         case;
 	int            linewrap;
+	int            id_len_limit;
     } FeatureSetToFASTA_Params;
 
 
@@ -167,6 +174,7 @@ module KBaseDataObjectToFileUtils {
 	path_type                                fasta_file_path;
 	mapping<data_obj_ref, list<feature_id>>  feature_ids_by_genome_ref;
 	mapping<feature_id,string>               feature_id_to_function;
+	mapping<string,string>                   short_id_to_rec_id;
 	mapping<data_obj_ref,string>             genome_ref_to_sci_name;
 	mapping<data_obj_ref,string>             genome_ref_to_obj_name;
     } FeatureSetToFASTA_Output;
@@ -186,6 +194,7 @@ module KBaseDataObjectToFileUtils {
 	pattern_type   record_desc_pattern;
 	string         case;
 	int            linewrap;
+	int            id_len_limit;
     } AnnotatedMetagenomeAssemblyToFASTA_Params;
 
     /* AnnotatedMetagenomeAssemblyToFASTA() Output
@@ -194,6 +203,7 @@ module KBaseDataObjectToFileUtils {
 	path_type                     fasta_file_path;
 	list<feature_id>              feature_ids;
 	mapping<feature_id,string>    feature_id_to_function;
+	mapping<string,string>        short_id_to_rec_id;
 	mapping<data_obj_ref,string>  ama_ref_to_obj_name;
     } AnnotatedMetagenomeAssemblyToFASTA_Output;
 
