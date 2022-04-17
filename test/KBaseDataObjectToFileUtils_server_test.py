@@ -198,13 +198,81 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
         self.__class__.amaInfo_list[item_i] = new_obj_info
         self.__class__.amaName_list[item_i] = ama_basename
         return new_obj_info
-    
-    # NOTE: According to Python unittest naming rules test method names should start from 'test'.
 
+
+    # call this method to get the WS object info of a Tree
+    #   (will upload the example data if this is the first time the method is called during tests)
+    def getTreeInfo(self, tree_basename, lib_i=0, genome_ref_map=None):
+        if hasattr(self.__class__, 'treeInfo_list'):
+            try:
+                info = self.__class__.treeInfo_list[lib_i]
+                name = self.__class__.treeName_list[lib_i]
+                if info != None:
+                    if name != tree_basename:
+                        self.__class__.treeInfo_list[lib_i] = None
+                        self.__class__.treeName_list[lib_i] = None
+                    else:
+                        return info
+            except:
+                pass
+
+        # 1) transform json to kbase Tree object and upload to ws
+        shared_dir = "/kb/module/work/tmp"
+        tree_data_file = 'data/trees/'+tree_basename+'.json'
+        tree_file = os.path.join(shared_dir, os.path.basename(tree_data_file))
+        shutil.copy(tree_data_file, tree_file)
+
+        # create object
+        with open (tree_file, 'r', 0) as tree_fh:
+            tree_obj = json.load(tree_fh)
+
+        # update genome_refs
+        if genome_ref_map != None:
+            for label_id in tree_obj['default_node_labels']:
+                for old_genome_ref in genome_ref_map.keys():
+                    tree_obj['default_node_labels'][label_id] = tree_obj['default_node_labels'][label_id].replace(old_genome_ref, genome_ref_map[old_genome_ref])
+            for label_id in tree_obj['ws_refs'].keys():
+                new_genome_refs = []
+                for old_genome_ref in tree_obj['ws_refs'][label_id]['g']:
+                    new_genome_refs.append(genome_ref_map[old_genome_ref])
+                tree_obj['ws_refs'][label_id]['g'] = new_genome_refs
+
+        provenance = [{}]
+        new_obj_info = self.getWsClient().save_objects({
+            'workspace': self.getWsName(), 
+            'objects': [
+                {
+                    'type': 'KBaseTrees.Tree',
+                    'data': tree_obj,
+                    'name': tree_basename+'.test_TREE',
+                    'meta': {},
+                    'provenance': provenance
+                }
+            ]})[0]
+
+        # 2) store it
+        if not hasattr(self.__class__, 'treeInfo_list'):
+            self.__class__.treeInfo_list = []
+            self.__class__.treeName_list = []
+        for i in range(lib_i+1):
+            try:
+                assigned = self.__class__.treeInfo_list[i]
+            except:
+                self.__class__.treeInfo_list.append(None)
+                self.__class__.treeName_list.append(None)
+
+        self.__class__.treeInfo_list[lib_i] = new_obj_info
+        self.__class__.treeName_list[lib_i] = tree_basename
+        return new_obj_info
+
+
+    #
+    # NOTE: According to Python unittest naming rules test method names should start from 'test'.
+    #
 
     #### TranslateNucToProtSeq_01()
     ##
-    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_TranslateNucToProtSeq_01()')
+    @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_TranslateNucToProtSeq_01()')
     def test_KBaseDataObjectToFileUtils_TranslateNucToProtSeq_01(self):
         # Prepare test objects in workspace if needed using 
         # self.getWsClient().save_objects({'workspace': self.getWsName(), 'objects': []})
@@ -229,7 +297,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
     #### ParseFastaStr_01()
     ##
-    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_ParseFastaStr_01()')
+    @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_ParseFastaStr_01()')
     def test_KBaseDataObjectToFileUtils_ParseFastaStr_01(self):
         
         # E. coli K-12 MG1655 (start modified from GTG to ATG)
@@ -254,7 +322,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
     #### GenomeToFASTA_01()
     ##
-    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_GenomeToFASTA_01()')
+    @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_GenomeToFASTA_01()')
     def test_KBaseDataObjectToFileUtils_GenomeToFASTA_01(self):
         test_name = 'GenomeToFASTA_01'
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
@@ -293,7 +361,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
     #### GenomeToFASTA_02()
     ##
-    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_GenomeToFASTA_02()')
+    @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_GenomeToFASTA_02()')
     def test_KBaseDataObjectToFileUtils_GenomeToFASTA_02(self):
         test_name = 'GenomeToFASTA_02'
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
@@ -332,7 +400,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
     #### GenomeSetToFASTA_01()
     ##
-    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_GenomeSetToFASTA_01()')
+    @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_GenomeSetToFASTA_01()')
     def test_KBaseDataObjectToFileUtils_GenomeSetToFASTA_01(self):
         test_name = 'GenomeSetToFASTA_01'
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
@@ -407,7 +475,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
     #### GenomeSetToFASTA_02()
     ##
-    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_GenomeSetToFASTA_02()')
+    @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_GenomeSetToFASTA_02()')
     def test_KBaseDataObjectToFileUtils_GenomeSetToFASTA_02(self):
         test_name = 'GenomeSetToFASTA_02'
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
@@ -480,9 +548,78 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
         pass
         
 
+    #### SpeciesTreeToFASTA_01()
+    ##
+    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_SpeciesTreeToFASTA_01()')
+    def test_KBaseDataObjectToFileUtils_SpeciesTreeToFASTA_01(self):
+        test_name = 'SpeciesTreeToFASTA_01'
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
+
+
+        # input_data
+        genomeInfo_3 = self.getGenomeInfo('GCF_000287295.1_ASM28729v1_genomic', 3)  # Candidatus Carsonella ruddii HT isolate Thao2000
+        genomeInfo_4 = self.getGenomeInfo('GCF_000306885.1_ASM30688v1_genomic', 4)  # Wolbachia endosymbiont of Onchocerca ochengi
+        genomeInfo_5 = self.getGenomeInfo('GCF_001439985.1_wTPRE_1.0_genomic',  5)  # Wolbachia endosymbiont of Trichogramma pretiosum
+        genomeInfo_6 = self.getGenomeInfo('GCF_000022285.1_ASM2228v1_genomic',  6)  # Wolbachia sp. wRi
+
+        genome_ref_3 = '/'.join([str(genomeInfo_3[WSID_I]),
+                                 str(genomeInfo_3[OBJID_I]),
+                                 str(genomeInfo_3[VERSION_I])])
+        genome_ref_4 = '/'.join([str(genomeInfo_4[WSID_I]),
+                                 str(genomeInfo_4[OBJID_I]),
+                                 str(genomeInfo_4[VERSION_I])])
+        genome_ref_5 = '/'.join([str(genomeInfo_5[WSID_I]),
+                                 str(genomeInfo_5[OBJID_I]),
+                                 str(genomeInfo_5[VERSION_I])])
+        genome_ref_6 = '/'.join([str(genomeInfo_6[WSID_I]),
+                                 str(genomeInfo_6[OBJID_I]),
+                                 str(genomeInfo_6[VERSION_I])])
+
+        # upload Tree
+        genome_refs_map = { '23880/3/1': genome_ref_3,
+                            '23880/4/1': genome_ref_4,
+                            '23880/5/1': genome_ref_5,
+                            '23880/6/1': genome_ref_6
+                        }
+        obj_info = self.getTreeInfo('Tiny_things.SpeciesTree', 0, genome_refs_map)
+        tree_ref = str(obj_info[WSID_I])+'/'+str(obj_info[OBJID_I])+'/'+str(obj_info[VERSION_I])
+
+        #feature_id_0 = 'A355_RS00030'   # F0F1 ATP Synthase subunit B
+        #feature_id_1 = 'WOO_RS00195'    # F0 ATP Synthase subunit B
+        #feature_id_2 = 'AOR14_RS04755'  # F0 ATP Synthase subunit B
+        #feature_id_3 = 'WRI_RS01560'    # F0 ATP Synthase subunit B
+
+
+        genome_id_feature_id_delim = '.f:'
+
+        output_dir = os.path.join(self.scratch,'fasta_out.'+str(uuid.uuid4()))
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+
+        parameters = {
+                'tree_ref':            tree_ref,
+                'file':                test_name+'-test_genomeSet.fasta',
+                'dir':                 output_dir,
+                'console':             [],
+                'invalid_msgs':        [],
+                'residue_type':        'protein',
+                'feature_type':        'CDS',
+                'record_id_pattern':   '%%genome_ref%%'+genome_id_feature_id_delim+'%%feature_id%%',
+                'record_desc_pattern': '[%%genome_ref%%]',
+                'case':                'upper',
+                'linewrap':            50,
+                'merge_fasta_files':   'TRUE'
+                }
+        ret = self.getImpl().SpeciesTreeToFASTA(self.getContext(), parameters)[0]
+        self.assertIsNotNone(ret['fasta_file_path_list'][0])
+        self.assertIsNotNone(ret['feature_ids_by_genome_id'])
+        self.assertNotEqual(len(ret['feature_ids_by_genome_id'].keys()), 0)
+        pass
+        
+
     #### FeatureSetToFASTA_01()
     ##
-    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_FeatureSetToFASTA_01()')
+    @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_FeatureSetToFASTA_01()')
     def test_KBaseDataObjectToFileUtils_FeatureSetToFASTA_01(self):
         test_name = 'FeatureSetToFASTA_01'
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
@@ -576,7 +713,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
     #### FeatureSetToFASTA_02()
     ##
-    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_FeatureSetToFASTA_02()')
+    @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_FeatureSetToFASTA_02()')
     def test_KBaseDataObjectToFileUtils_FeatureSetToFASTA_02(self):
         test_name = 'FeatureSetToFASTA_02'
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
@@ -670,7 +807,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
     #### AnnotatedMetagenomeAssemblyToFASTA_01()
     ##
-    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_AnnotatedMetagenomeAssemblyToFASTA_01()')
+    @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_AnnotatedMetagenomeAssemblyToFASTA_01()')
     def test_KBaseDataObjectToFileUtils_AnnotatedMetagenomeAssemblyToFASTA_01(self):
         test_name = 'AnnotatedMetagenomeAssemblyToFASTA_01'
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
@@ -711,7 +848,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
     #### AnnotatedMetagenomeAssemblyToFASTA_02()
     ##
-    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_AnnotatedMetagenomeAssemblyToFASTA_02()')
+    @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_AnnotatedMetagenomeAssemblyToFASTA_02()')
     def test_KBaseDataObjectToFileUtils_AnnotatedMetagenomeAssemblyToFASTA_02(self):
         test_name = 'AnnotatedMetagenomeAssemblyToFASTA_02'
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
