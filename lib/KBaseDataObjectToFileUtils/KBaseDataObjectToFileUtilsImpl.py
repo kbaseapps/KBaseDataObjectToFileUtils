@@ -459,18 +459,18 @@ class KBaseDataObjectToFileUtils:
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11) 
 
         # init and clean up params
-        genome_ref = params['genome_ref']
-        file = params['file']
-        dir = params['dir']
-        console = params['console']
-        invalid_msgs = params['invalid_msgs']
-        residue_type = params['residue_type']
-        feature_type = params['feature_type']
-        record_id_pattern = params['record_id_pattern']
-        record_desc_pattern = params['record_desc_pattern']
-        case = params['case']
-        linewrap = params['linewrap']
-        id_len_limit = params['id_len_limit']
+        genome_ref = params.get('genome_ref')
+        file = params.get('file')
+        dir = params.get('dir')
+        console = params.get('console')
+        invalid_msgs = params.get('invalid_msgs')
+        residue_type = params.get('residue_type')
+        feature_type = params.get('feature_type')
+        record_id_pattern = params.get('record_id_pattern')
+        record_desc_pattern = params.get('record_desc_pattern')
+        case = params.get('case')
+        linewrap = params.get('linewrap')
+        id_len_limit = params.get('id_len_limit')
         
         # Defaults
         if console == None:
@@ -690,19 +690,19 @@ class KBaseDataObjectToFileUtils:
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11) 
 
         # init and clean up params
-        genomeSet_ref = params['genomeSet_ref']
-        file = params['file']
-        dir = params['dir']
-        console = params['console']
-        invalid_msgs = params['invalid_msgs']
-        residue_type = params['residue_type']
-        feature_type = params['feature_type']
-        record_id_pattern = params['record_id_pattern']
-        record_desc_pattern = params['record_desc_pattern']
-        case = params['case']
-        linewrap = params['linewrap']
-        id_len_limit = params['id_len_limit']
-        merge_fasta_files = params['merge_fasta_files']
+        genomeSet_ref = params.get('genomeSet_ref')
+        file = params.get('file')
+        dir = params.get('dir')
+        console = params.get('console')
+        invalid_msgs = params.get('invalid_msgs')
+        residue_type = params.get('residue_type')
+        feature_type = params.get('feature_type')
+        record_id_pattern = params.get('record_id_pattern')
+        record_desc_pattern = params.get('record_desc_pattern')
+        case = params.get('case')
+        linewrap = params.get('linewrap')
+        id_len_limit = params.get('id_len_limit')
+        merge_fasta_files = params.get('merge_fasta_files')
 
         # Defaults
         if console == None:
@@ -971,19 +971,19 @@ class KBaseDataObjectToFileUtils:
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11) 
 
         # init and clean up params
-        tree_ref = params['tree_ref']
-        file = params['file']
-        dir = params['dir']
-        console = params['console']
-        invalid_msgs = params['invalid_msgs']
-        residue_type = params['residue_type']
-        feature_type = params['feature_type']
-        record_id_pattern = params['record_id_pattern']
-        record_desc_pattern = params['record_desc_pattern']
-        case = params['case']
-        linewrap = params['linewrap']
-        id_len_limit = params['id_len_limit']
-        merge_fasta_files = params['merge_fasta_files']
+        tree_ref = params.get('tree_ref')
+        file = params.get('file')
+        dir = params.get('dir')
+        console = params.get('console')
+        invalid_msgs = params.get('invalid_msgs')
+        residue_type = params.get('residue_type')
+        feature_type = params.get('feature_type')
+        record_id_pattern = params.get('record_id_pattern')
+        record_desc_pattern = params.get('record_desc_pattern')
+        case = params.get('case')
+        linewrap = params.get('linewrap')
+        id_len_limit = params.get('id_len_limit')
+        merge_fasta_files = params.get('merge_fasta_files')
 
         # Defaults
         if console == None:
@@ -1254,18 +1254,18 @@ class KBaseDataObjectToFileUtils:
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11) 
 
         # init and clean up params
-        featureSet_ref = params['featureSet_ref']
-        file = params['file']
-        dir = params['dir']
-        console = params['console']
-        invalid_msgs = params['invalid_msgs']
-        residue_type = params['residue_type']
-        feature_type = params['feature_type']
-        record_id_pattern = params['record_id_pattern']
-        record_desc_pattern = params['record_desc_pattern']
-        case = params['case']
-        linewrap = params['linewrap']
-        id_len_limit = params['id_len_limit']
+        featureSet_ref = params.get('featureSet_ref')
+        file = params.get('file')
+        dir = params.get('dir')
+        console = params.get('console')
+        invalid_msgs = params.get('invalid_msgs')
+        residue_type = params.get('residue_type')
+        feature_type = params.get('feature_type')
+        record_id_pattern = params.get('record_id_pattern')
+        record_desc_pattern = params.get('record_desc_pattern')
+        case = params.get('case')
+        linewrap = params.get('linewrap')
+        id_len_limit = params.get('id_len_limit')
 
         # Defaults
         if console == None:
@@ -1524,18 +1524,18 @@ class KBaseDataObjectToFileUtils:
         [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11) 
 
         # init and clean up params
-        ama_ref = params['ama_ref']
-        file = params['file']
-        dir = params['dir']
-        console = params['console']
-        invalid_msgs = params['invalid_msgs']
-        residue_type = params['residue_type']
-        feature_type = params['feature_type']
-        record_id_pattern = params['record_id_pattern']
-        record_desc_pattern = params['record_desc_pattern']
-        case = params['case']
-        linewrap = params['linewrap']
-        id_len_limit = params['id_len_limit']
+        ama_ref = params.get('ama_ref')
+        file = params.get('file')
+        dir = params.get('dir')
+        console = params.get('console')
+        invalid_msgs = params.get('invalid_msgs')
+        residue_type = params.get('residue_type')
+        feature_type = params.get('feature_type')
+        record_id_pattern = params.get('record_id_pattern')
+        record_desc_pattern = params.get('record_desc_pattern')
+        case = params.get('case')
+        linewrap = params.get('linewrap')
+        id_len_limit = params.get('id_len_limit')
 
         # Defaults
         if console == None:
