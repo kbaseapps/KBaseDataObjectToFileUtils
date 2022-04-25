@@ -225,15 +225,15 @@ class KBaseDataObjectToFileUtils:
             'GGA':'G', 'GGC':'G', 'GGG':'G', 'GGT':'G',
             'TCA':'S', 'TCC':'S', 'TCG':'S', 'TCT':'S',
             'TTC':'F', 'TTT':'F', 'TTA':'L', 'TTG':'L',
-            'TAC':'Y', 'TAT':'Y', 'TAA':'_', 'TAG':'_',
-            'TGC':'C', 'TGT':'C', 'TGA':'_', 'TGG':'W'
+            'TAC':'Y', 'TAT':'Y', 'TAA':'*', 'TAG':'*',
+            'TGC':'C', 'TGT':'C', 'TGA':'*', 'TGG':'W'
             }
         if genetic_code not in genetic_code_table:
             raise ValueError ("genetic code '"+str(genetic_code)+"' not configured in genetic_code_table")
 
         prot_seq = ''.join([genetic_code_table[genetic_code].get(nuc_seq[3*i:3*i+3],'X') for i in range(len(nuc_seq)//3)])
-        if prot_seq.endswith('_'):
-            prot_seq = prot_seq.rstrip('_')
+        if prot_seq.endswith('*'):
+            prot_seq = prot_seq.rstrip('*')
 
         returnVal = dict()
         returnVal['prot_seq'] = prot_seq
