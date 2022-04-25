@@ -201,15 +201,26 @@ class KBaseDataObjectToFileUtils:
             raise ValueError('Method TranslateNucToProtSeq() requires nuc_seq parameter')
         if 'genetic_code' not in params or params['genetic_code'] == None or params['genetic_code'] == '':
             params['genetic_code'] = '11'
-
-        if params['genetic_code'] != '11':
-            raise ValueError('Method TranslateNucToProtSeq() only knows genetic code 11')
+        params['genetic_code'] = str(params['genetic_code'])
         
-        nuc_seq = params['nuc_seq'].upper()
+        known_codes = ['1', '2', '3', '4', '5', '6', '11']
+        if params['genetic_code'] not in known_codes:
+            raise ValueError("Method TranslateNucToProtSeq() only knows genetic codes {}".format(", ".join(known_codes)))
+
+        nuc_seq = params['nuc_seq'].upper().replace('U','T')  # make uniform and handle RNA
         prot_seq = ''
 
         genetic_code = params['genetic_code']
         genetic_code_table = dict()
+
+        # from https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi
+        #
+        # 11. The Bacterial, Archaeal and Plant Plastid Code (transl_table=11)
+        #   AAs  = FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG
+        #   Starts = ---M------**--*----M------------MMMM---------------M------------
+        #   Base1  = TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG
+        #   Base2  = TTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGG
+        #   Base3  = TCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAG
         genetic_code_table['11'] = {
             'ATA':'I', 'ATC':'I', 'ATT':'I', 'ATG':'M',
             'ACA':'T', 'ACC':'T', 'ACG':'T', 'ACT':'T',
@@ -228,13 +239,103 @@ class KBaseDataObjectToFileUtils:
             'TAC':'Y', 'TAT':'Y', 'TAA':'*', 'TAG':'*',
             'TGC':'C', 'TGT':'C', 'TGA':'*', 'TGG':'W'
             }
+
+        # 1. The Standard Code (transl_table=1)
+        #   AAs  = FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG
+        #   Starts = ---M------**--*----M---------------M----------------------------
+        #   Base1  = TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG
+        #   Base2  = TTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGG
+        #   Base3  = TCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAG
+        genetic_code_table['1'] = {
+            'TTT':'F',       'TCT':'S',       'TAT':'Y',       'TGT':'C',
+            'TTC':'F',       'TCC':'S',       'TAC':'Y',       'TGC':'C',
+            'TTA':'L',       'TCA':'S',       'TAA':'*',       'TGA':'*',
+            'TTG':'L',       'TCG':'S',       'TAG':'*',       'TGG':'W',
+            'CTT':'L',       'CCT':'P',       'CAT':'H',       'CGT':'R',
+            'CTC':'L',       'CCC':'P',       'CAC':'H',       'CGC':'R',
+            'CTA':'L',       'CCA':'P',       'CAA':'Q',       'CGA':'R',
+            'CTG':'L',       'CCG':'P',       'CAG':'Q',       'CGG':'R',
+            'ATT':'I',       'ACT':'T',       'AAT':'N',       'AGT':'S',
+            'ATC':'I',       'ACC':'T',       'AAC':'N',       'AGC':'S',
+            'ATA':'I',       'ACA':'T',       'AAA':'K',       'AGA':'R',
+            'ATG':'M',       'ACG':'T',       'AAG':'K',       'AGG':'R',
+            'GTT':'V',       'GCT':'A',       'GAT':'D',       'GGT':'G',
+            'GTC':'V',       'GCC':'A',       'GAC':'D',       'GGC':'G',
+            'GTA':'V',       'GCA':'A',       'GAA':'E',       'GGA':'G',
+            'GTG':'V',       'GCG':'A',       'GAG':'E',       'GGG':'G'
+        }
+
+        # 2. The Vertebrate Mitochondrial Code (transl_table=2)
+        #   AAs  = FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSS**VVVVAAAADDEEGGGG
+        #   Starts = ----------**--------------------MMMM----------**---M------------
+        #   Base1  = TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG
+        #   Base2  = TTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGG
+        #   Base3  = TCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAG
+        genetic_code_table['2'] = genetic_code_table['1']
+        genetic_code_table['2']['AGA'] = '*'  # 1: 'R'
+        genetic_code_table['2']['AGG'] = '*'  # 1: 'R'
+        genetic_code_table['2']['ATA'] = 'M'  # 1: 'I'
+        genetic_code_table['2']['TGA'] = 'W'  # 1: '*'
+
+        # 3. The Yeast Mitochondrial Code (transl_table=3)
+        #   AAs  = FFLLSSSSYY**CCWWTTTTPPPPHHQQRRRRIIMMTTTTNNKKSSRRVVVVAAAADDEEGGGG
+        #   Starts = ----------**----------------------MM---------------M------------
+        #   Base1  = TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG
+        #   Base2  = TTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGG
+        #   Base3  = TCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAG
+        genetic_code_table['3'] = genetic_code_table['1']
+        genetic_code_table['3']['ATA'] = 'M'  # 1: 'I'
+        genetic_code_table['3']['CTT'] = 'T'  # 1: 'L'
+        genetic_code_table['3']['CTC'] = 'T'  # 1: 'L'
+        genetic_code_table['3']['CTA'] = 'T'  # 1: 'L'
+        genetic_code_table['3']['CTG'] = 'T'  # 1: 'L'
+        genetic_code_table['3']['TGA'] = 'W'  # 1: '*'
+        
+        # 4. The Mold, Protozoan, and Coelenterate Mitochondrial Code and the Mycoplasma/Spiroplasma Code (transl_table=4)
+        #   AAs  = FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG
+        #   Starts = --MM------**-------M------------MMMM---------------M------------
+        #   Base1  = TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG
+        #   Base2  = TTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGG
+        #   Base3  = TCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAG
+        genetic_code_table['4'] = genetic_code_table['1']
+        genetic_code_table['4']['TGA'] = 'W'  # 1: '*'
+        
+        # 5. The Invertebrate Mitochondrial Code (transl_table=5)
+        #   AAs  = FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSSSSVVVVAAAADDEEGGGG
+        #   Starts = ---M------**--------------------MMMM---------------M------------
+        #   Base1  = TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG
+        #   Base2  = TTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGG
+        #   Base3  = TCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAG
+        genetic_code_table['5'] = genetic_code_table['1']
+        genetic_code_table['5']['AGA'] = 'S'  # 1: 'R'
+        genetic_code_table['5']['AGG'] = 'S'  # 1: 'R'
+        genetic_code_table['5']['ATA'] = 'M'  # 1: 'I'
+        genetic_code_table['5']['TGA'] = 'W'  # 1: '*'
+        
+        # 6. The Ciliate, Dasycladacean and Hexamita Nuclear Code (transl_table=6)
+        #   AAs  = FFLLSSSSYYQQCC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG
+        #   Starts = --------------*--------------------M----------------------------
+        #   Base1  = TTTTTTTTTTTTTTTTCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAGGGGGGGGGGGGGGGG
+        #   Base2  = TTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGGTTTTCCCCAAAAGGGG
+        #   Base3  = TCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAGTCAG
+        genetic_code_table['6'] = genetic_code_table['1']
+        genetic_code_table['6']['TAA'] = 'Q'  # 1: '*'
+        genetic_code_table['6']['TAG'] = 'Q'  # 1: '*'
+
+        
         if genetic_code not in genetic_code_table:
             raise ValueError ("genetic code '"+str(genetic_code)+"' not configured in genetic_code_table")
 
+        # Translate!
         prot_seq = ''.join([genetic_code_table[genetic_code].get(nuc_seq[3*i:3*i+3],'X') for i in range(len(nuc_seq)//3)])
         if prot_seq.endswith('*'):
             prot_seq = prot_seq.rstrip('*')
 
+        # don't translate if internal stop
+        if '*' in prot_seq:
+            print ("WARNING: nuc_seq {} has internal STOP in translation {} using genetic code {}".format(nuc_seq, prot_seq, params['genetic_code']))
+            prot_seq = '*'
+            
         returnVal = dict()
         returnVal['prot_seq'] = prot_seq
         #END TranslateNucToProtSeq
@@ -1618,7 +1719,12 @@ class KBaseDataObjectToFileUtils:
                     feature_id_to_function[ama_ref][feature['id']] = "; ".join(feature['functions'])
                 else:
                     feature_id_to_function[ama_ref][feature['id']] = 'N/A'
-                
+
+                # set genetic code
+                genetic_code = '11'
+                if 'code' in feature:
+                    genetic_code = feature['code']
+                    
                 #if feature_type == 'ALL' or feature_type == feature['type']:
                 if True:  # don't want to deal with changing indentation
 
@@ -1645,8 +1751,10 @@ class KBaseDataObjectToFileUtils:
                             elif feature.get('dna_sequence'):
                                 seq = self.TranslateNucToProtSeq(ctx,
                                                                  {'nuc_seq': feature['dna_sequence'],
-                                                                  'genetic_code': '11'}
+                                                                  'genetic_code': str(genetic_code)}
                                                                  )[0]['prot_seq']
+                                if seq == '*':
+                                    continue
                             else:
                                 raise ValueError ("no sequence information for gene "+feature['id'])
                             seq = seq.upper() if case == 'U' else seq.lower()
