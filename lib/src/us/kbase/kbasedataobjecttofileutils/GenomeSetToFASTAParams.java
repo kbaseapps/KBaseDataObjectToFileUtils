@@ -34,6 +34,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "case",
     "linewrap",
     "id_len_limit",
+    "write_off_code_prot_seq",
     "merge_fasta_files"
 })
 public class GenomeSetToFASTAParams {
@@ -62,6 +63,8 @@ public class GenomeSetToFASTAParams {
     private Long linewrap;
     @JsonProperty("id_len_limit")
     private Long idLenLimit;
+    @JsonProperty("write_off_code_prot_seq")
+    private Long writeOffCodeProtSeq;
     @JsonProperty("merge_fasta_files")
     private java.lang.String mergeFastaFiles;
     private Map<java.lang.String, Object> additionalProperties = new HashMap<java.lang.String, Object>();
@@ -246,6 +249,21 @@ public class GenomeSetToFASTAParams {
         return this;
     }
 
+    @JsonProperty("write_off_code_prot_seq")
+    public Long getWriteOffCodeProtSeq() {
+        return writeOffCodeProtSeq;
+    }
+
+    @JsonProperty("write_off_code_prot_seq")
+    public void setWriteOffCodeProtSeq(Long writeOffCodeProtSeq) {
+        this.writeOffCodeProtSeq = writeOffCodeProtSeq;
+    }
+
+    public GenomeSetToFASTAParams withWriteOffCodeProtSeq(Long writeOffCodeProtSeq) {
+        this.writeOffCodeProtSeq = writeOffCodeProtSeq;
+        return this;
+    }
+
     @JsonProperty("merge_fasta_files")
     public java.lang.String getMergeFastaFiles() {
         return mergeFastaFiles;
@@ -273,7 +291,7 @@ public class GenomeSetToFASTAParams {
 
     @Override
     public java.lang.String toString() {
-        return ((((((((((((((((((((((((((((("GenomeSetToFASTAParams"+" [genomeSetRef=")+ genomeSetRef)+", file=")+ file)+", dir=")+ dir)+", console=")+ console)+", invalidMsgs=")+ invalidMsgs)+", residueType=")+ residueType)+", featureType=")+ featureType)+", recordIdPattern=")+ recordIdPattern)+", recordDescPattern=")+ recordDescPattern)+", _case=")+ _case)+", linewrap=")+ linewrap)+", idLenLimit=")+ idLenLimit)+", mergeFastaFiles=")+ mergeFastaFiles)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((((((((((((((((((((((("GenomeSetToFASTAParams"+" [genomeSetRef=")+ genomeSetRef)+", file=")+ file)+", dir=")+ dir)+", console=")+ console)+", invalidMsgs=")+ invalidMsgs)+", residueType=")+ residueType)+", featureType=")+ featureType)+", recordIdPattern=")+ recordIdPattern)+", recordDescPattern=")+ recordDescPattern)+", _case=")+ _case)+", linewrap=")+ linewrap)+", idLenLimit=")+ idLenLimit)+", writeOffCodeProtSeq=")+ writeOffCodeProtSeq)+", mergeFastaFiles=")+ mergeFastaFiles)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }

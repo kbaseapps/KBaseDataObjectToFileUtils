@@ -33,7 +33,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "record_desc_pattern",
     "case",
     "linewrap",
-    "id_len_limit"
+    "id_len_limit",
+    "write_off_code_prot_seq"
 })
 public class FeatureSetToFASTAParams {
 
@@ -61,6 +62,8 @@ public class FeatureSetToFASTAParams {
     private Long linewrap;
     @JsonProperty("id_len_limit")
     private Long idLenLimit;
+    @JsonProperty("write_off_code_prot_seq")
+    private Long writeOffCodeProtSeq;
     private Map<java.lang.String, Object> additionalProperties = new HashMap<java.lang.String, Object>();
 
     @JsonProperty("featureSet_ref")
@@ -243,6 +246,21 @@ public class FeatureSetToFASTAParams {
         return this;
     }
 
+    @JsonProperty("write_off_code_prot_seq")
+    public Long getWriteOffCodeProtSeq() {
+        return writeOffCodeProtSeq;
+    }
+
+    @JsonProperty("write_off_code_prot_seq")
+    public void setWriteOffCodeProtSeq(Long writeOffCodeProtSeq) {
+        this.writeOffCodeProtSeq = writeOffCodeProtSeq;
+    }
+
+    public FeatureSetToFASTAParams withWriteOffCodeProtSeq(Long writeOffCodeProtSeq) {
+        this.writeOffCodeProtSeq = writeOffCodeProtSeq;
+        return this;
+    }
+
     @JsonAnyGetter
     public Map<java.lang.String, Object> getAdditionalProperties() {
         return this.additionalProperties;
@@ -255,7 +273,7 @@ public class FeatureSetToFASTAParams {
 
     @Override
     public java.lang.String toString() {
-        return ((((((((((((((((((((((((((("FeatureSetToFASTAParams"+" [featureSetRef=")+ featureSetRef)+", file=")+ file)+", dir=")+ dir)+", console=")+ console)+", invalidMsgs=")+ invalidMsgs)+", residueType=")+ residueType)+", featureType=")+ featureType)+", recordIdPattern=")+ recordIdPattern)+", recordDescPattern=")+ recordDescPattern)+", _case=")+ _case)+", linewrap=")+ linewrap)+", idLenLimit=")+ idLenLimit)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((((((((((((((((((((("FeatureSetToFASTAParams"+" [featureSetRef=")+ featureSetRef)+", file=")+ file)+", dir=")+ dir)+", console=")+ console)+", invalidMsgs=")+ invalidMsgs)+", residueType=")+ residueType)+", featureType=")+ featureType)+", recordIdPattern=")+ recordIdPattern)+", recordDescPattern=")+ recordDescPattern)+", _case=")+ _case)+", linewrap=")+ linewrap)+", idLenLimit=")+ idLenLimit)+", writeOffCodeProtSeq=")+ writeOffCodeProtSeq)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }

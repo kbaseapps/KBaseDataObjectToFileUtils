@@ -26,13 +26,14 @@ module KBaseDataObjectToFileUtils {
     typedef string pattern_type;
     typedef string log_msg;
     typedef string true_false;
-
+    typedef int    bool;
 
     /* TranslateNucToProtSeq() Params
     */
     typedef structure {
 	string  nuc_seq;
 	string  genetic_code;
+	bool    write_off_code_prot_seq;
     } TranslateNucToProtSeq_Params;
 
     /* TranslateNucToProtSeq() Output
@@ -76,6 +77,7 @@ module KBaseDataObjectToFileUtils {
 	string         case;
 	int            linewrap;
 	int            id_len_limit;
+	bool           write_off_code_prot_seq;
     } GenomeToFASTA_Params;
 
     /* GenomeToFASTA() Output
@@ -105,6 +107,7 @@ module KBaseDataObjectToFileUtils {
 	string         case;
 	int            linewrap;
 	int            id_len_limit;
+	bool           write_off_code_prot_seq;
 	true_false     merge_fasta_files;
     } GenomeSetToFASTA_Params;
 
@@ -135,6 +138,7 @@ module KBaseDataObjectToFileUtils {
 	string         case;
 	int            linewrap;
 	int            id_len_limit;
+	bool           write_off_code_prot_seq;
 	true_false     merge_fasta_files;
     } SpeciesTreeToFASTA_Params;
 
@@ -165,6 +169,7 @@ module KBaseDataObjectToFileUtils {
 	string         case;
 	int            linewrap;
 	int            id_len_limit;
+	bool           write_off_code_prot_seq;
     } FeatureSetToFASTA_Params;
 
 
@@ -195,6 +200,7 @@ module KBaseDataObjectToFileUtils {
 	string         case;
 	int            linewrap;
 	int            id_len_limit;
+	bool           write_off_code_prot_seq;
     } AnnotatedMetagenomeAssemblyToFASTA_Params;
 
     /* AnnotatedMetagenomeAssemblyToFASTA() Output

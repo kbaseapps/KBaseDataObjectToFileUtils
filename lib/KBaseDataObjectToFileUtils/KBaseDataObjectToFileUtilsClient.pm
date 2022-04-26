@@ -127,6 +127,8 @@ $return is a KBaseDataObjectToFileUtils.TranslateNucToProtSeq_Output
 TranslateNucToProtSeq_Params is a reference to a hash where the following keys are defined:
 	nuc_seq has a value which is a string
 	genetic_code has a value which is a string
+	write_off_code_prot_seq has a value which is a KBaseDataObjectToFileUtils.bool
+bool is an int
 TranslateNucToProtSeq_Output is a reference to a hash where the following keys are defined:
 	prot_seq has a value which is a string
 
@@ -141,6 +143,8 @@ $return is a KBaseDataObjectToFileUtils.TranslateNucToProtSeq_Output
 TranslateNucToProtSeq_Params is a reference to a hash where the following keys are defined:
 	nuc_seq has a value which is a string
 	genetic_code has a value which is a string
+	write_off_code_prot_seq has a value which is a KBaseDataObjectToFileUtils.bool
+bool is an int
 TranslateNucToProtSeq_Output is a reference to a hash where the following keys are defined:
 	prot_seq has a value which is a string
 
@@ -334,10 +338,12 @@ GenomeToFASTA_Params is a reference to a hash where the following keys are defin
 	case has a value which is a string
 	linewrap has a value which is an int
 	id_len_limit has a value which is an int
+	write_off_code_prot_seq has a value which is a KBaseDataObjectToFileUtils.bool
 data_obj_ref is a string
 path_type is a string
 log_msg is a string
 pattern_type is a string
+bool is an int
 GenomeToFASTA_Output is a reference to a hash where the following keys are defined:
 	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
 	feature_ids has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
@@ -368,10 +374,12 @@ GenomeToFASTA_Params is a reference to a hash where the following keys are defin
 	case has a value which is a string
 	linewrap has a value which is an int
 	id_len_limit has a value which is an int
+	write_off_code_prot_seq has a value which is a KBaseDataObjectToFileUtils.bool
 data_obj_ref is a string
 path_type is a string
 log_msg is a string
 pattern_type is a string
+bool is an int
 GenomeToFASTA_Output is a reference to a hash where the following keys are defined:
 	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
 	feature_ids has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
@@ -466,11 +474,13 @@ GenomeSetToFASTA_Params is a reference to a hash where the following keys are de
 	case has a value which is a string
 	linewrap has a value which is an int
 	id_len_limit has a value which is an int
+	write_off_code_prot_seq has a value which is a KBaseDataObjectToFileUtils.bool
 	merge_fasta_files has a value which is a KBaseDataObjectToFileUtils.true_false
 data_obj_ref is a string
 path_type is a string
 log_msg is a string
 pattern_type is a string
+bool is an int
 true_false is a string
 GenomeSetToFASTA_Output is a reference to a hash where the following keys are defined:
 	fasta_file_path_list has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.path_type
@@ -503,11 +513,13 @@ GenomeSetToFASTA_Params is a reference to a hash where the following keys are de
 	case has a value which is a string
 	linewrap has a value which is an int
 	id_len_limit has a value which is an int
+	write_off_code_prot_seq has a value which is a KBaseDataObjectToFileUtils.bool
 	merge_fasta_files has a value which is a KBaseDataObjectToFileUtils.true_false
 data_obj_ref is a string
 path_type is a string
 log_msg is a string
 pattern_type is a string
+bool is an int
 true_false is a string
 GenomeSetToFASTA_Output is a reference to a hash where the following keys are defined:
 	fasta_file_path_list has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.path_type
@@ -604,11 +616,13 @@ SpeciesTreeToFASTA_Params is a reference to a hash where the following keys are 
 	case has a value which is a string
 	linewrap has a value which is an int
 	id_len_limit has a value which is an int
+	write_off_code_prot_seq has a value which is a KBaseDataObjectToFileUtils.bool
 	merge_fasta_files has a value which is a KBaseDataObjectToFileUtils.true_false
 data_obj_ref is a string
 path_type is a string
 log_msg is a string
 pattern_type is a string
+bool is an int
 true_false is a string
 SpeciesTreeToFASTA_Output is a reference to a hash where the following keys are defined:
 	fasta_file_path_list has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.path_type
@@ -641,11 +655,13 @@ SpeciesTreeToFASTA_Params is a reference to a hash where the following keys are 
 	case has a value which is a string
 	linewrap has a value which is an int
 	id_len_limit has a value which is an int
+	write_off_code_prot_seq has a value which is a KBaseDataObjectToFileUtils.bool
 	merge_fasta_files has a value which is a KBaseDataObjectToFileUtils.true_false
 data_obj_ref is a string
 path_type is a string
 log_msg is a string
 pattern_type is a string
+bool is an int
 true_false is a string
 SpeciesTreeToFASTA_Output is a reference to a hash where the following keys are defined:
 	fasta_file_path_list has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.path_type
@@ -742,10 +758,12 @@ FeatureSetToFASTA_Params is a reference to a hash where the following keys are d
 	case has a value which is a string
 	linewrap has a value which is an int
 	id_len_limit has a value which is an int
+	write_off_code_prot_seq has a value which is a KBaseDataObjectToFileUtils.bool
 data_obj_ref is a string
 path_type is a string
 log_msg is a string
 pattern_type is a string
+bool is an int
 FeatureSetToFASTA_Output is a reference to a hash where the following keys are defined:
 	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
 	feature_ids_by_genome_ref has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
@@ -776,10 +794,12 @@ FeatureSetToFASTA_Params is a reference to a hash where the following keys are d
 	case has a value which is a string
 	linewrap has a value which is an int
 	id_len_limit has a value which is an int
+	write_off_code_prot_seq has a value which is a KBaseDataObjectToFileUtils.bool
 data_obj_ref is a string
 path_type is a string
 log_msg is a string
 pattern_type is a string
+bool is an int
 FeatureSetToFASTA_Output is a reference to a hash where the following keys are defined:
 	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
 	feature_ids_by_genome_ref has a value which is a reference to a hash where the key is a KBaseDataObjectToFileUtils.data_obj_ref and the value is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
@@ -874,10 +894,12 @@ AnnotatedMetagenomeAssemblyToFASTA_Params is a reference to a hash where the fol
 	case has a value which is a string
 	linewrap has a value which is an int
 	id_len_limit has a value which is an int
+	write_off_code_prot_seq has a value which is a KBaseDataObjectToFileUtils.bool
 data_obj_ref is a string
 path_type is a string
 log_msg is a string
 pattern_type is a string
+bool is an int
 AnnotatedMetagenomeAssemblyToFASTA_Output is a reference to a hash where the following keys are defined:
 	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
 	feature_ids has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
@@ -907,10 +929,12 @@ AnnotatedMetagenomeAssemblyToFASTA_Params is a reference to a hash where the fol
 	case has a value which is a string
 	linewrap has a value which is an int
 	id_len_limit has a value which is an int
+	write_off_code_prot_seq has a value which is a KBaseDataObjectToFileUtils.bool
 data_obj_ref is a string
 path_type is a string
 log_msg is a string
 pattern_type is a string
+bool is an int
 AnnotatedMetagenomeAssemblyToFASTA_Output is a reference to a hash where the following keys are defined:
 	fasta_file_path has a value which is a KBaseDataObjectToFileUtils.path_type
 	feature_ids has a value which is a reference to a list where each element is a KBaseDataObjectToFileUtils.feature_id
@@ -1336,6 +1360,32 @@ a string
 
 
 
+=head2 bool
+
+=over 4
+
+
+
+=item Definition
+
+=begin html
+
+<pre>
+an int
+</pre>
+
+=end html
+
+=begin text
+
+an int
+
+=end text
+
+=back
+
+
+
 =head2 TranslateNucToProtSeq_Params
 
 =over 4
@@ -1355,6 +1405,7 @@ TranslateNucToProtSeq() Params
 a reference to a hash where the following keys are defined:
 nuc_seq has a value which is a string
 genetic_code has a value which is a string
+write_off_code_prot_seq has a value which is a KBaseDataObjectToFileUtils.bool
 
 </pre>
 
@@ -1365,6 +1416,7 @@ genetic_code has a value which is a string
 a reference to a hash where the following keys are defined:
 nuc_seq has a value which is a string
 genetic_code has a value which is a string
+write_off_code_prot_seq has a value which is a KBaseDataObjectToFileUtils.bool
 
 
 =end text
@@ -1519,6 +1571,7 @@ record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_ty
 case has a value which is a string
 linewrap has a value which is an int
 id_len_limit has a value which is an int
+write_off_code_prot_seq has a value which is a KBaseDataObjectToFileUtils.bool
 
 </pre>
 
@@ -1539,6 +1592,7 @@ record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_ty
 case has a value which is a string
 linewrap has a value which is an int
 id_len_limit has a value which is an int
+write_off_code_prot_seq has a value which is a KBaseDataObjectToFileUtils.bool
 
 
 =end text
@@ -1621,6 +1675,7 @@ record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_ty
 case has a value which is a string
 linewrap has a value which is an int
 id_len_limit has a value which is an int
+write_off_code_prot_seq has a value which is a KBaseDataObjectToFileUtils.bool
 merge_fasta_files has a value which is a KBaseDataObjectToFileUtils.true_false
 
 </pre>
@@ -1642,6 +1697,7 @@ record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_ty
 case has a value which is a string
 linewrap has a value which is an int
 id_len_limit has a value which is an int
+write_off_code_prot_seq has a value which is a KBaseDataObjectToFileUtils.bool
 merge_fasta_files has a value which is a KBaseDataObjectToFileUtils.true_false
 
 
@@ -1725,6 +1781,7 @@ record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_ty
 case has a value which is a string
 linewrap has a value which is an int
 id_len_limit has a value which is an int
+write_off_code_prot_seq has a value which is a KBaseDataObjectToFileUtils.bool
 merge_fasta_files has a value which is a KBaseDataObjectToFileUtils.true_false
 
 </pre>
@@ -1746,6 +1803,7 @@ record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_ty
 case has a value which is a string
 linewrap has a value which is an int
 id_len_limit has a value which is an int
+write_off_code_prot_seq has a value which is a KBaseDataObjectToFileUtils.bool
 merge_fasta_files has a value which is a KBaseDataObjectToFileUtils.true_false
 
 
@@ -1829,6 +1887,7 @@ record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_ty
 case has a value which is a string
 linewrap has a value which is an int
 id_len_limit has a value which is an int
+write_off_code_prot_seq has a value which is a KBaseDataObjectToFileUtils.bool
 
 </pre>
 
@@ -1849,6 +1908,7 @@ record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_ty
 case has a value which is a string
 linewrap has a value which is an int
 id_len_limit has a value which is an int
+write_off_code_prot_seq has a value which is a KBaseDataObjectToFileUtils.bool
 
 
 =end text
@@ -1931,6 +1991,7 @@ record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_ty
 case has a value which is a string
 linewrap has a value which is an int
 id_len_limit has a value which is an int
+write_off_code_prot_seq has a value which is a KBaseDataObjectToFileUtils.bool
 
 </pre>
 
@@ -1951,6 +2012,7 @@ record_desc_pattern has a value which is a KBaseDataObjectToFileUtils.pattern_ty
 case has a value which is a string
 linewrap has a value which is an int
 id_len_limit has a value which is an int
+write_off_code_prot_seq has a value which is a KBaseDataObjectToFileUtils.bool
 
 
 =end text

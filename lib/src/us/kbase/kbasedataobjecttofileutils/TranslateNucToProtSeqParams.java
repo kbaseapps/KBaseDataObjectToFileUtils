@@ -22,7 +22,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Generated("com.googlecode.jsonschema2pojo")
 @JsonPropertyOrder({
     "nuc_seq",
-    "genetic_code"
+    "genetic_code",
+    "write_off_code_prot_seq"
 })
 public class TranslateNucToProtSeqParams {
 
@@ -30,6 +31,8 @@ public class TranslateNucToProtSeqParams {
     private String nucSeq;
     @JsonProperty("genetic_code")
     private String geneticCode;
+    @JsonProperty("write_off_code_prot_seq")
+    private Long writeOffCodeProtSeq;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @JsonProperty("nuc_seq")
@@ -62,6 +65,21 @@ public class TranslateNucToProtSeqParams {
         return this;
     }
 
+    @JsonProperty("write_off_code_prot_seq")
+    public Long getWriteOffCodeProtSeq() {
+        return writeOffCodeProtSeq;
+    }
+
+    @JsonProperty("write_off_code_prot_seq")
+    public void setWriteOffCodeProtSeq(Long writeOffCodeProtSeq) {
+        this.writeOffCodeProtSeq = writeOffCodeProtSeq;
+    }
+
+    public TranslateNucToProtSeqParams withWriteOffCodeProtSeq(Long writeOffCodeProtSeq) {
+        this.writeOffCodeProtSeq = writeOffCodeProtSeq;
+        return this;
+    }
+
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
@@ -74,7 +92,7 @@ public class TranslateNucToProtSeqParams {
 
     @Override
     public String toString() {
-        return ((((((("TranslateNucToProtSeqParams"+" [nucSeq=")+ nucSeq)+", geneticCode=")+ geneticCode)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((("TranslateNucToProtSeqParams"+" [nucSeq=")+ nucSeq)+", geneticCode=")+ geneticCode)+", writeOffCodeProtSeq=")+ writeOffCodeProtSeq)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }

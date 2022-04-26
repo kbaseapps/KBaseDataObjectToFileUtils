@@ -4,7 +4,8 @@ __Changes__
 - change STOP residue from '_' to '*'
 - support genetic codes 1, 2, 3, 4, 5, 6, and 11
 - support feature-specific genetic code (not yet available)
-- don't write protein translations with internal STOP codon
+- add flag to not write protein translations with internal STOP codon (def: write it)
+- don't write protein translation if dna_sequence length not a multiple of 3
 
 ### Version 1.1.0
 __Changes__

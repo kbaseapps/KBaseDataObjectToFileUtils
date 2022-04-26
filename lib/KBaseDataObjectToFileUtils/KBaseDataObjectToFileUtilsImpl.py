@@ -38,7 +38,7 @@ class KBaseDataObjectToFileUtils:
     ######################################### noqa
     VERSION = "1.1.1"
     GIT_URL = "https://github.com/kbaseapps/KBaseDataObjectToFileUtils"
-    GIT_COMMIT_HASH = "8b9390102fab73e8f886173f14ea2068c378be32"
+    GIT_COMMIT_HASH = "7afc08354767fb5af2e4e5e4f7ab60c8f2137b8a"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -163,6 +163,7 @@ class KBaseDataObjectToFileUtils:
             os.makedirs(self.scratch)
 
         #END_CONSTRUCTOR
+        pass
 
 
     def TranslateNucToProtSeq(self, ctx, params):
@@ -171,7 +172,8 @@ class KBaseDataObjectToFileUtils:
         **
         :param params: instance of type "TranslateNucToProtSeq_Params"
            (TranslateNucToProtSeq() Params) -> structure: parameter "nuc_seq"
-           of String, parameter "genetic_code" of String
+           of String, parameter "genetic_code" of String, parameter
+           "write_off_code_prot_seq" of type "bool"
         :returns: instance of type "TranslateNucToProtSeq_Output"
            (TranslateNucToProtSeq() Output) -> structure: parameter
            "prot_seq" of String
@@ -181,6 +183,11 @@ class KBaseDataObjectToFileUtils:
         #BEGIN TranslateNucToProtSeq
         if params.get('nuc_seq') is None:
             raise ValueError('Method TranslateNucToProtSeq() requires nuc_seq parameter')
+        if params.get('write_off_code_prot_seq') is None:
+            params['write_off_code_prot_seq'] = 1
+        else:
+            params['write_off_code_prot_seq'] = int(params['write_off_code_prot_seq'])
+            
         if params.get('genetic_code') is None:
             params['genetic_code'] = '11'
         params['genetic_code'] = str(params['genetic_code'])
@@ -309,14 +316,20 @@ class KBaseDataObjectToFileUtils:
             raise ValueError ("genetic code '"+str(genetic_code)+"' not configured in genetic_code_table")
 
         # Translate!
-        prot_seq = ''.join([genetic_code_table[genetic_code].get(nuc_seq[3*i:3*i+3],'X') for i in range(len(nuc_seq)//3)])
-        if prot_seq.endswith('*'):
-            prot_seq = prot_seq.rstrip('*')
-
-        # don't translate if internal stop
-        if '*' in prot_seq:
-            print ("WARNING: nuc_seq {} has internal STOP in translation {} using genetic code {}".format(nuc_seq, prot_seq, params['genetic_code']))
+        if len(nuc_seq) % 3 != 0:
+            print ("WARNING: nuc_seq {} isn't a multiple of 3.  Unsure where frameshift is.  Not writing protein trnalsation".format(nuc_seq))
             prot_seq = '*'
+        else:
+            prot_seq = ''.join([genetic_code_table[genetic_code].get(nuc_seq[3*i:3*i+3],'X') for i in range(len(nuc_seq)//3)])
+            if prot_seq.endswith('*'):
+                prot_seq = prot_seq.rstrip('*')
+
+            # don't translate if internal stop
+            if '*' in prot_seq:
+                print ("WARNING: nuc_seq {} has internal STOP in translation {} using genetic code {}".format(nuc_seq, prot_seq, params['genetic_code']))
+                if params['write_off_code_prot_seq'] == 0:
+                    print ("WARNING: not writing protein translation")
+                    prot_seq = '*'
             
         returnVal = dict()
         returnVal['prot_seq'] = prot_seq
@@ -524,7 +537,8 @@ class KBaseDataObjectToFileUtils:
            "feature_type" of String, parameter "record_id_pattern" of type
            "pattern_type", parameter "record_desc_pattern" of type
            "pattern_type", parameter "case" of String, parameter "linewrap"
-           of Long, parameter "id_len_limit" of Long
+           of Long, parameter "id_len_limit" of Long, parameter
+           "write_off_code_prot_seq" of type "bool"
         :returns: instance of type "GenomeToFASTA_Output" (GenomeToFASTA()
            Output) -> structure: parameter "fasta_file_path" of type
            "path_type", parameter "feature_ids" of list of type "feature_id",
@@ -554,7 +568,7 @@ class KBaseDataObjectToFileUtils:
         case = params.get('case')
         linewrap = params.get('linewrap')
         id_len_limit = params.get('id_len_limit')
-        
+
         # Defaults
         if console is None:
             console = []
@@ -574,6 +588,10 @@ class KBaseDataObjectToFileUtils:
             linewrap = 0
         if id_len_limit is None:
             id_len_limit = 0
+        if params.get('write_off_code_prot_seq') is None:
+            params['write_off_code_prot_seq'] = 1
+        else:
+            params['write_off_code_prot_seq'] = int(params['write_off_code_prot_seq'])
             
         # init and simplify
         feature_ids = []
@@ -754,6 +772,7 @@ class KBaseDataObjectToFileUtils:
            of type "pattern_type", parameter "record_desc_pattern" of type
            "pattern_type", parameter "case" of String, parameter "linewrap"
            of Long, parameter "id_len_limit" of Long, parameter
+           "write_off_code_prot_seq" of type "bool", parameter
            "merge_fasta_files" of type "true_false"
         :returns: instance of type "GenomeSetToFASTA_Output"
            (GenomeSetToFASTA() Output) -> structure: parameter
@@ -806,6 +825,10 @@ class KBaseDataObjectToFileUtils:
             linewrap = 0
         if id_len_limit is None:
             id_len_limit = 0
+        if params.get('write_off_code_prot_seq') is None:
+            params['write_off_code_prot_seq'] = 1
+        else:
+            params['write_off_code_prot_seq'] = int(params['write_off_code_prot_seq'])
         if merge_fasta_files is None or merge_fasta_files[0:1].upper() == 'T':
             merge_fasta_files = True
         else:
@@ -1035,6 +1058,7 @@ class KBaseDataObjectToFileUtils:
            "pattern_type", parameter "record_desc_pattern" of type
            "pattern_type", parameter "case" of String, parameter "linewrap"
            of Long, parameter "id_len_limit" of Long, parameter
+           "write_off_code_prot_seq" of type "bool", parameter
            "merge_fasta_files" of type "true_false"
         :returns: instance of type "SpeciesTreeToFASTA_Output"
            (SpeciesTreeToFASTA() Output) -> structure: parameter
@@ -1087,6 +1111,10 @@ class KBaseDataObjectToFileUtils:
             linewrap = 0
         if id_len_limit is None:
             id_len_limit = 0
+        if params.get('write_off_code_prot_seq') is None:
+            params['write_off_code_prot_seq'] = 1
+        else:
+            params['write_off_code_prot_seq'] = int(params['write_off_code_prot_seq'])
         if merge_fasta_files is None or merge_fasta_files[0:1].upper() == 'T':
             merge_fasta_files = True
         else:
@@ -1318,7 +1346,8 @@ class KBaseDataObjectToFileUtils:
            parameter "feature_type" of String, parameter "record_id_pattern"
            of type "pattern_type", parameter "record_desc_pattern" of type
            "pattern_type", parameter "case" of String, parameter "linewrap"
-           of Long, parameter "id_len_limit" of Long
+           of Long, parameter "id_len_limit" of Long, parameter
+           "write_off_code_prot_seq" of type "bool"
         :returns: instance of type "FeatureSetToFASTA_Output"
            (FeatureSetToFASTA() Output) -> structure: parameter
            "fasta_file_path" of type "path_type", parameter
@@ -1369,6 +1398,10 @@ class KBaseDataObjectToFileUtils:
             linewrap = 0
         if id_len_limit is None:
             id_len_limit = 0
+        if params.get('write_off_code_prot_seq') is None:
+            params['write_off_code_prot_seq'] = 1
+        else:
+            params['write_off_code_prot_seq'] = int(params['write_off_code_prot_seq'])
 
         # init and simplify
         feature_ids_by_genome_ref = dict()
@@ -1587,7 +1620,8 @@ class KBaseDataObjectToFileUtils:
            parameter "feature_type" of String, parameter "record_id_pattern"
            of type "pattern_type", parameter "record_desc_pattern" of type
            "pattern_type", parameter "case" of String, parameter "linewrap"
-           of Long, parameter "id_len_limit" of Long
+           of Long, parameter "id_len_limit" of Long, parameter
+           "write_off_code_prot_seq" of type "bool"
         :returns: instance of type
            "AnnotatedMetagenomeAssemblyToFASTA_Output"
            (AnnotatedMetagenomeAssemblyToFASTA() Output) -> structure:
@@ -1637,6 +1671,10 @@ class KBaseDataObjectToFileUtils:
             linewrap = 0
         if id_len_limit is None:
             id_len_limit = 0
+        if params.get('write_off_code_prot_seq') is None:
+            params['write_off_code_prot_seq'] = 1
+        else:
+            params['write_off_code_prot_seq'] = int(params['write_off_code_prot_seq'])
 
         # init and simplify
         feature_ids = []
@@ -1731,8 +1769,9 @@ class KBaseDataObjectToFileUtils:
                             elif feature.get('dna_sequence'):
                                 seq = self.TranslateNucToProtSeq(ctx,
                                                                  {'nuc_seq': feature['dna_sequence'],
-                                                                  'genetic_code': str(genetic_code)}
-                                                                 )[0]['prot_seq']
+                                                                  'genetic_code': str(genetic_code),
+                                                                  'write_off_code_prot_seq': params['write_off_code_prot_seq']
+                                                                })[0]['prot_seq']
                                 if seq == '*':
                                     continue
                             else:
