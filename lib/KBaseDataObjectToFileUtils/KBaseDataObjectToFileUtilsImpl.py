@@ -181,16 +181,10 @@ class KBaseDataObjectToFileUtils:
         # ctx is the context object
         # return variables are: returnVal
         #BEGIN TranslateNucToProtSeq
-        if params.get('nuc_seq') is None:
+        if not params.get('nuc_seq'):
             raise ValueError('Method TranslateNucToProtSeq() requires nuc_seq parameter')
-        if params.get('write_off_code_prot_seq') is None:
-            params['write_off_code_prot_seq'] = 1
-        else:
-            params['write_off_code_prot_seq'] = int(params['write_off_code_prot_seq'])
-            
-        if params.get('genetic_code') is None:
-            params['genetic_code'] = '11'
-        params['genetic_code'] = str(params['genetic_code'])
+        params['write_off_code_prot_seq'] = int(params.get('write_off_code_prot_seq',1))
+        params['genetic_code'] = str(params.get('genetic_code','11'))
         
         known_codes = ['1', '2', '3', '4', '5', '6', '11']
         if params['genetic_code'] not in known_codes:
@@ -358,21 +352,17 @@ class KBaseDataObjectToFileUtils:
         #BEGIN ParseFastaStr
 
         # init
-        if 'fasta_str' not in params or params['fasta_str'] is None or params['fasta_str'] == '':
+        if not params.get('fasta_str'):
             raise ValueError('Method ParseFastaStr() requires fasta_str parameter')
-        input_sequence_buf = params['fasta_str']
-        residue_type       = params['residue_type']
-        case               = params['case']
+        input_sequence_buf = params.get('fasta_str')
+        residue_type       = params.get('residue_type','NUC')
+        case               = params.get('case','UPPER')
         #console            = params['console']
-        invalid_msgs       = params['invalid_msgs']
+        invalid_msgs       = params.get('invalid_msgs',[])
 
         now = int(100*(datetime.utcnow() - datetime.utcfromtimestamp(0)).total_seconds())
         header_id = 'id.'+str(now)
         header_desc = 'desc.'+str(now)
-        if residue_type is None:
-            residue_type = 'NUC'
-        if case is None:
-            case = 'UPPER'
 
         residue_type = residue_type[0:1].upper()
         case = case[0:1].upper()
@@ -557,41 +547,18 @@ class KBaseDataObjectToFileUtils:
 
         # init and clean up params
         genome_ref = params.get('genome_ref')
-        file = params.get('file')
-        dir = params.get('dir')
-        console = params.get('console')
-        invalid_msgs = params.get('invalid_msgs')
-        residue_type = params.get('residue_type')
-        feature_type = params.get('feature_type')
-        record_id_pattern = params.get('record_id_pattern')
-        record_desc_pattern = params.get('record_desc_pattern')
-        case = params.get('case')
-        linewrap = params.get('linewrap')
-        id_len_limit = params.get('id_len_limit')
-
-        # Defaults
-        if console is None:
-            console = []
-        if invalid_msgs is None:
-            invalid_msgs = []
-        if residue_type is None:
-            residue_type = 'nuc'
-        if feature_type is None:
-            feature_type = 'ALL';
-        if record_id_pattern is None:
-            record_id_pattern = '%%feature_id%%'
-        if record_desc_pattern is None:
-            record_desc_pattern = '[%%genome_id%%]'
-        if case is None:
-            case = 'UPPER'
-        if linewrap is None:
-            linewrap = 0
-        if id_len_limit is None:
-            id_len_limit = 0
-        if params.get('write_off_code_prot_seq') is None:
-            params['write_off_code_prot_seq'] = 1
-        else:
-            params['write_off_code_prot_seq'] = int(params['write_off_code_prot_seq'])
+        file = params.get('file','runfile.fasta')
+        dir = params.get('dir',self.scratch)
+        console = params.get('console',[])
+        invalid_msgs = params.get('invalid_msgs',[])
+        residue_type = params.get('residue_type','NUC')
+        feature_type = params.get('feature_type','ALL')
+        record_id_pattern = params.get('record_id_pattern','%%feature_id%%')
+        record_desc_pattern = params.get('record_desc_pattern','[%%genome_id%%]')
+        case = params.get('case','UPPER')
+        linewrap = params.get('linewrap',0)
+        id_len_limit = params.get('id_len_limit',0)
+        params['write_off_code_prot_seq'] = int(params.get('write_off_code_prot_seq',1))
             
         # init and simplify
         feature_ids = []
@@ -610,10 +577,6 @@ class KBaseDataObjectToFileUtils:
             str = str.replace('%%genome_id%%', genome_id)
             return str
 
-        if file is None:
-            file = 'runfile.fasta'
-        if dir is None:
-            dir = self.scratch
         fasta_file_path = os.path.join(dir, file)
         self.log(console, 'KB SDK data2file Genome2FASTA(): writing fasta file: '+fasta_file_path)
 
@@ -666,7 +629,7 @@ class KBaseDataObjectToFileUtils:
                     if residue_type == 'P':
                         #if feature['type'] != 'CDS':
                         #    continue
-                        if feature.get('protein_translation') is None:
+                        if not feature.get('protein_translation'):
                             #self.log(invalid_msgs, "bad CDS feature "+feature['id']+": No protein_translation field.")
                             continue
                         else:
@@ -684,7 +647,7 @@ class KBaseDataObjectToFileUtils:
 
                             rec_rows = []
                             rec_rows.append('>'+short_id+' '+rec_desc)
-                            if linewrap is None or linewrap == 0:
+                            if not linewrap:
                                 rec_rows.append(seq)
                             else:
                                 seq_len = len(seq)
@@ -701,9 +664,9 @@ class KBaseDataObjectToFileUtils:
 
                     # nuc recs
                     else:
-                        if feature_type == 'CDS' and feature.get('protein_translation') is None:
+                        if feature_type == 'CDS' and not feature.get('protein_translation'):
                             continue
-                        elif feature.get('dna_sequence') is None:
+                        elif not feature.get('dna_sequence'):
                             self.log(invalid_msgs, "bad feature "+feature['id']+": No dna_sequence field.")
                         else:
                             feature_sequence_found = True
@@ -720,7 +683,7 @@ class KBaseDataObjectToFileUtils:
 
                             rec_rows = []
                             rec_rows.append('>'+short_id+' '+rec_desc)
-                            if linewrap is None or linewrap == 0:
+                            if not linewrap:
                                 rec_rows.append(seq)
                             else:
                                 seq_len = len(seq)
@@ -793,42 +756,21 @@ class KBaseDataObjectToFileUtils:
 
         # init and clean up params
         genomeSet_ref = params.get('genomeSet_ref')
-        file = params.get('file')
-        dir = params.get('dir')
-        console = params.get('console')
-        invalid_msgs = params.get('invalid_msgs')
-        residue_type = params.get('residue_type')
-        feature_type = params.get('feature_type')
-        record_id_pattern = params.get('record_id_pattern')
-        record_desc_pattern = params.get('record_desc_pattern')
-        case = params.get('case')
-        linewrap = params.get('linewrap')
-        id_len_limit = params.get('id_len_limit')
+        file = params.get('file','runfile.fasta')
+        dir = params.get('dir',self.scratch)
+        console = params.get('console',[])
+        invalid_msgs = params.get('invalid_msgs',[])
+        residue_type = params.get('residue_type','NUC')
+        feature_type = params.get('feature_type','ALL')
+        record_id_pattern = params.get('record_id_pattern','g:%%genome_ref%%.f:%%feature_id%%')
+        record_desc_pattern = params.get('record_desc_pattern','[%%genome_ref%%]')
+        case = params.get('case','UPPER')
+        linewrap = params.get('linewrap',0)
+        id_len_limit = params.get('id_len_limit',0)
         merge_fasta_files = params.get('merge_fasta_files')
+        params['write_off_code_prot_seq'] = int(params.get('write_off_code_prot_seq',1))
 
         # Defaults
-        if console is None:
-            console = []
-        if invalid_msgs is None:
-            invalid_msgs = []
-        if residue_type is None:
-            residue_type = 'NUC'
-        if feature_type is None:
-            feature_type = 'ALL';
-        if record_id_pattern is None:
-            record_id_pattern = 'g:%%genome_ref%%.f:%%feature_id%%'
-        if record_desc_pattern is None:
-            record_desc_pattern = '[%%genome_ref%%]'
-        if case is None:
-            case = 'UPPER'
-        if linewrap is None:
-            linewrap = 0
-        if id_len_limit is None:
-            id_len_limit = 0
-        if params.get('write_off_code_prot_seq') is None:
-            params['write_off_code_prot_seq'] = 1
-        else:
-            params['write_off_code_prot_seq'] = int(params['write_off_code_prot_seq'])
         if merge_fasta_files is None or merge_fasta_files[0:1].upper() == 'T':
             merge_fasta_files = True
         else:
@@ -852,10 +794,6 @@ class KBaseDataObjectToFileUtils:
             str = str.replace('%%genome_ref%%', genome_ref)
             return str
 
-        if file is None:
-            file = 'runfile.fasta'
-        if dir is None:
-            dir = self.scratch
 
         # get genomeSet object
         try:
@@ -873,9 +811,7 @@ class KBaseDataObjectToFileUtils:
             genome_id = genome_ids[genome_i]
             feature_ids_by_genome_id[genome_id] = []
 
-            if 'ref' not in genomeSet_object['elements'][genome_id] or \
-                    genomeSet_object['elements'][genome_id]['ref'] is None or \
-                    genomeSet_object['elements'][genome_id]['ref'] == '':
+            if not genomeSet_object['elements'][genome_id].get('ref'):
                 raise ValueError('GenomeSetToFASTA() cannot handle GenomeSet objects with embedded genome.  Must be a set of genome references')
                 #to get the full stack trace: traceback.format_exc()       
             else:
@@ -947,7 +883,7 @@ class KBaseDataObjectToFileUtils:
                     if residue_type == 'P':
                         #if feature['type'] != 'CDS':
                         #    continue
-                        if feature.get('protein_translation') is None:
+                        if not feature.get('protein_translation'):
                             #self.log(invalid_msgs, "bad CDS feature "+feature['id']+": No protein_translation field.")
                             continue
                         else:
@@ -965,7 +901,7 @@ class KBaseDataObjectToFileUtils:
 
                             rec_rows = []
                             rec_rows.append('>'+short_id+' '+rec_desc)
-                            if linewrap is None or linewrap == 0:
+                            if not linewrap:
                                 rec_rows.append(seq)
                             else:
                                 seq_len = len(seq)
@@ -982,9 +918,9 @@ class KBaseDataObjectToFileUtils:
 
                     # nuc recs
                     else:
-                        if feature_type == 'CDS' and feature.get('protein_translation') is None:
+                        if feature_type == 'CDS' and not feature.get('protein_translation'):
                             continue
-                        elif feature.get('dna_sequence') is None:
+                        elif not feature.get('dna_sequence'):
                             self.log(invalid_msgs, "bad feature "+feature['id']+": No dna_sequence field.")
                         else:
                             feature_sequence_found = True
@@ -1001,7 +937,7 @@ class KBaseDataObjectToFileUtils:
 
                             rec_rows = []
                             rec_rows.append('>'+short_id+' '+rec_desc)
-                            if linewrap is None or linewrap == 0:
+                            if not linewrap:
                                 rec_rows.append(seq)
                             else:
                                 seq_len = len(seq)
@@ -1079,46 +1015,26 @@ class KBaseDataObjectToFileUtils:
 
         # init and clean up params
         tree_ref = params.get('tree_ref')
-        file = params.get('file')
-        dir = params.get('dir')
-        console = params.get('console')
-        invalid_msgs = params.get('invalid_msgs')
-        residue_type = params.get('residue_type')
-        feature_type = params.get('feature_type')
-        record_id_pattern = params.get('record_id_pattern')
-        record_desc_pattern = params.get('record_desc_pattern')
-        case = params.get('case')
-        linewrap = params.get('linewrap')
-        id_len_limit = params.get('id_len_limit')
+        file = params.get('file','runfile.fasta')
+        dir = params.get('dir',self.scratch)
+        console = params.get('console',[])
+        invalid_msgs = params.get('invalid_msgs',[])
+        residue_type = params.get('residue_type','NUC')
+        feature_type = params.get('feature_type','ALL')
+        record_id_pattern = params.get('record_id_pattern','g:%%genome_ref%%.f:%%feature_id%%')
+        record_desc_pattern = params.get('record_desc_pattern','[%%genome_ref%%]')
+        case = params.get('case','UPPER')
+        linewrap = params.get('linewrap',0)
+        id_len_limit = params.get('id_len_limit',0)
         merge_fasta_files = params.get('merge_fasta_files')
+        params['write_off_code_prot_seq'] = int(params.get('write_off_code_prot_seq',1))
 
         # Defaults
-        if console is None:
-            console = []
-        if invalid_msgs is None:
-            invalid_msgs = []
-        if residue_type is None:
-            residue_type = 'NUC'
-        if feature_type is None:
-            feature_type = 'ALL';
-        if record_id_pattern is None:
-            record_id_pattern = 'g:%%genome_ref%%.f:%%feature_id%%'
-        if record_desc_pattern is None:
-            record_desc_pattern = '[%%genome_ref%%]'
-        if case is None:
-            case = 'UPPER'
-        if linewrap is None:
-            linewrap = 0
-        if id_len_limit is None:
-            id_len_limit = 0
-        if params.get('write_off_code_prot_seq') is None:
-            params['write_off_code_prot_seq'] = 1
-        else:
-            params['write_off_code_prot_seq'] = int(params['write_off_code_prot_seq'])
         if merge_fasta_files is None or merge_fasta_files[0:1].upper() == 'T':
             merge_fasta_files = True
         else:
             merge_fasta_files = False
+
 
         # init and simplify
         fasta_file_path_list = []
@@ -1137,11 +1053,6 @@ class KBaseDataObjectToFileUtils:
             str = str.replace('%%genome_id%%', genome_id)
             str = str.replace('%%genome_ref%%', genome_ref)
             return str
-
-        if file is None:
-            file = 'runfile.fasta'
-        if dir is None:
-            dir = self.scratch
 
         # get SpeciesTree object
         try:
@@ -1236,7 +1147,7 @@ class KBaseDataObjectToFileUtils:
                     if residue_type == 'P':
                         #if feature['type'] != 'CDS':
                         #    continue
-                        if feature.get('protein_translation') is None:
+                        if not feature.get('protein_translation'):
                             #self.log(invalid_msgs, "bad CDS feature "+feature['id']+": No protein_translation field.")
                             continue
                         else:
@@ -1254,7 +1165,7 @@ class KBaseDataObjectToFileUtils:
 
                             rec_rows = []
                             rec_rows.append('>'+short_id+' '+rec_desc)
-                            if linewrap is None or linewrap == 0:
+                            if not linewrap:
                                 rec_rows.append(seq)
                             else:
                                 seq_len = len(seq)
@@ -1271,9 +1182,9 @@ class KBaseDataObjectToFileUtils:
 
                     # nuc recs
                     else:
-                        if feature_type == 'CDS' and feature.get('protein_translation') is None:
+                        if feature_type == 'CDS' and not feature.get('protein_translation'):
                             continue
-                        elif feature.get('dna_sequence') is None:
+                        elif not feature.get('dna_sequence'):
                             self.log(invalid_msgs, "bad feature "+feature['id']+": No dna_sequence field.")
                         else:
                             feature_sequence_found = True
@@ -1290,7 +1201,7 @@ class KBaseDataObjectToFileUtils:
 
                             rec_rows = []
                             rec_rows.append('>'+short_id+' '+rec_desc)
-                            if linewrap is None or linewrap == 0:
+                            if not linewrap:
                                 rec_rows.append(seq)
                             else:
                                 seq_len = len(seq)
@@ -1367,41 +1278,25 @@ class KBaseDataObjectToFileUtils:
 
         # init and clean up params
         featureSet_ref = params.get('featureSet_ref')
-        file = params.get('file')
-        dir = params.get('dir')
-        console = params.get('console')
-        invalid_msgs = params.get('invalid_msgs')
-        residue_type = params.get('residue_type')
-        feature_type = params.get('feature_type')
-        record_id_pattern = params.get('record_id_pattern')
-        record_desc_pattern = params.get('record_desc_pattern')
-        case = params.get('case')
-        linewrap = params.get('linewrap')
-        id_len_limit = params.get('id_len_limit')
+        file = params.get('file','runfile.fasta')
+        dir = params.get('dir',self.scratch)
+        console = params.get('console',[])
+        invalid_msgs = params.get('invalid_msgs',[])
+        residue_type = params.get('residue_type','NUC')
+        feature_type = params.get('feature_type','ALL')
+        record_id_pattern = params.get('record_id_pattern','g:%%genome_ref%%.f:%%feature_id%%')
+        record_desc_pattern = params.get('record_desc_pattern','[%%genome_ref%%]')
+        case = params.get('case','UPPER')
+        linewrap = params.get('linewrap',0)
+        id_len_limit = params.get('id_len_limit',0)
+        merge_fasta_files = params.get('merge_fasta_files')
+        params['write_off_code_prot_seq'] = int(params.get('write_off_code_prot_seq',1))
 
         # Defaults
-        if console is None:
-            console = []
-        if invalid_msgs is None:
-            invalid_msgs = []
-        if residue_type is None:
-            residue_type = 'NUC'
-        if feature_type is None:
-            feature_type = 'ALL';
-        if record_id_pattern is None:
-            record_id_pattern = 'g:%%genome_ref%%.f:%%feature_id%%'
-        if record_desc_pattern is None:
-            record_desc_pattern = '[%%genome_ref%%]'
-        if case is None:
-            case = 'UPPER'
-        if linewrap is None:
-            linewrap = 0
-        if id_len_limit is None:
-            id_len_limit = 0
-        if params.get('write_off_code_prot_seq') is None:
-            params['write_off_code_prot_seq'] = 1
+        if merge_fasta_files is None or merge_fasta_files[0:1].upper() == 'T':
+            merge_fasta_files = True
         else:
-            params['write_off_code_prot_seq'] = int(params['write_off_code_prot_seq'])
+            merge_fasta_files = False
 
         # init and simplify
         feature_ids_by_genome_ref = dict()
@@ -1421,10 +1316,6 @@ class KBaseDataObjectToFileUtils:
             str = str.replace('%%genome_ref%%', genome_ref)
             return str
 
-        if file is None:
-            file = 'runfile.fasta'
-        if dir is None:
-            dir = self.scratch
         fasta_file_path = os.path.join(dir, file)
         self.log(console, 'KB SDK data2file FeatureSetToFASTA(): writing fasta file: '+fasta_file_path)
 
@@ -1504,10 +1395,10 @@ class KBaseDataObjectToFileUtils:
 
                     # protein recs
                     if residue_type == 'P':
-                        #if feature['type'] != 'CDS':
-                        #    continue
-                        if feature.get('protein_translation') is None:
+                        if obj_type == 'KBaseGenomes.Genome' and not feature.get('protein_translation'):
                             #self.log(invalid_msgs, "bad CDS feature "+feature['id']+": No protein_translation field.")
+                            continue
+                        elif feature['type'] != 'CDS':
                             continue
                         else:
                             feature_sequence_found = True
@@ -1519,12 +1410,24 @@ class KBaseDataObjectToFileUtils:
                                     short_id = 'SID_'+str(short_index)
                                     short_id_to_rec_id[short_id] = rec_id
                             rec_desc = record_header_sub(record_desc_pattern, fid, genome_ref, genome_ref)
-                            seq = feature['protein_translation']
+                            if feature.get('protein_translation','') != '':
+                                seq = feature['protein_translation']
+                            elif feature.get('dna_sequence','') != '':
+                                genetic_code = feature.get('code','11')
+                                seq = self.TranslateNucToProtSeq(ctx,
+                                                                 {'nuc_seq': feature['dna_sequence'],
+                                                                  'genetic_code': str(genetic_code),
+                                                                  'write_off_code_prot_seq': params['write_off_code_prot_seq']
+                                                                 })[0]['prot_seq']
+                                if seq == '*':
+                                    continue
+                            else:
+                                raise ValueError ("no sequence information for gene "+feature['id'])
                             seq = seq.upper() if case == 'U' else seq.lower()
 
                             rec_rows = []
                             rec_rows.append('>'+short_id+' '+rec_desc)
-                            if linewrap is None or linewrap == 0:
+                            if not linewrap:
                                 rec_rows.append(seq)
                             else:
                                 seq_len = len(seq)
@@ -1541,9 +1444,9 @@ class KBaseDataObjectToFileUtils:
 
                     # nuc recs
                     else:
-                        if feature_type == 'CDS' and feature.get('protein_translation') is None:
+                        if feature_type == 'CDS' and not feature.get('protein_translation'):
                             continue
-                        elif feature.get('dna_sequence') is None:
+                        elif not feature.get('dna_sequence'):
                             self.log(invalid_msgs, "bad feature "+feature['id']+": No dna_sequence field.")
                         elif 'parent_gene' in feature:
                             continue
@@ -1562,7 +1465,7 @@ class KBaseDataObjectToFileUtils:
 
                             rec_rows = []
                             rec_rows.append('>'+short_id+' '+rec_desc)
-                            if linewrap is None or linewrap == 0:
+                            if not linewrap:
                                 rec_rows.append(seq)
                             else:
                                 seq_len = len(seq)
@@ -1640,42 +1543,20 @@ class KBaseDataObjectToFileUtils:
 
         # init and clean up params
         ama_ref = params.get('ama_ref')
-        file = params.get('file')
-        dir = params.get('dir')
-        console = params.get('console')
-        invalid_msgs = params.get('invalid_msgs')
-        residue_type = params.get('residue_type')
-        feature_type = params.get('feature_type')
-        record_id_pattern = params.get('record_id_pattern')
-        record_desc_pattern = params.get('record_desc_pattern')
-        case = params.get('case')
-        linewrap = params.get('linewrap')
-        id_len_limit = params.get('id_len_limit')
+        file = params.get('file','runfile.fasta')
+        dir = params.get('dir',self.scratch)
+        console = params.get('console',[])
+        invalid_msgs = params.get('invalid_msgs',[])
+        residue_type = params.get('residue_type','NUC')
+        feature_type = params.get('feature_type','ALL')
+        record_id_pattern = params.get('record_id_pattern','%%feature_id%%')
+        record_desc_pattern = params.get('record_desc_pattern','[%%genome_id%%]')
+        case = params.get('case','UPPER')
+        linewrap = params.get('linewrap',0)
+        id_len_limit = params.get('id_len_limit',0)
+        params['write_off_code_prot_seq'] = int(params.get('write_off_code_prot_seq',1))
 
-        # Defaults
-        if console is None:
-            console = []
-        if invalid_msgs is None:
-            invalid_msgs = []
-        if residue_type is None:
-            residue_type = 'nuc'
-        if feature_type is None:
-            feature_type = 'ALL';
-        if record_id_pattern is None:
-            record_id_pattern = '%%feature_id%%'
-        if record_desc_pattern is None:
-            record_desc_pattern = '[%%genome_id%%]'
-        if case is None:
-            case = 'UPPER'
-        if linewrap is None:
-            linewrap = 0
-        if id_len_limit is None:
-            id_len_limit = 0
-        if params.get('write_off_code_prot_seq') is None:
-            params['write_off_code_prot_seq'] = 1
-        else:
-            params['write_off_code_prot_seq'] = int(params['write_off_code_prot_seq'])
-
+        
         # init and simplify
         feature_ids = []
         feature_id_to_function = dict()
@@ -1692,10 +1573,6 @@ class KBaseDataObjectToFileUtils:
             str = str.replace('%%genome_id%%', genome_id)
             return str
 
-        if file is None:
-            file = 'runfile.fasta'
-        if dir is None:
-            dir = self.scratch
         fasta_file_path = os.path.join(dir, file)
         self.log(console, 'KB SDK data2file AnnotatedMetagenomeAssemby2FASTA(): writing fasta file: '+fasta_file_path)
 
@@ -1739,9 +1616,7 @@ class KBaseDataObjectToFileUtils:
                     feature_id_to_function[ama_ref][feature['id']] = 'N/A'
 
                 # set genetic code
-                genetic_code = '11'
-                if 'code' in feature:
-                    genetic_code = feature['code']
+                genetic_code = feature.get('code','11')
                     
                 #if feature_type == 'ALL' or feature_type == feature['type']:
                 if True:  # don't want to deal with changing indentation
@@ -1780,7 +1655,7 @@ class KBaseDataObjectToFileUtils:
 
                             rec_rows = []
                             rec_rows.append('>'+short_id+' '+rec_desc)
-                            if linewrap is None or linewrap == 0:
+                            if not linewrap:
                                 rec_rows.append(seq)
                             else:
                                 seq_len = len(seq)
@@ -1797,9 +1672,9 @@ class KBaseDataObjectToFileUtils:
 
                     # nuc recs
                     else:
-                        if feature_type == 'CDS' and feature.get('protein_translation') is None:
+                        if feature_type == 'CDS' and not feature.get('protein_translation'):
                             continue
-                        elif feature.get('dna_sequence') is None:
+                        elif not feature.get('dna_sequence'):
                             self.log(invalid_msgs, "bad feature "+feature['id']+": No dna_sequence field.")
                         elif 'parent_gene' in feature:
                             continue
@@ -1821,7 +1696,7 @@ class KBaseDataObjectToFileUtils:
 
                             rec_rows = []
                             rec_rows.append('>'+short_id+' '+rec_desc)
-                            if linewrap is None or linewrap == 0:
+                            if not linewrap:
                                 rec_rows.append(seq)
                             else:
                                 seq_len = len(seq)

@@ -6,6 +6,8 @@ __Changes__
 - support feature-specific genetic code (not yet available)
 - add flag to not write protein translations with internal STOP codon (def: write it)
 - don't write protein translation if dna_sequence length not a multiple of 3
+- improved param retrieval code style
+- more explicit vals in unit tests
 
 ### Version 1.1.0
 __Changes__
