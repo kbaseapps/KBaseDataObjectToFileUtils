@@ -101,8 +101,8 @@ class KBaseDataObjectToFileUtils:
             sys.stdout.flush()
 
         buf = []
-        #with open(json_features_file_path, 'r') as f:
-        with open(protein_file_path, 'r') as f:
+        with open(json_features_file_path, 'r') as f:
+        #with open(protein_file_path, 'r') as f:
             for line in f.readlines():
                 buf.append (line)
             #features_json = json.load(f)
@@ -110,10 +110,10 @@ class KBaseDataObjectToFileUtils:
         print ("FEATURES_JSON:\n"+"\n".join(buf))
         sys.stdout.flush()
         """
+        # END DEBUG
         
         with open(json_features_file_path, 'r') as f:
             features_json = json.load(f)
-
 
         os.remove(json_features_file_path+'.gz')
         os.remove(json_features_file_path)
@@ -1398,7 +1398,7 @@ class KBaseDataObjectToFileUtils:
                         if obj_type == 'KBaseGenomes.Genome' and not feature.get('protein_translation'):
                             #self.log(invalid_msgs, "bad CDS feature "+feature['id']+": No protein_translation field.")
                             continue
-                        elif feature['type'] != 'CDS':
+                        elif 'type' in feature and feature['type'] != 'CDS':  # for AMA features
                             continue
                         else:
                             feature_sequence_found = True

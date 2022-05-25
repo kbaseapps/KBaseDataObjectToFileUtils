@@ -791,7 +791,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
         feature_id_1 = 'AWN69_RS07145' # DnaA
         feature_id_2 = 'DVMF_RS00005'  # DnaA
         feature_id_3 = 'A6701_RS00005' # DnaA
-        ama_feature_id_1 = '4_27'
+        ama_feature_id_1 = '4_27_gene' # NOTE: must be parent gene for nuc, not CDS
         
         featureSet_obj = { 'description': 'test genomeSet',
                            'element_ordering': [
@@ -823,7 +823,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
         featureSet_ref = str(featureSet_info[WSID_I])+'/'+str(featureSet_info[OBJID_I])+'/'+str(featureSet_info[VERSION_I])
 
         genome_count = 4
-        CDS_count = 4  # protein
+        CDS_count = 4  # nucleotide
         
         output_dir = os.path.join(self.scratch,'fasta_out.'+str(uuid.uuid4()))
         if not os.path.exists(output_dir):
