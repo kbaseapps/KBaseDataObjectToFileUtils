@@ -1,3 +1,18 @@
+### Version 1.1.1
+__Changes__
+- adjust fasta IDs to be under length threshold and return ID map
+- change STOP residue from '_' to '*'
+- support genetic codes 1, 2, 3, 4, 5, 6, and 11
+- support feature-specific genetic code (not yet available)
+- add flag to not write protein translations with internal STOP codon (def: write it)
+- don't write protein translation if dna_sequence length not a multiple of 3
+- improved param retrieval code style
+- more explicit vals in unit tests
+
+### Version 1.1.0
+__Changes__
+- added SpeciesTreeToFASTA() method
+
 ### Version 1.0.1
 __Changes__
 - include 'non_coding_features' for nucleotide/non-CDS queries from Genomes >= 9.0
