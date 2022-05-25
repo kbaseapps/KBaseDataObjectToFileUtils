@@ -198,9 +198,77 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
         self.__class__.amaInfo_list[item_i] = new_obj_info
         self.__class__.amaName_list[item_i] = ama_basename
         return new_obj_info
-    
-    # NOTE: According to Python unittest naming rules test method names should start from 'test'.
 
+
+    # call this method to get the WS object info of a Tree
+    #   (will upload the example data if this is the first time the method is called during tests)
+    def getTreeInfo(self, tree_basename, lib_i=0, genome_ref_map=None):
+        if hasattr(self.__class__, 'treeInfo_list'):
+            try:
+                info = self.__class__.treeInfo_list[lib_i]
+                name = self.__class__.treeName_list[lib_i]
+                if info != None:
+                    if name != tree_basename:
+                        self.__class__.treeInfo_list[lib_i] = None
+                        self.__class__.treeName_list[lib_i] = None
+                    else:
+                        return info
+            except:
+                pass
+
+        # 1) transform json to kbase Tree object and upload to ws
+        shared_dir = "/kb/module/work/tmp"
+        tree_data_file = 'data/trees/'+tree_basename+'.json'
+        tree_file = os.path.join(shared_dir, os.path.basename(tree_data_file))
+        shutil.copy(tree_data_file, tree_file)
+
+        # create object
+        with open (tree_file, 'r', 0) as tree_fh:
+            tree_obj = json.load(tree_fh)
+
+        # update genome_refs
+        if genome_ref_map != None:
+            for label_id in tree_obj['default_node_labels']:
+                for old_genome_ref in genome_ref_map.keys():
+                    tree_obj['default_node_labels'][label_id] = tree_obj['default_node_labels'][label_id].replace(old_genome_ref, genome_ref_map[old_genome_ref])
+            for label_id in tree_obj['ws_refs'].keys():
+                new_genome_refs = []
+                for old_genome_ref in tree_obj['ws_refs'][label_id]['g']:
+                    new_genome_refs.append(genome_ref_map[old_genome_ref])
+                tree_obj['ws_refs'][label_id]['g'] = new_genome_refs
+
+        provenance = [{}]
+        new_obj_info = self.getWsClient().save_objects({
+            'workspace': self.getWsName(), 
+            'objects': [
+                {
+                    'type': 'KBaseTrees.Tree',
+                    'data': tree_obj,
+                    'name': tree_basename+'.test_TREE',
+                    'meta': {},
+                    'provenance': provenance
+                }
+            ]})[0]
+
+        # 2) store it
+        if not hasattr(self.__class__, 'treeInfo_list'):
+            self.__class__.treeInfo_list = []
+            self.__class__.treeName_list = []
+        for i in range(lib_i+1):
+            try:
+                assigned = self.__class__.treeInfo_list[i]
+            except:
+                self.__class__.treeInfo_list.append(None)
+                self.__class__.treeName_list.append(None)
+
+        self.__class__.treeInfo_list[lib_i] = new_obj_info
+        self.__class__.treeName_list[lib_i] = tree_basename
+        return new_obj_info
+
+
+    #
+    # NOTE: According to Python unittest naming rules test method names should start from 'test'.
+    #
 
     #### TranslateNucToProtSeq_01()
     ##
@@ -225,7 +293,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
         ret = self.getImpl().TranslateNucToProtSeq(self.getContext(), parameters)[0]
         self.assertEqual(ret['prot_seq'], prot_seq)
         pass
-
+        
 
     #### ParseFastaStr_01()
     ##
@@ -263,10 +331,15 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
         genome_ref_1 = reference_prok_genomes_WS+'/GCF_001566335.1/1'  # E. coli K-12 MG1655
         """
         genomeInfo_0 = self.getGenomeInfo('GCF_001566335.1_ASM156633v1_genomic', 0)  # E. coli K-12 MG1655
+
+        #CDS_count = 4225  # protein  # why not this?
+        CDS_count = 4232
+
         genome_ref_0 = '/'.join([str(genomeInfo_0[WSID_I]),
                                  str(genomeInfo_0[OBJID_I]),
                                  str(genomeInfo_0[VERSION_I])])        
 
+        
         output_dir = os.path.join(self.scratch,'fasta_out.'+str(uuid.uuid4()))
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
@@ -282,12 +355,15 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
                 'record_id_pattern':   '%%feature_id%%',
                 'record_desc_pattern': '[%%genome_id%%]',
                 'case':                'upper',
-                'linewrap':            50
+                'linewrap':            50,
+                'id_len_limit':        5
                 }
         ret = self.getImpl().GenomeToFASTA(self.getContext(), parameters)[0]
         self.assertIsNotNone(ret['fasta_file_path'])
         self.assertIsNotNone(ret['feature_ids'])
-        self.assertNotEqual(len(ret['feature_ids']), 0)
+        self.assertEqual(len(ret['feature_ids']), CDS_count)
+        self.assertIsNotNone(ret['short_id_to_rec_id'])
+        self.assertEqual(len(ret['short_id_to_rec_id']), CDS_count)
         pass
         
 
@@ -302,6 +378,10 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
         genome_ref_1 = reference_prok_genomes_WS+'/GCF_001566335.1/1'  # E. coli K-12 MG1655
         """
         genomeInfo_0 = self.getGenomeInfo('GCF_001566335.1_ASM156633v1_genomic', 0)  # E. coli K-12 MG1655
+
+        #CDS_count = 4399  # nuc  # why not this?
+        CDS_count = 4658  # nuc
+
         genome_ref_0 = '/'.join([str(genomeInfo_0[WSID_I]),
                                  str(genomeInfo_0[OBJID_I]),
                                  str(genomeInfo_0[VERSION_I])])        
@@ -321,12 +401,15 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
                 'record_id_pattern':   '%%feature_id%%',
                 'record_desc_pattern': '[%%genome_id%%]',
                 'case':                'upper',
-                'linewrap':            50
+                'linewrap':            50,
+                'id_len_limit':        5
                 }
         ret = self.getImpl().GenomeToFASTA(self.getContext(), parameters)[0]
         self.assertIsNotNone(ret['fasta_file_path'])
         self.assertIsNotNone(ret['feature_ids'])
-        self.assertNotEqual(len(ret['feature_ids']), 0)
+        self.assertEqual(len(ret['feature_ids']), CDS_count)
+        self.assertIsNotNone(ret['short_id_to_rec_id'])
+        self.assertEqual(len(ret['short_id_to_rec_id']), CDS_count)
         pass
         
 
@@ -347,6 +430,11 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
         genomeInfo_0 = self.getGenomeInfo('GCF_001566335.1_ASM156633v1_genomic', 0)  # E. coli K-12 MG1655
         genomeInfo_1 = self.getGenomeInfo('GCF_000021385.1_ASM2138v1_genomic', 1)    # D. vulgaris str. 'Miyazaki F
         genomeInfo_2 = self.getGenomeInfo('GCF_001721825.1_ASM172182v1_genomic', 2)  # Pseudomonas aeruginosa
+
+        genome_count = 3
+        #CDS_count = 4225 + 3104 + 6040  # protein  # why not this (13369)?
+        CDS_count = 13384
+
         genome_ref_0 = '/'.join([str(genomeInfo_0[WSID_I]),
                                  str(genomeInfo_0[OBJID_I]),
                                  str(genomeInfo_0[VERSION_I])])
@@ -396,12 +484,15 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
                 'record_desc_pattern': '[%%genome_ref%%]',
                 'case':                'upper',
                 'linewrap':            50,
+                'id_len_limit':        5,
                 'merge_fasta_files':   'TRUE'
                 }
         ret = self.getImpl().GenomeSetToFASTA(self.getContext(), parameters)[0]
         self.assertIsNotNone(ret['fasta_file_path_list'][0])
         self.assertIsNotNone(ret['feature_ids_by_genome_id'])
-        self.assertNotEqual(len(ret['feature_ids_by_genome_id'].keys()), 0)
+        self.assertEqual(len(ret['feature_ids_by_genome_id'].keys()), genome_count)
+        self.assertIsNotNone(ret['short_id_to_rec_id'])
+        self.assertEqual(len(ret['short_id_to_rec_id']), CDS_count)
         pass
         
 
@@ -422,6 +513,11 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
         genomeInfo_0 = self.getGenomeInfo('GCF_001566335.1_ASM156633v1_genomic', 0)  # E. coli K-12 MG1655
         genomeInfo_1 = self.getGenomeInfo('GCF_000021385.1_ASM2138v1_genomic', 1)    # D. vulgaris str. 'Miyazaki F
         genomeInfo_2 = self.getGenomeInfo('GCF_001721825.1_ASM172182v1_genomic', 2)  # Pseudomonas aeruginosa
+        
+        genome_count = 3
+        #CDS_count = 4399 + 3210 + 6113  # nuc  # why not this (13722)?
+        CDS_count = 14323  # nuc
+
         genome_ref_0 = '/'.join([str(genomeInfo_0[WSID_I]),
                                  str(genomeInfo_0[OBJID_I]),
                                  str(genomeInfo_0[VERSION_I])])
@@ -471,12 +567,90 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
                 'record_desc_pattern': '[%%genome_ref%%]',
                 'case':                'upper',
                 'linewrap':            50,
+                'id_len_limit':        5,
                 'merge_fasta_files':   'TRUE'
                 }
         ret = self.getImpl().GenomeSetToFASTA(self.getContext(), parameters)[0]
         self.assertIsNotNone(ret['fasta_file_path_list'][0])
         self.assertIsNotNone(ret['feature_ids_by_genome_id'])
-        self.assertNotEqual(len(ret['feature_ids_by_genome_id'].keys()), 0)
+        self.assertEqual(len(ret['feature_ids_by_genome_id'].keys()), genome_count)
+        self.assertIsNotNone(ret['short_id_to_rec_id'])
+        self.assertEqual(len(ret['short_id_to_rec_id']), CDS_count)
+        pass
+        
+
+    #### SpeciesTreeToFASTA_01()
+    ##
+    # HIDE @unittest.skip ('skipping test_KBaseDataObjectToFileUtils_SpeciesTreeToFASTA_01()')
+    def test_KBaseDataObjectToFileUtils_SpeciesTreeToFASTA_01(self):
+        test_name = 'SpeciesTreeToFASTA_01'
+        [OBJID_I, NAME_I, TYPE_I, SAVE_DATE_I, VERSION_I, SAVED_BY_I, WSID_I, WORKSPACE_I, CHSUM_I, SIZE_I, META_I] = range(11)  # object_info tuple
+
+
+        # input_data
+        genomeInfo_3 = self.getGenomeInfo('GCF_000287295.1_ASM28729v1_genomic', 3)  # Candidatus Carsonella ruddii HT isolate Thao2000
+        genomeInfo_4 = self.getGenomeInfo('GCF_000306885.1_ASM30688v1_genomic', 4)  # Wolbachia endosymbiont of Onchocerca ochengi
+        genomeInfo_5 = self.getGenomeInfo('GCF_001439985.1_wTPRE_1.0_genomic',  5)  # Wolbachia endosymbiont of Trichogramma pretiosum
+        genomeInfo_6 = self.getGenomeInfo('GCF_000022285.1_ASM2228v1_genomic',  6)  # Wolbachia sp. wRi
+
+        genome_count = 4
+        CDS_count = 166 + 643 + 839 + 1248 # protein
+        
+        genome_ref_3 = '/'.join([str(genomeInfo_3[WSID_I]),
+                                 str(genomeInfo_3[OBJID_I]),
+                                 str(genomeInfo_3[VERSION_I])])
+        genome_ref_4 = '/'.join([str(genomeInfo_4[WSID_I]),
+                                 str(genomeInfo_4[OBJID_I]),
+                                 str(genomeInfo_4[VERSION_I])])
+        genome_ref_5 = '/'.join([str(genomeInfo_5[WSID_I]),
+                                 str(genomeInfo_5[OBJID_I]),
+                                 str(genomeInfo_5[VERSION_I])])
+        genome_ref_6 = '/'.join([str(genomeInfo_6[WSID_I]),
+                                 str(genomeInfo_6[OBJID_I]),
+                                 str(genomeInfo_6[VERSION_I])])
+
+        # upload Tree
+        genome_refs_map = { '23880/3/1': genome_ref_3,
+                            '23880/4/1': genome_ref_4,
+                            '23880/5/1': genome_ref_5,
+                            '23880/6/1': genome_ref_6
+                        }
+        obj_info = self.getTreeInfo('Tiny_things.SpeciesTree', 0, genome_refs_map)
+        tree_ref = str(obj_info[WSID_I])+'/'+str(obj_info[OBJID_I])+'/'+str(obj_info[VERSION_I])
+
+        #feature_id_0 = 'A355_RS00030'   # F0F1 ATP Synthase subunit B
+        #feature_id_1 = 'WOO_RS00195'    # F0 ATP Synthase subunit B
+        #feature_id_2 = 'AOR14_RS04755'  # F0 ATP Synthase subunit B
+        #feature_id_3 = 'WRI_RS01560'    # F0 ATP Synthase subunit B
+
+
+        genome_id_feature_id_delim = '.f:'
+
+        output_dir = os.path.join(self.scratch,'fasta_out.'+str(uuid.uuid4()))
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+
+        parameters = {
+                'tree_ref':            tree_ref,
+                'file':                test_name+'-test_genomeSet.fasta',
+                'dir':                 output_dir,
+                'console':             [],
+                'invalid_msgs':        [],
+                'residue_type':        'protein',
+                'feature_type':        'CDS',
+                'record_id_pattern':   '%%genome_ref%%'+genome_id_feature_id_delim+'%%feature_id%%',
+                'record_desc_pattern': '[%%genome_ref%%]',
+                'case':                'upper',
+                'linewrap':            50,
+                'id_len_limit':        5,
+                'merge_fasta_files':   'TRUE'
+                }
+        ret = self.getImpl().SpeciesTreeToFASTA(self.getContext(), parameters)[0]
+        self.assertIsNotNone(ret['fasta_file_path_list'][0])
+        self.assertIsNotNone(ret['feature_ids_by_genome_id'])
+        self.assertEqual(len(ret['feature_ids_by_genome_id'].keys()), genome_count)
+        self.assertIsNotNone(ret['short_id_to_rec_id'])
+        self.assertEqual(len(ret['short_id_to_rec_id']), CDS_count)
         pass
         
 
@@ -496,6 +670,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
         genomeInfo_0 = self.getGenomeInfo('GCF_001566335.1_ASM156633v1_genomic', 0)  # E. coli K-12 MG1655
         genomeInfo_1 = self.getGenomeInfo('GCF_000021385.1_ASM2138v1_genomic', 1)    # D. vulgaris str. 'Miyazaki F
         genomeInfo_2 = self.getGenomeInfo('GCF_001721825.1_ASM172182v1_genomic', 2)  # Pseudomonas aeruginosa
+
         genome_ref_0 = '/'.join([str(genomeInfo_0[WSID_I]),
                                  str(genomeInfo_0[OBJID_I]),
                                  str(genomeInfo_0[VERSION_I])])
@@ -547,6 +722,9 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
         featureSet_ref = str(featureSet_info[WSID_I])+'/'+str(featureSet_info[OBJID_I])+'/'+str(featureSet_info[VERSION_I])
 
+        genome_count = 4
+        CDS_count = 4  # protein
+        
         output_dir = os.path.join(self.scratch,'fasta_out.'+str(uuid.uuid4()))
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
@@ -563,14 +741,17 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
                 'record_desc_pattern': '[%%genome_ref%%]',
                 'case':                'upper',
                 'linewrap':            50,
+                'id_len_limit':        5,
                 'merge_fasta_files':   'TRUE'
                 }
         ret = self.getImpl().FeatureSetToFASTA(self.getContext(), parameters)[0]
         self.assertIsNotNone(ret['fasta_file_path'][0])
         self.assertIsNotNone(ret['feature_ids_by_genome_ref'])
-        self.assertNotEqual(len(ret['feature_ids_by_genome_ref'].keys()), 0)
+        self.assertEqual(len(ret['feature_ids_by_genome_ref'].keys()), genome_count)
+        self.assertIsNotNone(ret['short_id_to_rec_id'])
+        self.assertEqual(len(ret['short_id_to_rec_id']), CDS_count)
         self.assertIsNotNone(ret['genome_ref_to_sci_name'])
-        self.assertNotEqual(len(ret['genome_ref_to_sci_name'].keys()), 0)
+        self.assertEqual(len(ret['genome_ref_to_sci_name'].keys()), genome_count)
         pass
         
 
@@ -610,7 +791,7 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
         feature_id_1 = 'AWN69_RS07145' # DnaA
         feature_id_2 = 'DVMF_RS00005'  # DnaA
         feature_id_3 = 'A6701_RS00005' # DnaA
-        ama_feature_id_1 = '4_27'
+        ama_feature_id_1 = '4_27_gene' # NOTE: must be parent gene for nuc, not CDS
         
         featureSet_obj = { 'description': 'test genomeSet',
                            'element_ordering': [
@@ -641,6 +822,9 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
 
         featureSet_ref = str(featureSet_info[WSID_I])+'/'+str(featureSet_info[OBJID_I])+'/'+str(featureSet_info[VERSION_I])
 
+        genome_count = 4
+        CDS_count = 4  # nucleotide
+        
         output_dir = os.path.join(self.scratch,'fasta_out.'+str(uuid.uuid4()))
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
@@ -657,14 +841,17 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
                 'record_desc_pattern': '[%%genome_ref%%]',
                 'case':                'upper',
                 'linewrap':            50,
+                'id_len_limit':        5,
                 'merge_fasta_files':   'TRUE'
                 }
         ret = self.getImpl().FeatureSetToFASTA(self.getContext(), parameters)[0]
         self.assertIsNotNone(ret['fasta_file_path'][0])
         self.assertIsNotNone(ret['feature_ids_by_genome_ref'])
-        self.assertNotEqual(len(ret['feature_ids_by_genome_ref'].keys()), 0)
+        self.assertEqual(len(ret['feature_ids_by_genome_ref'].keys()), genome_count)
+        self.assertIsNotNone(ret['short_id_to_rec_id'])
+        self.assertEqual(len(ret['short_id_to_rec_id']), CDS_count)
         self.assertIsNotNone(ret['genome_ref_to_sci_name'])
-        self.assertNotEqual(len(ret['genome_ref_to_sci_name'].keys()), 0)
+        self.assertEqual(len(ret['genome_ref_to_sci_name'].keys()), genome_count)
         pass
         
 
@@ -699,13 +886,15 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
                 'record_id_pattern':   '%%feature_id%%',
                 'record_desc_pattern': '[%%genome_id%%]',
                 'case':                'upper',
-                'linewrap':            50
+                'linewrap':            50,
+                'id_len_limit':        5
                 }
         ret = self.getImpl().AnnotatedMetagenomeAssemblyToFASTA(self.getContext(), parameters)[0]
         self.assertIsNotNone(ret['fasta_file_path'])
         self.assertIsNotNone(ret['feature_ids'])
-        self.assertNotEqual(len(ret['feature_ids']), 0)
         self.assertEqual(len(ret['feature_ids']), ama_feature_cnt)
+        self.assertIsNotNone(ret['short_id_to_rec_id'])
+        self.assertNotEqual(len(ret['short_id_to_rec_id']), ama_feature_cnt)
         pass
 
 
@@ -740,11 +929,13 @@ class KBaseDataObjectToFileUtilsTest(unittest.TestCase):
                 'record_id_pattern':   '%%feature_id%%',
                 'record_desc_pattern': '[%%genome_id%%]',
                 'case':                'upper',
-                'linewrap':            50
+                'linewrap':            50,
+                'id_len_limit':        5
                 }
         ret = self.getImpl().AnnotatedMetagenomeAssemblyToFASTA(self.getContext(), parameters)[0]
         self.assertIsNotNone(ret['fasta_file_path'])
         self.assertIsNotNone(ret['feature_ids'])
-        self.assertNotEqual(len(ret['feature_ids']), 0)
         self.assertEqual(len(ret['feature_ids']), ama_feature_cnt)
+        self.assertIsNotNone(ret['short_id_to_rec_id'])
+        self.assertEqual(len(ret['short_id_to_rec_id']), ama_feature_cnt)
         pass

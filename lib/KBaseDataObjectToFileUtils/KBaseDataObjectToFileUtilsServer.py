@@ -354,6 +354,10 @@ class Application(object):
                              name='KBaseDataObjectToFileUtils.GenomeSetToFASTA',
                              types=[dict])
         self.method_authentication['KBaseDataObjectToFileUtils.GenomeSetToFASTA'] = 'required'  # noqa
+        self.rpc_service.add(impl_KBaseDataObjectToFileUtils.SpeciesTreeToFASTA,
+                             name='KBaseDataObjectToFileUtils.SpeciesTreeToFASTA',
+                             types=[dict])
+        self.method_authentication['KBaseDataObjectToFileUtils.SpeciesTreeToFASTA'] = 'required'  # noqa
         self.rpc_service.add(impl_KBaseDataObjectToFileUtils.FeatureSetToFASTA,
                              name='KBaseDataObjectToFileUtils.FeatureSetToFASTA',
                              types=[dict])
