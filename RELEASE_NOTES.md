@@ -1,3 +1,7 @@
+### Version 1.1.2
+__Changes__
+- adjust fasta headers to support object ref for GenomeToFASTA() and AnnotatedMetagenomeAssembluyToFASTA()
+
 ### Version 1.1.1
 __Changes__
 - adjust fasta IDs to be under length threshold and return ID map
