@@ -36,9 +36,9 @@ class KBaseDataObjectToFileUtils:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "1.1.1"
+    VERSION = "1.1.2"
     GIT_URL = "https://github.com/kbaseapps/KBaseDataObjectToFileUtils"
-    GIT_COMMIT_HASH = "7afc08354767fb5af2e4e5e4f7ab60c8f2137b8a"
+    GIT_COMMIT_HASH = "e50fefcb9055647abf9b492f83b23a45b7e1af67"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
