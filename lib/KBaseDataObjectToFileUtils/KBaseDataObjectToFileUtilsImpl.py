@@ -36,9 +36,9 @@ class KBaseDataObjectToFileUtils:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "1.1.1"
+    VERSION = "1.1.2"
     GIT_URL = "https://github.com/kbaseapps/KBaseDataObjectToFileUtils"
-    GIT_COMMIT_HASH = "7afc08354767fb5af2e4e5e4f7ab60c8f2137b8a"
+    GIT_COMMIT_HASH = "e50fefcb9055647abf9b492f83b23a45b7e1af67"
 
     #BEGIN_CLASS_HEADER
     workspaceURL = None
@@ -572,9 +572,10 @@ class KBaseDataObjectToFileUtils:
         case = case[0:1].upper()
         short_index = 0
         
-        def record_header_sub(str, feature_id, genome_id):
+        def record_header_sub(str, feature_id, genome_id, genome_ref):
             str = str.replace('%%feature_id%%', feature_id)
             str = str.replace('%%genome_id%%', genome_id)
+            str = str.replace('%%genome_ref%%', genome_ref)
             return str
 
         fasta_file_path = os.path.join(dir, file)
@@ -634,14 +635,14 @@ class KBaseDataObjectToFileUtils:
                             continue
                         else:
                             feature_sequence_found = True
-                            rec_id = record_header_sub(record_id_pattern, feature['id'], genome_object['id'])
+                            rec_id = record_header_sub(record_id_pattern, feature['id'], genome_object['id'], genome_ref)
                             short_id = rec_id
                             if id_len_limit != None and id_len_limit > 0:
                                 if len(rec_id) >= id_len_limit:
                                     short_index += 1
                                     short_id = 'SID_'+str(short_index)
                                     short_id_to_rec_id[short_id] = rec_id
-                            rec_desc = record_header_sub(record_desc_pattern, feature['id'], genome_object['id'])
+                            rec_desc = record_header_sub(record_desc_pattern, feature['id'], genome_object['id'], genome_ref)
                             seq = feature['protein_translation']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
@@ -670,14 +671,14 @@ class KBaseDataObjectToFileUtils:
                             self.log(invalid_msgs, "bad feature "+feature['id']+": No dna_sequence field.")
                         else:
                             feature_sequence_found = True
-                            rec_id = record_header_sub(record_id_pattern, feature['id'], genome_object['id'])
+                            rec_id = record_header_sub(record_id_pattern, feature['id'], genome_object['id'], genome_ref)
                             short_id = rec_id
                             if id_len_limit != None and id_len_limit > 0:
                                 if len(rec_id) >= id_len_limit:
                                     short_index += 1
                                     short_id = 'SID_'+str(short_index)
                                     short_id_to_rec_id[short_id] = rec_id
-                            rec_desc = record_header_sub(record_desc_pattern, feature['id'], genome_object['id'])
+                            rec_desc = record_header_sub(record_desc_pattern, feature['id'], genome_object['id'], genome_ref)
                             seq = feature['dna_sequence']
                             seq = seq.upper() if case == 'U' else seq.lower()
 
@@ -1568,9 +1569,12 @@ class KBaseDataObjectToFileUtils:
         case = case[0:1].upper()
         short_index = 0
         
-        def record_header_sub(str, feature_id, genome_id):
+        def record_header_sub(str, feature_id, ama_id, ama_ref):
             str = str.replace('%%feature_id%%', feature_id)
-            str = str.replace('%%genome_id%%', genome_id)
+            str = str.replace('%%genome_id%%', ama_id)
+            str = str.replace('%%genome_ref%%', ama_ref)
+            str = str.replace('%%ama_id%%', ama_id)
+            str = str.replace('%%ama_ref%%', ama_ref)
             return str
 
         fasta_file_path = os.path.join(dir, file)
@@ -1630,14 +1634,14 @@ class KBaseDataObjectToFileUtils:
                         #    continue
                         else:
                             feature_sequence_found = True
-                            rec_id = record_header_sub(record_id_pattern, feature['id'], ama_object_name)
+                            rec_id = record_header_sub(record_id_pattern, feature['id'], ama_object_name, ama_ref)
                             short_id = rec_id
                             if id_len_limit != None and id_len_limit > 0:
                                 if len(rec_id) >= id_len_limit:
                                     short_index += 1
                                     short_id = 'SID_'+str(short_index)
                                     short_id_to_rec_id[short_id] = rec_id
-                            rec_desc = record_header_sub(record_desc_pattern, feature['id'], ama_object_name)
+                            rec_desc = record_header_sub(record_desc_pattern, feature['id'], ama_object_name, ama_ref)
 
                             if feature.get('protein_translation'):
                                 seq = feature['protein_translation']
@@ -1680,14 +1684,14 @@ class KBaseDataObjectToFileUtils:
                             continue
                         else:
                             feature_sequence_found = True
-                            rec_id = record_header_sub(record_id_pattern, feature['id'], ama_object_name)
+                            rec_id = record_header_sub(record_id_pattern, feature['id'], ama_object_name, ama_ref)
                             short_id = rec_id
                             if id_len_limit != None and id_len_limit > 0:
                                 if len(rec_id) >= id_len_limit:
                                     short_index += 1
                                     short_id = 'SID_'+str(short_index)
                                     short_id_to_rec_id[short_id] = rec_id
-                            rec_desc = record_header_sub(record_desc_pattern, feature['id'], ama_object_name)
+                            rec_desc = record_header_sub(record_desc_pattern, feature['id'], ama_object_name, ama_ref)
                             if feature.get('dna_sequence'):
                                 seq = feature['dna_sequence']
                             else:
